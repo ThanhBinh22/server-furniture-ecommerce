@@ -3,7 +3,7 @@ package com.thesis.serverfurnitureecommerce.model.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -20,9 +20,9 @@ public class UserDTO {
     String oauth2Id;
     String oauth2Provider;
     String otp;
-    Instant otpExpired;
-    Instant createdAt;
-    Instant updatedAt;
+    LocalDateTime otpExpired;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
     RoleDTO role;
     CartDTO cart;
     Set<OrderDTO> orders;

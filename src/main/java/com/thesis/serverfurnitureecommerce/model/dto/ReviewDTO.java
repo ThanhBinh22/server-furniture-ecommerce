@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -20,8 +20,8 @@ public class ReviewDTO {
     @DecimalMin(value = "0.5", message = "Rating must be at least 0.5")
     @DecimalMax(value = "5.0", message = "Rating must be at most 5.0")
     Double rating;
-    Instant createdAt;
-    Instant updatedAt;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
     @NotNull(message = "Need id of product to review")
     ProductDTO product;
     @NotNull(message = "Need id of user to review")

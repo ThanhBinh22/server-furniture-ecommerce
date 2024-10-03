@@ -12,7 +12,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Getter
 @Setter
@@ -22,16 +23,17 @@ import java.time.Instant;
 public class BaseEntity implements Serializable {
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
-    Instant createdAt;
+    LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(name = "updated_at")
-    Instant updatedAt;
+    LocalDateTime updatedAt;
 
     @Column(name = "deleted_at")
-    Instant deletedAt;
+    LocalDateTime deletedAt;
 
-//    public void markAsDeleted() {
-//        this.deletedAt = Instant.now();
-//    }
+    public void markAsDeleted() {
+        this.deletedAt = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+    }
 }
+

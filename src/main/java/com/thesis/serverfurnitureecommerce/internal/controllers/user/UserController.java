@@ -33,7 +33,7 @@ public class UserController {
         return ResponseBuilder.buildResponse(result, result != null ? ErrorCode.CREATE_SUCCESS : ErrorCode.CREATE_FAILED);
     }
 
-    @PostMapping("/verify-otp")
+    @PostMapping("/verify-account")
     public ResponseEntity<APIResponse<Void>> verifyOtp(@RequestBody @Valid AccountVerifyRequest accountVerifyRequest) {
         log.info("OTP verification request for email: {}", accountVerifyRequest.getEmail());
         try {
@@ -44,6 +44,4 @@ public class UserController {
             return ResponseBuilder.buildResponse(null, ex.getErrorCode());
         }
     }
-
-
 }

@@ -28,7 +28,6 @@ public class OrderEntity extends BaseEntity {
     Long id;
     @Column(name = "total_amount")
     Double totalAmount;
-    String address;
     String status;
     @Column(name = "payment")
     String payment;
@@ -39,5 +38,8 @@ public class OrderEntity extends BaseEntity {
     Set<OrderItemEntity> orderItems = new HashSet<>();
     @ManyToMany(mappedBy = "orders")
     Set<PromotionEntity> promotions = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    AddressEntity address;
 }
 

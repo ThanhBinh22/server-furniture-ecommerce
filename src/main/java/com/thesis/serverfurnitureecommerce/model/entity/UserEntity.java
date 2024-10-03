@@ -8,9 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 @Data
@@ -35,7 +34,7 @@ public class UserEntity extends BaseEntity {
     @Column(name = "otp")
     Integer otp;
     @Column(name = "otp_expired")
-    Instant otpExpired;
+    LocalDateTime otpExpired;
     @Column(name = "oauth2_id")
     String oauth2Id;
     @Column(name = "oauth2_provider")
