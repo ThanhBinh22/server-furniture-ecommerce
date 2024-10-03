@@ -3,7 +3,7 @@ package com.thesis.serverfurnitureecommerce.model.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -15,7 +15,7 @@ public class UserLogDTO {
     String level;
     String ip;
     String action;
-    Instant createdAt;
-    Instant updatedAt;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
     UserDTO user;
 }

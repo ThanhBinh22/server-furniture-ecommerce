@@ -19,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -39,32 +39,20 @@ public class AccountServiceImpl implements IAccountService {
         if (userFindByUsername.isPresent()) {
             throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
         }
-
         Optional<UserEntity> userFindByEmail = userRepository.findByEmail(registerRequest.getEmail());
         if (userFindByEmail.isPresent()) {
-            UserEntity user = userFindByEmail.get();
-            if (user.getIsActive() == 1) {
-                throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
-            } else {
-                int otp = Random.generate6DigitOtp();
-                user.setOtp(otp);
-                user.setOtpExpired(Instant.now().plus(Duration.ofMinutes(3)));
-                emailService.sendMailOTP(user.getEmail(), otp);
-                userRepository.save(user);
-                return registerRequest;
-            }
+            throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
         } else {
             UserEntity user = userMapper.toRequestToEntity(registerRequest);
             int otp = Random.generate6DigitOtp();
             user.setIsActive((short) 0);
             user.setOtp(otp);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setOtpExpired(Instant.now().plus(Duration.ofMinutes(3)));
+            user.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
             RoleEntity role = roleRepository.findByName("USER").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
             user.setRole(role);
             emailService.sendMailOTP(user.getEmail(), otp);
             userRepository.save(user);
-
             return registerRequest;
         }
     }
@@ -75,14 +63,14 @@ public class AccountServiceImpl implements IAccountService {
 
         if (userFindByEmail.isPresent()) {
             UserEntity user = userFindByEmail.get();
-            if ((accountVerifyRequest.getOtp().equals(user.getOtp())) && user.getOtpExpired().isAfter(Instant.now())) {
+            if ((accountVerifyRequest.getOtp().equals(user.getOtp())) && user.getOtpExpired().isAfter(LocalDateTime.now())) {
                 user.setOtpExpired(null);
                 user.setOtp(null);
                 user.setIsActive((short) 1);
                 userRepository.save(user);
                 return true;
             } else {
-                if (!user.getOtpExpired().isAfter(Instant.now())) {
+                if (!user.getOtpExpired().isAfter(LocalDateTime.now())) {
                     throw new AppException(ErrorCode.OTP_EXPIRED);
                 }
                 if (!accountVerifyRequest.getOtp().equals(user.getOtp())) {

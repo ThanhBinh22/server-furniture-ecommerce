@@ -3,7 +3,7 @@ package com.thesis.serverfurnitureecommerce.model.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +17,7 @@ public class AddressDTO {
     String province;
     String country;
     Boolean isDefault;
-    Instant createdAt;
-    Instant updatedAt;
-    Instant deletedAt;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    LocalDateTime deletedAt;
 }
