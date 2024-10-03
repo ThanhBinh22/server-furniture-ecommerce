@@ -50,7 +50,6 @@ public class GlobalException {
         if (exception instanceof BadCredentialsException) {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(401), exception.getMessage());
             errorDetail.setProperty("description", StringConstant.USER_AND_PASSWORD_NOT_MATCH);
-
             return errorDetail;
         }
 

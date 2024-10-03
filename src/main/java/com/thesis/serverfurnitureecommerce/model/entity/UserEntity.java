@@ -48,6 +48,8 @@ public class UserEntity extends BaseEntity implements UserDetails {
     String oauth2Provider;
     @Column(name = "is_active", nullable = false)
     Short isActive;
+    @Column(name = "is_locked", nullable = false)
+    Short isLocked;
     @ManyToOne
     @JoinColumn(name = "role_id")
     RoleEntity role;
