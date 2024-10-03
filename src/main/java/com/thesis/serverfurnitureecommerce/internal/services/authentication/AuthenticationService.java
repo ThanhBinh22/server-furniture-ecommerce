@@ -3,6 +3,8 @@ package com.thesis.serverfurnitureecommerce.internal.services.authentication;
 import com.thesis.serverfurnitureecommerce.domain.request.AuthenticationRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
+import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
+import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,9 +27,16 @@ public class AuthenticationService {
                         authenticationRequest.getPassword()
                 )
         );
+        UserEntity userEntity = userRepository.findByUsername(authenticationRequest.getUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (!userEntity.isEnabled()) {
+            throw new AppException(ErrorCode.USER_NOT_ENABLED);
+        }
+        if (!userEntity.isAccountNonLocked()){
+            throw new AppException(ErrorCode.USER_LOCKED);
+        }
 
-        return userRepository.findByUsername(authenticationRequest.getUsername())
-                .orElseThrow();
+        return userEntity;
     }
 
 }

@@ -78,7 +78,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.isLocked == null || this.isLocked == 0;
     }
 
     @Override
@@ -88,6 +88,6 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isActive != null && this.isActive == 1;
     }
 }
