@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Entity
 @Table(name = DatabaseConstant.ADDRESS)
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -22,4 +24,6 @@ public class AddressEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     UserEntity user;
+    @OneToMany(mappedBy = "address")
+    Set<OrderEntity> orderEntities;
 }

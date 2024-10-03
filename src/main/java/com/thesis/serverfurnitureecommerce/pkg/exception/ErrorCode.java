@@ -8,6 +8,7 @@ public enum ErrorCode {
 
     // Success
     SUCCESS(200, "Success"),
+    VERIFY_FAIL(400, "Verify fail"),
     DELETE_SUCCESS(200, "Delete success"),
     CREATE_SUCCESS(201, "Create success"),
     UPDATE_SUCCESS(200, "Update success"),

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -44,7 +44,7 @@ public class ProductDTO {
 
     Set<CartItemDTO> cartItems;
     Set<ReviewDTO> reviews;
-    Instant createdAt;
-    Instant updatedAt;
-    Instant deletedAt;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    LocalDateTime deletedAt;
 }

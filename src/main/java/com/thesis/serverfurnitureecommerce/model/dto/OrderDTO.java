@@ -3,7 +3,7 @@ package com.thesis.serverfurnitureecommerce.model.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -14,9 +14,8 @@ import java.util.Set;
 public class OrderDTO {
      Long id;
      Double totalPrice;
-     Instant createdAt;
-     Instant updatedAt;
-     String address;
+     LocalDateTime createdAt;
+     LocalDateTime updatedAt;
      String status;
      String paymentMethod;
      UserDTO user;

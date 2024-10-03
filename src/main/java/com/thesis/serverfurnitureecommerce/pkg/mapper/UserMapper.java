@@ -1,5 +1,6 @@
 package com.thesis.serverfurnitureecommerce.pkg.mapper;
 
+import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import org.mapstruct.Mapper;
@@ -15,6 +16,8 @@ public interface UserMapper {
     UserDTO toDTO(UserEntity userEntity);
 
     UserEntity toEntity(UserDTO userDTO);
+
+    UserEntity toRequestToEntity(RegisterRequest registerRequest);
 
     List<UserDTO> toListDTO(List<UserEntity> userEntities);
 }
