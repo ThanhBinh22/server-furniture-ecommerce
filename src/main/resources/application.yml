@@ -10,14 +10,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
-  datasource:
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 5
-      idle-timeout: 600000
-      max-lifetime: 1800000
-      connection-timeout: 30000
-      pool-name: MyHikariPool
   jackson:
     time-zone: Asia/Ho_Chi_Minh
   mail:
@@ -33,5 +25,7 @@ spring:
             enable: true
           starttls.required: true
           ssl.trust: smtp.gmail.com
+
 server:
   port: 8085
+  shutdown: graceful

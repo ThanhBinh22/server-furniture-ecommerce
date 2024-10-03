@@ -1,13 +1,21 @@
 package com.thesis.serverfurnitureecommerce.pkg.exception;
 
+import com.thesis.serverfurnitureecommerce.constant.StringConstant;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AccountStatusException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,10 +42,43 @@ public class GlobalException {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<APIResponse<Object>> handleException(Exception e) {
-        APIResponse<Object> apiResponse = new APIResponse<>();
-        apiResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        apiResponse.setMessage(e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
+    public ProblemDetail handleSecurityException(Exception exception) {
+        ProblemDetail errorDetail = null;
+
+        exception.printStackTrace();
+
+        if (exception instanceof BadCredentialsException) {
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(401), exception.getMessage());
+            errorDetail.setProperty("description", StringConstant.USER_AND_PASSWORD_NOT_MATCH);
+
+            return errorDetail;
+        }
+
+        if (exception instanceof AccountStatusException) {
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
+            errorDetail.setProperty("description", StringConstant.ACCOUNT_IS_LOCKED);
+        }
+
+        if (exception instanceof AccessDeniedException) {
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
+            errorDetail.setProperty("description", StringConstant.NOT_AUTHENTICATED);
+        }
+
+        if (exception instanceof SignatureException) {
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
+            errorDetail.setProperty("description", StringConstant.JWT_SIGNATURE_INVALID);
+        }
+
+        if (exception instanceof ExpiredJwtException) {
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
+            errorDetail.setProperty("description", StringConstant.JWT_TOKEN_EXPIRED);
+        }
+
+        if (errorDetail == null) {
+            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(500), exception.getMessage());
+            errorDetail.setProperty("description", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return errorDetail;
     }
 }

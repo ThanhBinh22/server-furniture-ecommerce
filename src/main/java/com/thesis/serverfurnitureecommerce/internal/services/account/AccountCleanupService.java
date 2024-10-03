@@ -20,7 +20,7 @@ public class AccountCleanupService {
 
     IUserRepository userRepository;
 
-    @Scheduled(fixedRate = 500000)
+//    @Scheduled(fixedRate = 500000)
     public void removeExpiredAccounts() {
         log.info("removeExpiredAccounts");
         List<UserEntity> expiredAccounts = userRepository.findByIsActiveAndOtpExpiredBefore((short) 0);

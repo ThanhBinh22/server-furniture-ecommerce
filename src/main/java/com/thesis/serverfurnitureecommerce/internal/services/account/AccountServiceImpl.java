@@ -31,7 +31,7 @@ public class AccountServiceImpl implements IAccountService {
     IEmailService emailService;
     UserMapper userMapper;
     IRoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder;
 
     @Override
     public RegisterRequest RegisterAccount(RegisterRequest registerRequest) {
