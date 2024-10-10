@@ -1,6 +1,5 @@
-package com.thesis.serverfurnitureecommerce.jwt;
+package com.thesis.serverfurnitureecommerce.internal.services.jwt;
 
-import com.thesis.serverfurnitureecommerce.internal.services.jwt.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
