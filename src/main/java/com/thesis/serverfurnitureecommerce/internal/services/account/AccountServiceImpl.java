@@ -1,6 +1,7 @@
 package com.thesis.serverfurnitureecommerce.internal.services.account;
 
 import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
+import com.thesis.serverfurnitureecommerce.domain.request.LogoutRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IRoleRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
