@@ -1,5 +1,6 @@
 package com.thesis.serverfurnitureecommerce.configs;
 
+import com.thesis.serverfurnitureecommerce.internal.services.authentication.CustomOAuth2UserService;
 import com.thesis.serverfurnitureecommerce.internal.services.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     AuthenticationProvider authenticationProvider;
     JwtAuthenticationFilter jwtAuthenticationFilter;
+    CustomOAuth2UserService customOAuth2UserService;
 
 
     @Bean
@@ -30,6 +32,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService)
+                        )
+                        .defaultSuccessUrl("/home", true)
+                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -37,7 +45,5 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
-
 
 }
