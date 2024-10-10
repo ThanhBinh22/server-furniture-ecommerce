@@ -1,15 +1,16 @@
 package com.thesis.serverfurnitureecommerce.domain.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class AccountVerifyRequest {
-    private String email;
-    private String otp;
+@AllArgsConstructor
+@Builder
+public class LogoutRequest {
+    @NotBlank(message = "PARAMETER_MISSING")
+    private String token;
 }

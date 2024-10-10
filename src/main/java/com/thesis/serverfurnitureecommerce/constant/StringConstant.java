@@ -1,7 +1,14 @@
 package com.thesis.serverfurnitureecommerce.constant;
 
 public class StringConstant {
+    public static final String USER_AND_PASSWORD_NOT_MATCH = "Username and password do not match";
+    public static final String ACCOUNT_IS_LOCKED = "User is locked";
     public static final String OTP_NUll = "OTP cannot be empty or blank";
+    public static final String NOT_AUTHENTICATED = "You are not authorized to access this resource";
+    public static final String JWT_SIGNATURE_INVALID = "The JWT signature is invalid";
+    public static final String JWT_TOKEN_EXPIRED = "The JWT token has expired";
+    public static final String USER_NOT_FOUND = "User not found";
+
     public static final String TEMPLATE_EMAIL_VERIFY = """
         <div style="font-family: Arial, sans-serif; color: #333;">
             <p style="font-size: 16px;">Chào bạn,</p>

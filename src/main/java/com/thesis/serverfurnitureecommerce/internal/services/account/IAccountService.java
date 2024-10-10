@@ -7,4 +7,6 @@ public interface IAccountService {
     RegisterRequest RegisterAccount(RegisterRequest registerRequest);
 
     Boolean verifyAccountAfterRegister(AccountVerifyRequest accountVerifyRequest);
+
+    void resendOTP(String email);
 }

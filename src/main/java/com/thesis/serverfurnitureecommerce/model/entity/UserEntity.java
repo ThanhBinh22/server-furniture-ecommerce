@@ -1,5 +1,6 @@
 package com.thesis.serverfurnitureecommerce.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thesis.serverfurnitureecommerce.constant.DatabaseConstant;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -7,9 +8,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -18,7 +23,7 @@ import java.util.Set;
 @Entity
 @Table(name = DatabaseConstant.USER_TABLE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserEntity extends BaseEntity {
+public class UserEntity extends BaseEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -31,8 +36,10 @@ public class UserEntity extends BaseEntity {
     String phone;
     @Column(name = "full_name")
     String fullName;
+    @JsonIgnore
     @Column(name = "otp")
     Integer otp;
+    @JsonIgnore
     @Column(name = "otp_expired")
     LocalDateTime otpExpired;
     @Column(name = "oauth2_id")
@@ -41,6 +48,8 @@ public class UserEntity extends BaseEntity {
     String oauth2Provider;
     @Column(name = "is_active", nullable = false)
     Short isActive;
+    @Column(name = "is_locked", nullable = false)
+    Short isLocked;
     @ManyToOne
     @JoinColumn(name = "role_id")
     RoleEntity role;
@@ -56,4 +65,29 @@ public class UserEntity extends BaseEntity {
     Set<ReviewEntity> reviews = new HashSet<>();
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<AddressEntity> addresses = new HashSet<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.isLocked == null || this.isLocked == 0;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.isActive != null && this.isActive == 1;
+    }
 }

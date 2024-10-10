@@ -31,7 +31,7 @@ public class AccountServiceImpl implements IAccountService {
     IEmailService emailService;
     UserMapper userMapper;
     IRoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder;
 
     @Override
     public RegisterRequest RegisterAccount(RegisterRequest registerRequest) {
@@ -64,7 +64,8 @@ public class AccountServiceImpl implements IAccountService {
 
         if (userFindByEmail.isPresent()) {
             UserEntity user = userFindByEmail.get();
-            if ((accountVerifyRequest.getOtp().equals(user.getOtp())) && user.getOtpExpired().isAfter(LocalDateTime.now())) {
+            String userOTP = user.getOtp() + "";
+            if ((accountVerifyRequest.getOtp().equals(userOTP)) && user.getOtpExpired().isAfter(LocalDateTime.now())) {
                 user.setOtpExpired(null);
                 user.setOtp(null);
                 user.setIsActive((short) 1);
@@ -82,6 +83,17 @@ public class AccountServiceImpl implements IAccountService {
             throw new AppException(ErrorCode.USER_NOT_FOUND);
         }
         return false;
+    }
+
+    @Override
+    public void resendOTP(String email) {
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        int otp = Random.generate6DigitOtp();
+        user.setOtp(otp);
+        user.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
+        emailService.sendMailOTP(user.getEmail(), otp);
+        userRepository.save(user);
     }
 
 }
