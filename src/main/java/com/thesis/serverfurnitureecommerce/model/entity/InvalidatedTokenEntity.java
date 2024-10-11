@@ -19,8 +19,5 @@ public class InvalidatedTokenEntity {
     @Id
     @Column(name = "token_id")
     String tokenId;
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    UserEntity user;
     LocalDateTime expired;
 }

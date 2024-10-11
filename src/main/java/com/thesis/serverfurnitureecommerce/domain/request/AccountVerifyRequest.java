@@ -1,5 +1,6 @@
 package com.thesis.serverfurnitureecommerce.domain.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountVerifyRequest {
+    @NotBlank(message = "PARAMETER_MISSING")
     private String email;
+    @NotBlank(message = "PARAMETER_MISSING")
     private String otp;
 }
