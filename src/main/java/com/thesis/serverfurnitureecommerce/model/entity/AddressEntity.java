@@ -3,10 +3,14 @@ package com.thesis.serverfurnitureecommerce.model.entity;
 import com.thesis.serverfurnitureecommerce.constant.DatabaseConstant;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table(name = DatabaseConstant.ADDRESS)
 @FieldDefaults(level = AccessLevel.PRIVATE)

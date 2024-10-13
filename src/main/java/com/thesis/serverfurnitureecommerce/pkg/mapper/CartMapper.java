@@ -12,11 +12,11 @@ public interface CartMapper {
 
     CartMapper INSTANCE = Mappers.getMapper(CartMapper.class);
 
-    @Mapping(source = "user.id", target = "user.id")
-    @Mapping(target = "cartItems", source = "cartItems")
+//    @Mapping(source = "user.id", target = "user.id")
+//    @Mapping(target = "cartItems", source = "cartItems")
     CartDTO toDTO(CartEntity cartEntity);
 
-    @Mapping(source = "user.id", target = "user.id")
-    @Mapping(target = "cartItems", source = "cartItems")
+//    @Mapping(source = "user.id", target = "user.id")
+//    @Mapping(target = "cartItems", source = "cartItems")
     CartEntity toEntity(CartDTO cartDTO);
 }

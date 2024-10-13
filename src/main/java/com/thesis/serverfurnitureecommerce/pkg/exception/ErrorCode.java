@@ -37,6 +37,7 @@ public enum ErrorCode {
     CART_NOT_FOUND(400, "Cart not found"),
     CART_ITEM_NOT_FOUND(400, "Cart item not found"),
     USER_NOT_AUTHENTICATE(400, "User not authenticate"),
+    INVALID_CREDENTIALS(400, "mật khẩu không chính xác"),
 
     // Server Error
     INTERNAL_SERVER_ERROR(500, "Internal Server Error"),

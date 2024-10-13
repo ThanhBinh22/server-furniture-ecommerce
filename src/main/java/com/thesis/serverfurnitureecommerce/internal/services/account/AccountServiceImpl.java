@@ -1,7 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.services.account;
 
 import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.LogoutRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IRoleRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
@@ -10,7 +9,7 @@ import com.thesis.serverfurnitureecommerce.model.entity.RoleEntity;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
-import com.thesis.serverfurnitureecommerce.pkg.mapper.UserMapper;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.IUserMapper;
 import com.thesis.serverfurnitureecommerce.pkg.utils.Random;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,7 @@ import java.util.Optional;
 public class AccountServiceImpl implements IAccountService {
     IUserRepository userRepository;
     IEmailService emailService;
-    UserMapper userMapper;
+    IUserMapper userMapper;
     IRoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
 
@@ -95,6 +94,7 @@ public class AccountServiceImpl implements IAccountService {
         user.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
         emailService.sendMailOTP(user.getEmail(), otp);
         userRepository.save(user);
+
     }
 
 }

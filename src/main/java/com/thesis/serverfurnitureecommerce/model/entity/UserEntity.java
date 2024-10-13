@@ -3,10 +3,7 @@ package com.thesis.serverfurnitureecommerce.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thesis.serverfurnitureecommerce.constant.DatabaseConstant;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -65,8 +63,6 @@ public class UserEntity extends BaseEntity implements UserDetails {
     Set<ReviewEntity> reviews = new HashSet<>();
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<AddressEntity> addresses = new HashSet<>();
-//    @OneToMany(mappedBy = "user")
-//    private List<InvalidatedTokenEntity> invalidatedTokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

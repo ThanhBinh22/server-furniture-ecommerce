@@ -32,12 +32,14 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public UserEntity authenticate(AuthenticationRequest authenticationRequest) {
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticationRequest.getUsername(),
                         authenticationRequest.getPassword()
                 )
         );
+
         UserEntity userEntity = userRepository.findByUsername(authenticationRequest.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         if (!userEntity.isEnabled()) {

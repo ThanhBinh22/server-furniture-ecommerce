@@ -13,6 +13,5 @@ import java.util.Set;
 public class CartDTO {
     String id;
     Integer quantity;
-    UserDTO user;
     Set<CartItemDTO> cartItems;
 }

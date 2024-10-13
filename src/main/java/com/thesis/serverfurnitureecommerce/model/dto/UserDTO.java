@@ -17,9 +17,6 @@ public class UserDTO {
     String fullName;
     String email;
     String phone;
-    String oauth2Id;
-    String oauth2Provider;
-    String otp;
     LocalDateTime otpExpired;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
@@ -27,4 +24,5 @@ public class UserDTO {
     CartDTO cart;
     Set<OrderDTO> orders;
     Set<WishlistDTO> wishlist;
+    Set<AddressDTO> address;
 }
