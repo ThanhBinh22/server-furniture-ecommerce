@@ -59,7 +59,7 @@ public class AuthenticationService implements IAuthenticationService {
             throw new AppException(ErrorCode.USER_NOT_AUTHENTICATE);
         }
         String token = logoutRequest.getToken();
-        InvalidatedTokenEntity invalidatedToken = new InvalidatedTokenEntity();
+        InvalidatedTokenEntity invalidatedToken = InvalidatedTokenEntity.createInvalidatedToken();
         invalidatedToken.setTokenId(token);
         LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(30);
         invalidatedToken.setExpired(expirationTime);

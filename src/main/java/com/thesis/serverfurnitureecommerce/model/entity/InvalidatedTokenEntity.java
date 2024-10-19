@@ -21,4 +21,8 @@ public class InvalidatedTokenEntity {
     @Column(name = "token_id")
     String tokenId;
     LocalDateTime expired;
+
+    public static InvalidatedTokenEntity createInvalidatedToken() {
+        return new InvalidatedTokenEntity();
+    }
 }

@@ -33,7 +33,7 @@ public class AuthenticationController {
     IAuthenticationService authenticationService;
 
 
-    @DeleteMapping("/sign-up")
+    @PostMapping("/sign-up")
     public ResponseEntity<APIResponse<RegisterRequest>> register(@RequestBody @Valid RegisterRequest registerRequest) {
         log.info("register");
         RegisterRequest result = accountService.RegisterAccount(registerRequest);
