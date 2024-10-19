@@ -32,6 +32,7 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public UserEntity authenticate(AuthenticationRequest authenticationRequest) {
+        log.info("Service is solving authentication with account: {}", authenticationRequest.getUsername());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticationRequest.getUsername(),

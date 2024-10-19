@@ -12,20 +12,6 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
   jackson:
     time-zone: Asia/Ho_Chi_Minh
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username:
-    password:
-    properties:
-      mail:
-        smtp:
-          auth: false
-          starttls:
-            enable: true
-          starttls.required: true
-          ssl.trust: smtp.gmail.com
-
 server:
   port: 8085
   shutdown: graceful
