@@ -88,4 +88,9 @@ public class UserEntity extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return this.isActive != null && this.isActive == 1;
     }
+
+    // static factory method
+    public static UserEntity createUserEntity() {
+        return new UserEntity();
+    }
 }

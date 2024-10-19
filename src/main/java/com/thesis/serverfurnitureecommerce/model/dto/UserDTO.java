@@ -21,8 +21,8 @@ public class UserDTO {
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     RoleDTO role;
-    CartDTO cart;
-    Set<OrderDTO> orders;
-    Set<WishlistDTO> wishlist;
-    Set<AddressDTO> address;
+
+    public static UserDTO createUserDTO(){
+        return new UserDTO();
+    }
 }

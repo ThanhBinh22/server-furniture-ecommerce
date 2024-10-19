@@ -42,6 +42,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<APIResponse<LoginResponse>> authenticate(@RequestBody AuthenticationRequest login) {
+        log.info("Request login with account: {}", login.getUsername());
         UserEntity authenticatedUser = authenticationService.authenticate(login);
 
         String jwtToken = jwtService.generateToken(authenticatedUser);
@@ -62,7 +63,6 @@ public class AuthenticationController {
             return ResponseBuilder.buildResponse(null, ex.getErrorCode());
         }
     }
-
 
     @PostMapping("/verify-account")
     public ResponseEntity<APIResponse<Void>> verifyOtp(@RequestBody AccountVerifyRequest accountVerifyRequest) {
