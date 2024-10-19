@@ -67,7 +67,6 @@ public class AuthenticationController {
         }
     }
 
-
     @PostMapping("/verify-account")
     public ResponseEntity<APIResponse<Void>> verifyOtp(@RequestBody AccountVerifyRequest accountVerifyRequest) {
         log.info("OTP verification request for email: {}", accountVerifyRequest.getEmail());

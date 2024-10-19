@@ -65,8 +65,6 @@ public class UserEntity extends BaseEntity implements UserDetails {
     Set<ReviewEntity> reviews = new HashSet<>();
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<AddressEntity> addresses = new HashSet<>();
-//    @OneToMany(mappedBy = "user")
-//    private List<InvalidatedTokenEntity> invalidatedTokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -91,5 +89,10 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return this.isActive != null && this.isActive == 1;
+    }
+
+    // static factory method
+    public static UserEntity createUserEntity() {
+        return new UserEntity();
     }
 }

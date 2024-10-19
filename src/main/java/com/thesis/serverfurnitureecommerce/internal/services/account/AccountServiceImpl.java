@@ -1,7 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.services.account;
 
 import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.LogoutRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IRoleRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
@@ -11,7 +10,7 @@ import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import com.thesis.serverfurnitureecommerce.pkg.mapper.UserMapper;
-import com.thesis.serverfurnitureecommerce.pkg.utils.Random;
+import com.thesis.serverfurnitureecommerce.pkg.utils.OtpGenerator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -46,7 +45,7 @@ public class AccountServiceImpl implements IAccountService {
             throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
         } else {
             UserEntity user = userMapper.toRequestToEntity(registerRequest);
-            int otp = Random.generate6DigitOtp();
+            int otp = OtpGenerator.generate6DigitOtp();
             user.setIsActive((short) 0);
             user.setOtp(otp);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -90,7 +89,7 @@ public class AccountServiceImpl implements IAccountService {
     public void resendOTP(String email) {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        int otp = Random.generate6DigitOtp();
+        int otp = OtpGenerator.generate6DigitOtp();
         user.setOtp(otp);
         user.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
         emailService.sendMailOTP(user.getEmail(), otp);
