@@ -1,5 +1,6 @@
 package com.thesis.serverfurnitureecommerce.domain.request;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
