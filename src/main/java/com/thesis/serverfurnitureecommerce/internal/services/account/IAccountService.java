@@ -7,7 +7,7 @@ import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
 public interface IAccountService {
     void RegisterAccount(RegisterRequest registerRequest);
 
-    Boolean verifyAccountAfterRegister(AccountVerifyRequest accountVerifyRequest);
+    Boolean verifyAccountAfterRegister(String otp);
 
     void resendOTP(String email);
 

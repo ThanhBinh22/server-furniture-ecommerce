@@ -13,15 +13,18 @@ import com.thesis.serverfurnitureecommerce.internal.services.jwt.JwtService;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
+
+import java.io.IOException;
+import java.net.http.HttpClient;
 
 @RequestMapping("/api/auth")
 @RestController
@@ -43,7 +46,7 @@ public class AuthenticationController {
             accountService.RegisterAccount(registerRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
         } catch (AppException ex) {
-            return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_FAILED);
+            return ResponseBuilder.buildResponse(null, ex.getErrorCode());
         }
     }
 
@@ -71,17 +74,23 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("/verify-account")
-    public ResponseEntity<APIResponse<Void>> verifyOtp(@RequestBody AccountVerifyRequest accountVerifyRequest) {
-        log.info("OTP verification request for email: {}", accountVerifyRequest.getEmail());
+    @PostMapping("/confirm-account")
+    public ResponseEntity<APIResponse<Void>> verifyOtp(@RequestParam String otp, HttpServletResponse response) {
+        log.info("Request verify OTP with OTP: {}", otp);
         try {
-            accountService.verifyAccountAfterRegister(accountVerifyRequest);
-            return ResponseBuilder.buildResponse(null, ErrorCode.SUCCESS);
+            accountService.verifyAccountAfterRegister(otp);
+            response.sendRedirect("http://localhost:5173/sign-in");
+            return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
         } catch (AppException ex) {
-            log.error("OTP verification failed for email: {}", accountVerifyRequest.getEmail(), ex);
+            log.error("OTP verification failed for OTP: {}", otp, ex);
             return ResponseBuilder.buildResponse(null, ex.getErrorCode());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
+
+
+
 
     @PostMapping("/resend-otp")
     public ResponseEntity<APIResponse<Void>> resendOTP(@RequestBody String email) {

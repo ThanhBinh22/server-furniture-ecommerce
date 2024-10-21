@@ -1,6 +1,5 @@
 package com.thesis.serverfurnitureecommerce.internal.services.account;
 
-import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IRoleRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
@@ -33,85 +32,69 @@ public class AccountServiceImpl implements IAccountService {
     IRoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
 
-//    @Override
-//    public RegisterRequest RegisterAccount(RegisterRequest registerRequest) {
-//        log.info("Service RegisterAccount");
-//        Optional<UserEntity> userFindByUsername = userRepository.findByUsername(registerRequest.getUsername());
-//        if (userFindByUsername.isPresent()) {
-//            throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
-//        }
-//        Optional<UserEntity> userFindByEmail = userRepository.findByEmail(registerRequest.getEmail());
-//        if (userFindByEmail.isPresent()) {
-//            throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
-//        } else {
-//            UserEntity user = userMapper.toRequestToEntity(registerRequest);
-//            int otp = OtpGenerator.generate6DigitOtp();
-//            user.setIsActive((short) 0);
-//            user.setOtp(otp);
-//            user.setPassword(passwordEncoder.encode(user.getPassword()));
-//            user.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
-//            RoleEntity role = roleRepository.findByName("USER").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
-//            user.setRole(role);
-//            emailService.sendMailOTP(user.getEmail(), otp);
-//            userRepository.save(user);
-//            return registerRequest;
-//        }
-//    }
-
-
     @Override
     public void RegisterAccount(RegisterRequest registerRequest) {
         log.info("Invoke to service register");
         Optional<UserEntity> existingUserByUsername = userRepository.findByUsername(registerRequest.getUsername());
         if (existingUserByUsername.isPresent()) {
             UserEntity userByUsername = existingUserByUsername.get();
-            if (userByUsername.getIsActive() == 1) {
+            if (userByUsername.getIsActive() == 0) {
+                userByUsername.setPassword(passwordEncoder.encode(registerRequest.getPassword())); // Cập nhật mật khẩu
+                userByUsername.setOtp(OtpGenerator.generate6DigitOtp()); // Tạo mã OTP mới
+                userByUsername.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3))); // Thời gian hết hạn OTP
+                userRepository.save(userByUsername);
+                log.info("Updated existing user with username: {}", registerRequest.getUsername());
+                emailService.sendMailOTP(userByUsername.getEmail(), userByUsername.getOtp()); // Gửi email OTP
+                return;
+            } else {
                 throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
             }
         }
         Optional<UserEntity> existingUserByEmail = userRepository.findByEmail(registerRequest.getEmail());
         if (existingUserByEmail.isPresent()) {
             UserEntity userByUserEmail = existingUserByEmail.get();
-            if (userByUserEmail.getIsActive() == 1) {
-                throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
+            if (userByUserEmail.getIsActive() == 0) {
+                userByUserEmail.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+                userByUserEmail.setOtp(OtpGenerator.generate6DigitOtp());
+                userByUserEmail.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
+
+                userRepository.save(userByUserEmail);
+
+                log.info("Updated existing user with email: {}", registerRequest.getEmail());
+                emailService.sendMailOTP(userByUserEmail.getEmail(), userByUserEmail.getOtp()); // Gửi email OTP
+                return;
             }
+            throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
         int otp = OtpGenerator.generate6DigitOtp();
         UserEntity userEntity = userMapper.fromRequestToEntity(registerRequest);
         userEntity.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         userEntity.setOtp(otp);
+        userEntity.setIsActive((short) 0);
         userEntity.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
         RoleEntity role = roleRepository.findByName("USER").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
         userEntity.setRole(role);
-//        userRepository.save(userEntity);
+        userRepository.save(userEntity);
         log.info("Invoke function send mail");
         emailService.sendMailOTP(userEntity.getEmail(), otp);
     }
 
 
     @Override
-    public Boolean verifyAccountAfterRegister(AccountVerifyRequest accountVerifyRequest) {
-        Optional<UserEntity> userFindByEmail = userRepository.findByEmail(accountVerifyRequest.getEmail());
-
-        if (userFindByEmail.isPresent()) {
-            UserEntity user = userFindByEmail.get();
-            String userOTP = user.getOtp() + "";
-            if ((accountVerifyRequest.getOtp().equals(userOTP)) && user.getOtpExpired().isAfter(LocalDateTime.now())) {
-                user.setOtpExpired(null);
-                user.setOtp(null);
+    public Boolean verifyAccountAfterRegister(String otp) {
+        Optional<UserEntity> userFindByOtp = userRepository.findByOtp(Integer.parseInt(otp));
+        if (userFindByOtp.isPresent()) {
+            UserEntity user = userFindByOtp.get();
+            if (user.getOtpExpired().isBefore(LocalDateTime.now())) {
+                throw new AppException(ErrorCode.OTP_EXPIRED);
+            }
+            if (otp.equals(user.getOtp().toString())) {
                 user.setIsActive((short) 1);
+                user.setOtp(null);
+                user.setOtpExpired(null);
                 userRepository.save(user);
                 return true;
-            } else {
-                if (!user.getOtpExpired().isAfter(LocalDateTime.now())) {
-                    throw new AppException(ErrorCode.OTP_EXPIRED);
-                }
-                if (!accountVerifyRequest.getOtp().equals(userOTP)) {
-                    throw new AppException(ErrorCode.INVALID_OTP);
-                }
             }
-        } else {
-            throw new AppException(ErrorCode.USER_NOT_FOUND);
         }
         return false;
     }

@@ -4,14 +4,11 @@ import com.thesis.serverfurnitureecommerce.constant.StringConstant;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ExecutorService;
@@ -21,8 +18,12 @@ import java.util.concurrent.Executors;
 @Slf4j
 public class EmailServiceImpl implements IEmailService {
     private final ExecutorService executorService = Executors.newFixedThreadPool(3);
+
+    private final JavaMailSender mailSender;
     @Autowired
-    private JavaMailSender mailSender;
+    public EmailServiceImpl(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
     @Value("${spring.mail.username}")
     private String username;
