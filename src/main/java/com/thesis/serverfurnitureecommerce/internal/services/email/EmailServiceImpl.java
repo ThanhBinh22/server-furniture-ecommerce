@@ -8,22 +8,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class EmailServiceImpl implements IEmailService {
-
     private final ExecutorService executorService = Executors.newFixedThreadPool(3);
-
     @Autowired
-    private JavaMailSender emailSender;
+    private JavaMailSender mailSender;
 
     @Value("${spring.mail.username}")
     private String username;
@@ -35,6 +34,7 @@ public class EmailServiceImpl implements IEmailService {
         String content = generateOtpEmailContent(otp);
         sendMail(to, subject, content);
     }
+
     @Override
     public void sendMailForgotPassword(String to, String resetLink) {
         log.info("Sending forgot password email to {}", to);
@@ -64,7 +64,7 @@ public class EmailServiceImpl implements IEmailService {
             try {
                 MimeMessage message = createMimeMessage(to, subject, content);
                 log.info("MimeMessage created successfully");
-                emailSender.send(message);
+                mailSender.send(message);
                 log.info("Email sent successfully to {}", to);
             } catch (MessagingException ex) {
                 log.error("Failed to send email to {}", to, ex);
@@ -76,7 +76,7 @@ public class EmailServiceImpl implements IEmailService {
 
     private MimeMessage createMimeMessage(String to, String subject, String content) throws MessagingException {
         log.info("Creating MimeMessage for email to {}", to);
-        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
         helper.setFrom(new InternetAddress(username));
         helper.setTo(new InternetAddress(to));

@@ -17,7 +17,7 @@ public interface IUserMapper {
 
     UserEntity toEntity(UserDTO userDTO);
 
-    UserEntity toRequestToEntity(RegisterRequest registerRequest);
+    UserEntity fromRequestToEntity(RegisterRequest registerRequest);
 
     List<UserDTO> toListDTO(List<UserEntity> userEntities);
 }
