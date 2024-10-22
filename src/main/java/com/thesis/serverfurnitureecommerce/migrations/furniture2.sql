@@ -108,21 +108,22 @@ VALUES (1, 'ADMIN', 'Quản trị viên hệ thống, có toàn quyền quyết 
 
 CREATE TABLE `users`
 (
-    `id`             BIGINT  NOT NULL,
-    `username`        varchar(255) NOT NULL,
-    `email`           varchar(255) NOT NULL,
+    `id`              BIGINT AUTO_INCREMENT NOT NULL,
+    `username`        varchar(255)          NOT NULL,
+    `email`           varchar(255)          NOT NULL,
     `password`        varchar(255)                                                  DEFAULT NULL,
     `phone`           varchar(20)                                                   DEFAULT NULL,
     `full_name`       varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
     `oauth2_id`       varchar(255)                                                  DEFAULT NULL,
     `oauth2_provider` varchar(50)                                                   DEFAULT NULL,
     `otp`             varchar(6)                                                    DEFAULT NULL,
-    `otp_expired`      timestamp    NULL                                             DEFAULT NULL,
-    `role_id`         int          NOT NULL,
+    `otp_expired`     timestamp             NULL                                    DEFAULT NULL,
+    `role_id`         int                   NOT NULL,
     `is_active`       tinyint(1)                                                    DEFAULT '0',
-    `created_at`      timestamp    NULL                                             DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`      timestamp    NULL                                             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at`      timestamp    NULL                                             DEFAULT NULL,
+    `is_locked`       tinyint(1)                                                    DEFAULT '0',
+    `created_at`      timestamp             NULL                                    DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`      timestamp             NULL                                    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at`      timestamp             NULL                                    DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `username` (`username`),
     UNIQUE KEY `email` (`email`),
@@ -177,14 +178,14 @@ VALUES (1, 'Đèn Spotlight', NULL, 25500000, 12,
 CREATE TABLE `carts`
 (
     `id`         varchar(12) NOT NULL,
-    `user_id`    BIGINT NOT NULL,
+    `user_id`    BIGINT      NOT NULL,
     `quantity`   int              DEFAULT '0',
     `created_at` timestamp   NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` timestamp   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` timestamp   NULL DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `user_id` (`user_id`),
-    CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+    CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
 CREATE TABLE `cart_items`
@@ -203,27 +204,32 @@ CREATE TABLE `cart_items`
     CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`id`)
 );
 
-CREATE TABLE `address` (
-                           `id` INT AUTO_INCREMENT PRIMARY KEY,
-                           `address_line` VARCHAR(255),
-                           `ward` VARCHAR(100),
-                           `district` VARCHAR(100),
-                           `province` VARCHAR(100),
-                           `country` VARCHAR(100),
-                           `is_default` BOOLEAN,
-                           `user_id` BIGINT NOT NULL,
-                           CONSTRAINT `fk_user_address` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `address`
+(
+    `id`           INT AUTO_INCREMENT PRIMARY KEY,
+    `address_line` VARCHAR(255),
+    `ward`         VARCHAR(100),
+    `district`     VARCHAR(100),
+    `province`     VARCHAR(100),
+    `country`      VARCHAR(100),
+    `is_default`   BOOLEAN,
+    `user_id`      BIGINT    NOT NULL,
+    `created_at`   timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`   timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at`   timestamp NULL DEFAULT NULL,
+    CONSTRAINT `fk_user_address` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
 
 CREATE TABLE `orders`
 (
     `id`           bigint                                                                  NOT NULL AUTO_INCREMENT,
-    `user_id`      BIGINT                                                            NOT NULL,
+    `user_id`      BIGINT                                                                  NOT NULL,
     `total_amount` double                                                                  NOT NULL,
     `status`       enum ('Chờ xác nhận','Đã duyệt','Đang giao hàng','Hoàn thành','Đã hủy') NOT NULL DEFAULT 'Chờ xác nhận',
     `payment`      varchar(100)                                                            NOT NULL,
-    `address_id`      int          NOT NULL,
+    `address_id`   int                                                                     NOT NULL,
     `created_at`   timestamp                                                               NULL     DEFAULT CURRENT_TIMESTAMP,
     `updated_at`   timestamp                                                               NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at`   timestamp                                                               NULL     DEFAULT NULL,
@@ -274,22 +280,31 @@ CREATE TABLE `promotion_orders`
     `promotion_id` int    NOT NULL,
     `order_id`     bigint NOT NULL,
     PRIMARY KEY (`id`),
-    KEY `promotion_id` (`promotion_id`),
-    KEY `order_id` (`order_id`),
     CONSTRAINT `promotion_orders_ibfk_1` FOREIGN KEY (`promotion_id`) REFERENCES `promotions` (`id`),
     CONSTRAINT `promotion_orders_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
 );
 
+CREATE TABLE `promotion_order_items`
+(
+    `id`            int    NOT NULL AUTO_INCREMENT primary key,
+    `promotion_id`  int    NOT NULL,
+    `order_item_id` bigint NOT NULL,
+    FOREIGN KEY (`promotion_id`) REFERENCES `promotions` (`id`),
+    FOREIGN KEY (`order_item_id`) REFERENCES `order_items` (`id`)
+);
+
+
+
 CREATE TABLE `reviews`
 (
-    `id`         int         NOT NULL AUTO_INCREMENT,
-    `product_id` int         NOT NULL,
-    `user_id`    BIGINT NOT NULL,
-    `rating`     tinyint     NOT NULL,
+    `id`         int       NOT NULL AUTO_INCREMENT,
+    `product_id` int       NOT NULL,
+    `user_id`    BIGINT    NOT NULL,
+    `rating`     tinyint   NOT NULL,
     `comment`    text,
-    `created_at` timestamp   NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` timestamp   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` timestamp   NULL DEFAULT NULL,
+    `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` timestamp NULL DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `product_id` (`product_id`),
     KEY `user_id` (`user_id`),
@@ -340,7 +355,7 @@ VALUES (1, 1, 1),
 CREATE TABLE `user_logs`
 (
     `id`         int       NOT NULL AUTO_INCREMENT,
-    `user_id`    BIGINT    DEFAULT NULL,
+    `user_id`    BIGINT         DEFAULT NULL,
     `action`     varchar(255)   DEFAULT NULL,
     `message`    text,
     `log_level`  varchar(50)    DEFAULT NULL,
@@ -355,12 +370,12 @@ CREATE TABLE `user_logs`
 
 CREATE TABLE `wishlists`
 (
-    `id`         int         NOT NULL AUTO_INCREMENT,
-    `user_id`    BIGINT NOT NULL,
-    `product_id` int         NOT NULL,
-    `created_at` timestamp   NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` timestamp   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` timestamp   NULL DEFAULT NULL,
+    `id`         int       NOT NULL AUTO_INCREMENT,
+    `user_id`    BIGINT    NOT NULL,
+    `product_id` int       NOT NULL,
+    `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` timestamp NULL DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `FK_wishlist_user` (`user_id`),
     KEY `FK_wishlist_product` (`product_id`),
@@ -368,10 +383,37 @@ CREATE TABLE `wishlists`
     CONSTRAINT `FK_wishlist_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
+create table support_customers
+(
+    `id`       int not null primary key,
+    `user_id`  bigint not null,
+    `message`  text,
+    `feedback` text,
+    `is_solve` tinyint,
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+);
+
+create table policies
+(
+    `id`         int           not null primary key,
+    `title`      NVARCHAR(255) not null,
+    `content`    text,
+    `created_at` timestamp     NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp     NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` timestamp     NULL DEFAULT NULL
+);
+
+CREATE TABLE `invalidated_tokens`
+(
+    token_id VARCHAR(255) NOT NULL PRIMARY KEY,
+    expired  DATETIME
+);
+
 DELIMITER //
 
 CREATE TRIGGER after_user_insert
-    AFTER INSERT ON users
+    AFTER INSERT
+    ON users
     FOR EACH ROW
 BEGIN
     DECLARE new_cart_id VARCHAR(12);
@@ -381,6 +423,7 @@ BEGIN
     FROM carts;
     INSERT INTO carts (id, user_id, created_at, updated_at)
     VALUES (new_cart_id, NEW.id, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-END; //
+END;
+//
 
 DELIMITER ;

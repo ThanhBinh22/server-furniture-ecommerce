@@ -14,6 +14,8 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByEmail(String email);
 
+    Optional<UserEntity> findByOtp(Integer otp);
+
     @Query("""
             SELECT u FROM UserEntity u WHERE u.isActive = :isActive AND u.otpExpired < CURRENT_TIMESTAMP
             """)

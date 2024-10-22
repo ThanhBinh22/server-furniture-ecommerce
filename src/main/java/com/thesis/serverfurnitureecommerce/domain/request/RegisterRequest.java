@@ -14,16 +14,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RegisterRequest {
-    @NotBlank(message = "Username is required")
+    @NotBlank(message = "Tên người dùng đã tồn tại")
     @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
     private String username;
 
-    @NotBlank(message = "Email is required")
+    @NotBlank(message = "Email bắt buộc")
     @Email(message = "Email should be valid")
     private String email;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least 6 characters long")
+    @NotBlank(message = "Password bắt buộc")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,20}$",
+            message = "Mật khẩu phải bao gồm ít nhất một chữ hoa, một chữ thường, một số và một ký tự đặc biệt!")
     private String password;
 
     @NotBlank(message = "Full name is required")

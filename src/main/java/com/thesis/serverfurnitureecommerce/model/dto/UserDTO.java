@@ -17,14 +17,12 @@ public class UserDTO {
     String fullName;
     String email;
     String phone;
-    String oauth2Id;
-    String oauth2Provider;
-    String otp;
     LocalDateTime otpExpired;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     RoleDTO role;
-    CartDTO cart;
-    Set<OrderDTO> orders;
-    Set<WishlistDTO> wishlist;
+
+    public static UserDTO createUserDTO(){
+        return new UserDTO();
+    }
 }

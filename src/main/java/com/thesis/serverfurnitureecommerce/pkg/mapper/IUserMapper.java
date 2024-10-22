@@ -9,15 +9,15 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface UserMapper {
+public interface IUserMapper {
 
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+    IUserMapper INSTANCE = Mappers.getMapper(IUserMapper.class);
 
     UserDTO toDTO(UserEntity userEntity);
 
     UserEntity toEntity(UserDTO userDTO);
 
-    UserEntity toRequestToEntity(RegisterRequest registerRequest);
+    UserEntity fromRequestToEntity(RegisterRequest registerRequest);
 
     List<UserDTO> toListDTO(List<UserEntity> userEntities);
 }

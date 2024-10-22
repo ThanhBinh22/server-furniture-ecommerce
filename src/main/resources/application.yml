@@ -1,8 +1,9 @@
 spring:
-  application:
-    name: server-furniture-ecommerce
-  profiles:
-    active: dev
+  datasource:
+    url: jdbc:mysql://${DEV_DB_HOST}:${DEV_DB_PORT}/${DEV_DB_NAME}
+    username: ${DEV_DB_USERNAME}
+    password: ${DEV_DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: none
@@ -10,28 +11,44 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
-  datasource:
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 5
-      idle-timeout: 600000
-      max-lifetime: 1800000
-      connection-timeout: 30000
-      pool-name: MyHikariPool
-  jackson:
-    time-zone: Asia/Ho_Chi_Minh
   mail:
     host: smtp.gmail.com
     port: 587
-    username:
-    password:
+    username: ${EMAIL_ADDRESS}
+    password: ${EMAIL_PASSWORD}
     properties:
       mail:
         smtp:
-          auth: false
-          starttls:
-            enable: true
-          starttls.required: true
-          ssl.trust: smtp.gmail.com
+          auth: true
+          starttls.enable: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: "http://localhost:8085/oauth2/callback/google"
+            scope:
+              - email
+              - profile
+              - openid
+security:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
+    expiration-time: 3600000
 server:
   port: 8085
+  shutdown: graceful
+management:
+  endpoint:
+    health:
+      group:
+        custom:
+          include: diskSpace
+          show-components: always
+          show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"

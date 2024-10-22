@@ -1,16 +1,15 @@
 package com.thesis.serverfurnitureecommerce.model.entity;
 
 import com.thesis.serverfurnitureecommerce.constant.DatabaseConstant;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,5 +20,9 @@ public class InvalidatedTokenEntity {
     @Id
     @Column(name = "token_id")
     String tokenId;
-    Date expired;
+    LocalDateTime expired;
+
+    public static InvalidatedTokenEntity createInvalidatedToken() {
+        return new InvalidatedTokenEntity();
+    }
 }

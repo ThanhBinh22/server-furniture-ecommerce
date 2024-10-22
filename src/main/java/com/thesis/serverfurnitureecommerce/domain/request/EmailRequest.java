@@ -1,4 +1,4 @@
-package com.thesis.serverfurnitureecommerce.model.dto;
+package com.thesis.serverfurnitureecommerce.domain.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryDTO {
-    Integer id;
-    String name;
+public class EmailRequest {
+    String email;
 }

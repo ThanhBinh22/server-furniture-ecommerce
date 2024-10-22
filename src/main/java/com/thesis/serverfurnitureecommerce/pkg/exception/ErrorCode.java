@@ -24,6 +24,8 @@ public enum ErrorCode {
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED.value(), "Unauthenticated"),
     UNAUTHORIZED(HttpStatus.FORBIDDEN.value(), "You do not have permission"),
     USER_NOT_FOUND(404, "User not found"),
+    USER_NOT_ENABLED(400, "Account not verified"),
+    USER_LOCKED(400, "Account has been locked"),
     NOT_FOUND(404, "Not found"),
     EMAIL_ALREADY_EXISTS(409, "Email already exists"),
     USERNAME_ALREADY_EXISTS(409, "Username already exists"),
@@ -34,6 +36,9 @@ public enum ErrorCode {
     ACCOUNT_NOT_VERIFIED(400, "Account not verified"),
     CART_NOT_FOUND(400, "Cart not found"),
     CART_ITEM_NOT_FOUND(400, "Cart item not found"),
+    USER_NOT_AUTHENTICATE(400, "User not authenticate"),
+    INVALID_CREDENTIALS(400, "mật khẩu không chính xác"),
+    INVALID_EMAIL(400, "Email chưa được đăng ký tài khoản"),
 
     // Server Error
     INTERNAL_SERVER_ERROR(500, "Internal Server Error"),

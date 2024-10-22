@@ -4,6 +4,11 @@ import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import org.springframework.http.ResponseEntity;
 
 public class ResponseBuilder {
+
+    private ResponseBuilder() {
+        throw new AssertionError();
+    }
+
     public static <T> ResponseEntity<APIResponse<T>> buildResponse(T result, ErrorCode errorCode) {
         APIResponse<T> response = APIResponse.<T>builder()
                 .code(errorCode.getCode())

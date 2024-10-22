@@ -1,6 +1,5 @@
 package com.thesis.serverfurnitureecommerce.internal.services.account;
 
-import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IRoleRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
@@ -9,8 +8,8 @@ import com.thesis.serverfurnitureecommerce.model.entity.RoleEntity;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
-import com.thesis.serverfurnitureecommerce.pkg.mapper.UserMapper;
-import com.thesis.serverfurnitureecommerce.pkg.utils.Random;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.IUserMapper;
+import com.thesis.serverfurnitureecommerce.pkg.utils.OtpGenerator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,59 +28,89 @@ import java.util.Optional;
 public class AccountServiceImpl implements IAccountService {
     IUserRepository userRepository;
     IEmailService emailService;
-    UserMapper userMapper;
+    IUserMapper userMapper;
     IRoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder;
 
     @Override
-    public RegisterRequest RegisterAccount(RegisterRequest registerRequest) {
-        log.info("Service RegisterAccount");
-        Optional<UserEntity> userFindByUsername = userRepository.findByUsername(registerRequest.getUsername());
-        if (userFindByUsername.isPresent()) {
-            throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
+    public void RegisterAccount(RegisterRequest registerRequest) {
+        log.info("Invoke to service register");
+        UserEntity userByUsername = findUserByUsername(registerRequest.getUsername());
+        if (userByUsername != null) {
+            handleExistingUser(userByUsername, registerRequest.getPassword());
+            return;
         }
-        Optional<UserEntity> userFindByEmail = userRepository.findByEmail(registerRequest.getEmail());
-        if (userFindByEmail.isPresent()) {
-            throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
-        } else {
-            UserEntity user = userMapper.toRequestToEntity(registerRequest);
-            int otp = Random.generate6DigitOtp();
-            user.setIsActive((short) 0);
-            user.setOtp(otp);
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
-            RoleEntity role = roleRepository.findByName("USER").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
-            user.setRole(role);
-            emailService.sendMailOTP(user.getEmail(), otp);
-            userRepository.save(user);
-            return registerRequest;
+        UserEntity userByEmail = findUserByEmail(registerRequest.getEmail());
+        if (userByEmail != null) {
+            handleExistingUser(userByEmail, registerRequest.getPassword());
+            return;
         }
+
+        createNewUser(registerRequest);
+    }
+
+    private UserEntity findUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .filter(user -> user.getIsActive() == 0)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_ALREADY_EXISTS));
+    }
+    private UserEntity findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .filter(user -> user.getIsActive() == 0)
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_ALREADY_EXISTS));
+    }
+
+    private void handleExistingUser(UserEntity user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        user.setOtp(OtpGenerator.generate6DigitOtp());
+        user.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
+        userRepository.save(user);
+        log.info("Updated existing user: {}", user.getEmail());
+        emailService.sendMailOTP(user.getEmail(), user.getOtp());
+    }
+
+    private void createNewUser(RegisterRequest registerRequest) {
+        UserEntity userEntity = userMapper.fromRequestToEntity(registerRequest);
+        userEntity.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        userEntity.setOtp(OtpGenerator.generate6DigitOtp());
+        userEntity.setIsActive((short) 0);
+        userEntity.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
+        RoleEntity role = roleRepository.findByName("USER")
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+        userEntity.setRole(role);
+        userRepository.save(userEntity);
+        log.info("Invoke function send mail for new user");
+        emailService.sendMailOTP(userEntity.getEmail(), userEntity.getOtp());
     }
 
     @Override
-    public Boolean verifyAccountAfterRegister(AccountVerifyRequest accountVerifyRequest) {
-        Optional<UserEntity> userFindByEmail = userRepository.findByEmail(accountVerifyRequest.getEmail());
-
-        if (userFindByEmail.isPresent()) {
-            UserEntity user = userFindByEmail.get();
-            if ((accountVerifyRequest.getOtp().equals(user.getOtp())) && user.getOtpExpired().isAfter(LocalDateTime.now())) {
-                user.setOtpExpired(null);
-                user.setOtp(null);
-                user.setIsActive((short) 1);
-                userRepository.save(user);
-                return true;
-            } else {
-                if (!user.getOtpExpired().isAfter(LocalDateTime.now())) {
-                    throw new AppException(ErrorCode.OTP_EXPIRED);
-                }
-                if (!accountVerifyRequest.getOtp().equals(user.getOtp())) {
-                    throw new AppException(ErrorCode.INVALID_OTP);
-                }
-            }
-        } else {
-            throw new AppException(ErrorCode.USER_NOT_FOUND);
+    public Boolean verifyAccountAfterRegister(String otp) {
+        UserEntity user = userRepository.findByOtp(Integer.parseInt(otp))
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (user.getOtpExpired().isBefore(LocalDateTime.now())) {
+            throw new AppException(ErrorCode.OTP_EXPIRED);
+        }
+        if (otp.equals(user.getOtp().toString())) {
+            activateUser(user);
+            return true;
         }
         return false;
     }
 
+    private void activateUser(UserEntity user) {
+        user.setIsActive((short) 1);
+        user.setOtp(null);
+        user.setOtpExpired(null);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void resendOTP(String email) {
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        user.setOtp(OtpGenerator.generate6DigitOtp());
+        user.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
+        emailService.sendMailOTP(user.getEmail(), user.getOtp());
+        userRepository.save(user);
+    }
 }
