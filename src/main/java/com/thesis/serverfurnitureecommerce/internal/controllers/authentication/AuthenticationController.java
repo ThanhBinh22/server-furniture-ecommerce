@@ -21,10 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
-import java.net.http.HttpClient;
 
 @RequestMapping("/api/auth")
 @RestController
@@ -33,74 +31,72 @@ import java.net.http.HttpClient;
 @Slf4j
 public class AuthenticationController {
     IAccountService accountService;
-
     JwtService jwtService;
-
     IAuthenticationService authenticationService;
-
 
     @PostMapping("/sign-up")
     public ResponseEntity<APIResponse<Void>> register(@RequestBody @Valid RegisterRequest registerRequest) {
-        log.info("register");
-        try {
+        log.info("Registering user with username: {}", registerRequest.getUsername());
+        return handleRequest(() -> {
             accountService.RegisterAccount(registerRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
-        } catch (AppException ex) {
-            return ResponseBuilder.buildResponse(null, ex.getErrorCode());
-        }
+        });
     }
 
     @PostMapping("/login")
     public ResponseEntity<APIResponse<LoginResponse>> authenticate(@RequestBody AuthenticationRequest login) {
-        log.info("Request login with account: {}", login.getUsername());
+        log.info("Requesting login for user: {}", login.getUsername());
         UserEntity authenticatedUser = authenticationService.authenticate(login);
-
         String jwtToken = jwtService.generateToken(authenticatedUser);
+        LoginResponse loginResponse = new LoginResponse()
+                .setToken(jwtToken)
+                .setExpiresIn(jwtService.getExpirationTime());
 
-        LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
-
-        return ResponseBuilder.buildResponse(loginResponse, loginResponse != null ? ErrorCode.SUCCESS : ErrorCode.UNAUTHORIZED);
+        return ResponseBuilder.buildResponse(loginResponse, ErrorCode.SUCCESS);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<APIResponse<Void>> logout(@RequestBody @Valid LogoutRequest logoutRequest) {
-        log.info("Request logout with account has token: {}", logoutRequest.getToken());
-        try {
+        log.info("Requesting logout for token: {}", logoutRequest.getToken());
+        return handleRequest(() -> {
             authenticationService.logout(logoutRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.SUCCESS);
-        } catch (AppException ex) {
-            log.error("Request logout fail");
-            return ResponseBuilder.buildResponse(null, ex.getErrorCode());
-        }
+        });
     }
 
     @PostMapping("/confirm-account")
     public ResponseEntity<APIResponse<Void>> verifyOtp(@RequestParam String otp, HttpServletResponse response) {
-        log.info("Request verify OTP with OTP: {}", otp);
+        log.info("Verifying OTP: {}", otp);
         try {
             accountService.verifyAccountAfterRegister(otp);
             response.sendRedirect("http://localhost:5173/sign-in");
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
-        } catch (AppException ex) {
-            log.error("OTP verification failed for OTP: {}", otp, ex);
-            return ResponseBuilder.buildResponse(null, ex.getErrorCode());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.error("Failed to redirect after OTP verification", e);
+            throw new RuntimeException("Redirect failed", e);
         }
     }
 
-
-
-
     @PostMapping("/resend-otp")
-    public ResponseEntity<APIResponse<Void>> resendOTP(@RequestBody String email) {
-        log.info("Request resend OTP with email: {}", email);
-        try {
+    public ResponseEntity<APIResponse<Void>> resendOtp(@RequestBody String email) {
+        log.info("Requesting OTP resend for email: {}", email);
+        return handleRequest(() -> {
             accountService.resendOTP(email);
             return ResponseBuilder.buildResponse(null, ErrorCode.SUCCESS);
+        });
+    }
+
+    private <T> ResponseEntity<APIResponse<T>> handleRequest(RequestHandler<T> handler) {
+        try {
+            return handler.execute();
         } catch (AppException ex) {
-            log.error("OTP verification failed for email: {}", email, ex);
+            log.error("Error occurred: {}", ex.getErrorCode(), ex);
             return ResponseBuilder.buildResponse(null, ex.getErrorCode());
         }
+    }
+
+    @FunctionalInterface
+    private interface RequestHandler<T> {
+        ResponseEntity<APIResponse<T>> execute();
     }
 }

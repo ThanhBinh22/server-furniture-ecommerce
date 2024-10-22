@@ -4,7 +4,6 @@ import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.NewPasswordRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
 import com.thesis.serverfurnitureecommerce.internal.services.email.IEmailService;
-import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
@@ -13,7 +12,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.mapstruct.control.MappingControl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +33,7 @@ public class UserServiceImpl implements IUserService {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_EMAIL));
         int otp = OtpGenerator.generate6DigitOtp();
-        log.info("OTP: {}", otp);
+        log.info("Generated OTP: {}", otp);
         user.setOtp(otp);
         user.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
         userRepository.save(user);
@@ -47,18 +45,29 @@ public class UserServiceImpl implements IUserService {
         log.info("Verifying OTP for email: {}", accountVerifyRequest.getEmail());
         UserEntity user = userRepository.findByEmail(accountVerifyRequest.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        if (user.getOtpExpired() != null && user.getOtpExpired().isBefore(LocalDateTime.now())) {
-            throw new AppException(ErrorCode.OTP_EXPIRED);
-        }
-        String userOTP = String.valueOf(user.getOtp());
-        if (accountVerifyRequest.getOtp().equals(userOTP)) {
-            user.setOtp(null);
-            user.setOtpExpired(null);
-            userRepository.save(user);
+        checkOtpExpiration(user);
+        if (isOtpValid(accountVerifyRequest.getOtp(), user.getOtp())) {
+            clearOtp(user);
+            return true;
         } else {
             throw new AppException(ErrorCode.INVALID_OTP);
         }
-        return true;
+    }
+
+    private void checkOtpExpiration(UserEntity user) {
+        if (user.getOtpExpired() != null && user.getOtpExpired().isBefore(LocalDateTime.now())) {
+            throw new AppException(ErrorCode.OTP_EXPIRED);
+        }
+    }
+
+    private boolean isOtpValid(String inputOtp, Integer userOtp) {
+        return inputOtp.equals(String.valueOf(userOtp));
+    }
+
+    private void clearOtp(UserEntity user) {
+        user.setOtp(null);
+        user.setOtpExpired(null);
+        userRepository.save(user);
     }
 
     @Override

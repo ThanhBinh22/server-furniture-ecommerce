@@ -32,38 +32,62 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public UserEntity authenticate(AuthenticationRequest authenticationRequest) {
-        log.info("Service is solving authentication with account: {}", authenticationRequest.getUsername());
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authenticationRequest.getUsername(),
-                        authenticationRequest.getPassword()
-                )
+        log.info("Authenticating user: {}", authenticationRequest.getUsername());
+
+        authenticateUser(authenticationRequest);
+
+        UserEntity userEntity = findUser(authenticationRequest.getUsername());
+        validateUserStatus(userEntity);
+
+        return userEntity;
+    }
+
+    private void authenticateUser(AuthenticationRequest authenticationRequest) {
+        Authentication authenticationToken = new UsernamePasswordAuthenticationToken(
+                authenticationRequest.getUsername(),
+                authenticationRequest.getPassword()
         );
-        UserEntity userEntity = userRepository.findByUsername(authenticationRequest.getUsername())
+        authenticationManager.authenticate(authenticationToken);
+    }
+
+    private UserEntity findUser(String username) {
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    private void validateUserStatus(UserEntity userEntity) {
         if (!userEntity.isEnabled()) {
             throw new AppException(ErrorCode.USER_NOT_ENABLED);
         }
         if (!userEntity.isAccountNonLocked()) {
             throw new AppException(ErrorCode.USER_LOCKED);
         }
-
-        return userEntity;
     }
 
     @Override
     public void logout(LogoutRequest logoutRequest) {
-        log.info("Service is solving logout with account has token: {}", logoutRequest.getToken());
+        log.info("Logging out user with token: {}", logoutRequest.getToken());
+        validateAuthentication();
+        invalidateToken(logoutRequest.getToken());
+        SecurityContextHolder.clearContext();
+    }
+
+    private void validateAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new AppException(ErrorCode.USER_NOT_AUTHENTICATE);
         }
-        String token = logoutRequest.getToken();
+    }
+
+    private void invalidateToken(String token) {
+        InvalidatedTokenEntity invalidatedToken = createInvalidatedToken(token);
+        invalidatedTokenRepository.save(invalidatedToken);
+    }
+
+    private InvalidatedTokenEntity createInvalidatedToken(String token) {
         InvalidatedTokenEntity invalidatedToken = InvalidatedTokenEntity.createInvalidatedToken();
         invalidatedToken.setTokenId(token);
-        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(30);
-        invalidatedToken.setExpired(expirationTime);
-        invalidatedTokenRepository.save(invalidatedToken);
-        SecurityContextHolder.clearContext();
+        invalidatedToken.setExpired(LocalDateTime.now().plusMinutes(30));
+        return invalidatedToken;
     }
 }

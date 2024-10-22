@@ -13,26 +13,43 @@ import java.util.Optional;
 
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
-    private IUserRepository userRepository;
+
+    private final IUserRepository userRepository;
+
+    public CustomOAuth2UserService(IUserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
-        OAuth2User oAuth2User = delegate.loadUser(userRequest);
-
+        OAuth2User oAuth2User = fetchOAuth2User(userRequest);
         String email = oAuth2User.getAttribute("email");
 
-        Optional<UserEntity> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isEmpty()) {
-            UserEntity user = new UserEntity();
-            user.setEmail(email);
-            user.setFullName(oAuth2User.getAttribute("name"));
-            user.setOauth2Provider(userRequest.getClientRegistration().getRegistrationId());
-            user.setEmail(email);
-
-            userRepository.save(user);
-        }
+        registerUserIfNotExists(oAuth2User, userRequest, email);
 
         return oAuth2User;
+    }
+
+    private OAuth2User fetchOAuth2User(OAuth2UserRequest userRequest) {
+        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
+        return delegate.loadUser(userRequest);
+    }
+
+    private void registerUserIfNotExists(OAuth2User oAuth2User, OAuth2UserRequest userRequest, String email) {
+        Optional<UserEntity> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isPresent()) {
+            return;
+        }
+
+        UserEntity user = createUserEntity(oAuth2User, userRequest, email);
+        userRepository.save(user);
+    }
+
+    private UserEntity createUserEntity(OAuth2User oAuth2User, OAuth2UserRequest userRequest, String email) {
+        UserEntity user = new UserEntity();
+        user.setEmail(email);
+        user.setFullName(oAuth2User.getAttribute("name"));
+        user.setOauth2Provider(userRequest.getClientRegistration().getRegistrationId());
+        return user;
     }
 }
