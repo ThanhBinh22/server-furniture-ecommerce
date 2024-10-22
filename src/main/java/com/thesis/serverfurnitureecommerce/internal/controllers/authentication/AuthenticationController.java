@@ -1,6 +1,5 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers.authentication;
 
-import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.AuthenticationRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.LogoutRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
@@ -18,7 +17,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,6 +69,9 @@ public class AuthenticationController {
             accountService.verifyAccountAfterRegister(otp);
             response.sendRedirect("http://localhost:5173/sign-in");
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
+        } catch (AppException ex) {
+            log.error("Error occurred: {}", ex.getErrorCode(), ex);
+            return ResponseBuilder.buildResponse(null, ex.getErrorCode());
         } catch (IOException e) {
             log.error("Failed to redirect after OTP verification", e);
             throw new RuntimeException("Redirect failed", e);
