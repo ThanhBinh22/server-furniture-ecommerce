@@ -7,19 +7,18 @@ public class StringConstant {
     public static final String NOT_AUTHENTICATED = "You are not authorized to access this resource";
     public static final String JWT_SIGNATURE_INVALID = "The JWT signature is invalid";
     public static final String JWT_TOKEN_EXPIRED = "The JWT token has expired";
-    public static final String USER_NOT_FOUND = "User not found";
 
     public static final String TEMPLATE_EMAIL_VERIFY = """
     <div style="font-family: Arial, sans-serif; color: #333;">
         <p style="font-size: 16px;">Chào bạn,</p>
         <p style="font-size: 16px;">
-            Cảm ơn bạn đã đăng ký tài khoản với chúng tôi! Để xác thực tài khoản của bạn, 
+            Cảm ơn bạn đã đăng ký tài khoản với chúng tôi! Để xác thực tài khoản của bạn,
             vui lòng nhấn vào nút dưới đây để xác thực tài khoản:
-        </p>                        
+        </p>
         <div style="text-align: center;">
             <form action="http://localhost:8085/api/auth/confirm-account" method="post">
                 <input type="hidden" name="otp" value="%s" /> <!-- Thay 'token' thành 'otp' -->
-                <button type="submit" 
+                <button type="submit"
                     style="padding: 10px 20px; color: white; background-color: #28a745; border: none; border-radius: 5px; cursor: pointer;">
                     Xác thực tài khoản
                 </button>
@@ -35,7 +34,4 @@ public class StringConstant {
         <p style="font-size: 16px; font-style: italic;">Đội ngũ hỗ trợ</p>
     </div>
     """;
-
-
-
 }

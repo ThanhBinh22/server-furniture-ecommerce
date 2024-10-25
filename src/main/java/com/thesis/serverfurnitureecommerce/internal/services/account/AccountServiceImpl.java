@@ -1,5 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.services.account;
 
+import com.thesis.serverfurnitureecommerce.constant.RoleConstant;
 import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IRoleRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
@@ -114,11 +115,10 @@ public class AccountServiceImpl implements IAccountService {
         userEntity.setOtp(OtpGenerator.generate6DigitOtp());
         userEntity.setIsActive((short) 0);
         userEntity.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
-        RoleEntity role = roleRepository.findByName("USER")
+        RoleEntity role = roleRepository.findByName(RoleConstant.USER)
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
         userEntity.setRole(role);
         userRepository.save(userEntity);
-        log.info("Invoke function send mail for new user");
         emailService.sendMailOTP(userEntity.getEmail(), userEntity.getOtp());
     }
 

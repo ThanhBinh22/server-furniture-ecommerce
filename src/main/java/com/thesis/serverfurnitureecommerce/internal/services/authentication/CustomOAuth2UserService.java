@@ -40,13 +40,12 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         if (userOptional.isPresent()) {
             return;
         }
-
         UserEntity user = createUserEntity(oAuth2User, userRequest, email);
         userRepository.save(user);
     }
 
     private UserEntity createUserEntity(OAuth2User oAuth2User, OAuth2UserRequest userRequest, String email) {
-        UserEntity user = new UserEntity();
+        UserEntity user = UserEntity.createNewUserEntity();
         user.setEmail(email);
         user.setFullName(oAuth2User.getAttribute("name"));
         user.setOauth2Provider(userRequest.getClientRegistration().getRegistrationId());

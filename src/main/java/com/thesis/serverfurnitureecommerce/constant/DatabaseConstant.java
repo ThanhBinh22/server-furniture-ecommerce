@@ -17,4 +17,5 @@ public class DatabaseConstant {
     public static final String ROOM_TABLE = "rooms";
     public static final String PROMOTION_TABLE = "promotions";
     public static final String ADDRESS = "address";
+    public static final String SUPPORT_CUSTOMER = "support_customers";
 }

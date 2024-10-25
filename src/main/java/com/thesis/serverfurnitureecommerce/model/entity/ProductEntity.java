@@ -23,23 +23,37 @@ public class ProductEntity extends BaseEntity {
     Integer price;
     Integer stock;
     String description;
+
     @Column(name = "is_active")
     Short isActive;
+
     String image;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     CategoryEntity category;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id", nullable = false)
     SupplierEntity supplier;
+
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Set<CartItemEntity> cartItems = new HashSet<>();
+
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Set<ReviewEntity> reviews = new HashSet<>();
+
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Set<OrderItemEntity> orderItems = new HashSet<>();
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<WishlistEntity> wishlist;
+
     @ManyToMany(mappedBy = "products")
     Set<RoomEntity> rooms = new HashSet<>();
+
+    public static ProductEntity createNewProductEntity(){
+        return new ProductEntity();
+    }
+
 }

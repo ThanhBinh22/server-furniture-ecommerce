@@ -48,19 +48,26 @@ public class UserEntity extends BaseEntity implements UserDetails {
     Short isActive;
     @Column(name = "is_locked", nullable = false)
     Short isLocked;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     RoleEntity role;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<UserLogEntity> logs = new HashSet<>();
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     CartEntity cart;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<OrderEntity> orders = new HashSet<>();
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<WishlistEntity> wishlist;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<ReviewEntity> reviews = new HashSet<>();
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<AddressEntity> addresses = new HashSet<>();
 
@@ -70,18 +77,8 @@ public class UserEntity extends BaseEntity implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
     public boolean isAccountNonLocked() {
         return this.isLocked == null || this.isLocked == 0;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
     }
 
     @Override
@@ -90,7 +87,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
     }
 
     // static factory method
-    public static UserEntity createUserEntity() {
+    public static UserEntity createNewUserEntity() {
         return new UserEntity();
     }
 }

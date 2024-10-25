@@ -37,7 +37,7 @@ public class UserController {
     public ResponseEntity<APIResponse<String>> verifyForgetPassword(@RequestBody AccountVerifyRequest accountVerifyRequest) {
         log.info("Request to verify forgot password for email: {}", accountVerifyRequest.getEmail());
         return handleUserAction(() -> {
-            boolean otpVerified = userService.verifyForgetPassword(accountVerifyRequest);
+            userService.verifyForgetPassword(accountVerifyRequest);
             return ResponseBuilder.buildResponse("OTP verified successfully", ErrorCode.SUCCESS);
         });
     }
