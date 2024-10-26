@@ -14,6 +14,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Security configuration class for the application.
+ * <p>
+ * This class configures the security settings for the application, including
+ * authentication, authorization, and session management. It integrates JWT
+ * authentication and OAuth2 login capabilities.
+ * </p>
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -23,7 +31,17 @@ public class SecurityConfig {
     JwtAuthenticationFilter jwtAuthenticationFilter;
     CustomOAuth2UserService customOAuth2UserService;
 
-
+    /**
+     * Configures the security filter chain for the application.
+     * <p>
+     * This method sets up HTTP security, including CSRF protection,
+     * request authorization, OAuth2 login, and stateless session management.
+     * </p>
+     *
+     * @param http the {@link HttpSecurity} to configure
+     * @return the configured {@link SecurityFilterChain}
+     * @throws Exception if any error occurs during configuration
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http

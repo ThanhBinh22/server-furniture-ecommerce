@@ -1,5 +1,13 @@
 package com.thesis.serverfurnitureecommerce.constant;
 
+/**
+ * A class that contains constants for database table names used in the application.
+ * <p>
+ * This class is designed to centralize the table names for easy maintenance and
+ * consistency across the application. Instead of hardcoding table names in various
+ * parts of the codebase, use these constants to reference the database tables.
+ * </p>
+ */
 public class DatabaseConstant {
     public static final String CART_ITEMS_TABLE = "cart_items";
     public static final String CART_TABLE = "carts";
