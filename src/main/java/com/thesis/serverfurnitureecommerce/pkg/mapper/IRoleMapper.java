@@ -5,21 +5,19 @@ import com.thesis.serverfurnitureecommerce.model.entity.RoleEntity;
 import org.mapstruct.Mapper;
 
 /**
- * Mapper interface for converting between RoleEntity and RoleDTO.
- * This interface provides methods to convert RoleEntity objects to RoleDTO
- * and vice versa.
+ * Mapper interface dùng để chuyển đổi giữa RoleEntity và RoleDTO
+ * Nó sẽ dựa bào thư viện mapstruct để tự động convert qua lại giữa
+ * hai đối rượng RoleEntity và RoleDTO với nhau
  */
 @Mapper(componentModel = "spring")
 public interface IRoleMapper {
-
     /**
-     * Converts a RoleEntity to a RoleDTO.
+     * Chuyển đổi RoleEntity sang RoleDTO
      *
      * @param roleEntity the RoleEntity to convert
      * @return the converted RoleDTO
      */
     RoleDTO toDTO(RoleEntity roleEntity);
-
     /**
      * Converts a RoleDTO to a RoleEntity.
      *

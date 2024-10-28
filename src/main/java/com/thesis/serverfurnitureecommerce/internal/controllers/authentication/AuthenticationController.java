@@ -10,6 +10,7 @@ import com.thesis.serverfurnitureecommerce.internal.services.account.IAccountSer
 import com.thesis.serverfurnitureecommerce.internal.services.authentication.IAuthenticationService;
 import com.thesis.serverfurnitureecommerce.internal.services.jwt.JwtService;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
+import com.thesis.serverfurnitureecommerce.pkg.anotation.ratelimit.WithRateLimitProtection;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,6 +34,7 @@ public class AuthenticationController {
     IAuthenticationService authenticationService;
 
     @PostMapping("/sign-up")
+    @WithRateLimitProtection
     public ResponseEntity<APIResponse<Void>> register(@RequestBody @Valid RegisterRequest registerRequest) {
         log.info("Registering user with username: {}", registerRequest.getUsername());
         return handleRequest(() -> {
