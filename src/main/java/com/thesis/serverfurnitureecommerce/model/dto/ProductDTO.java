@@ -3,6 +3,8 @@ package com.thesis.serverfurnitureecommerce.model.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +17,7 @@ public class ProductDTO {
     Integer stock;
     String description;
     Short isActive;
-    String image;
+    List<ImageDTO> images;
     CategoryDTO category;
     SupplierDTO supplier;
 }

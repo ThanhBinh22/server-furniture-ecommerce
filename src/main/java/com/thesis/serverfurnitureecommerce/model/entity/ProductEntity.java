@@ -27,7 +27,8 @@ public class ProductEntity extends BaseEntity {
     @Column(name = "is_active")
     Short isActive;
 
-    String image;
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    Set<ImageEntity> images = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
