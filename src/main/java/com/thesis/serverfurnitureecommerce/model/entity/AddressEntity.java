@@ -12,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = DatabaseConstant.ADDRESS)
+@Table(name = DatabaseConstant.ADDRESS_TABLE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AddressEntity extends BaseEntity {
     @Id

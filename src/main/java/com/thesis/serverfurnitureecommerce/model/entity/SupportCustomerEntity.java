@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = DatabaseConstant.SUPPORT_CUSTOMER)
+@Table(name = DatabaseConstant.SUPPORT_CUSTOMER_TABLE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SupportCustomerEntity extends BaseEntity{
     @Id
