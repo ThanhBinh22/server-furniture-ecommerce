@@ -1,7 +1,9 @@
 package com.thesis.serverfurnitureecommerce.internal.services.product;
 
+import com.thesis.serverfurnitureecommerce.domain.request.ProductSearchRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IImageRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IProductRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.custom.product.IProductRepositoryCustom;
 import com.thesis.serverfurnitureecommerce.model.dto.ImageDTO;
 import com.thesis.serverfurnitureecommerce.model.dto.ProductDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.ProductEntity;
@@ -22,10 +24,44 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductServiceImpl implements IProductService {
     IProductRepository productRepository;
+    IProductRepositoryCustom productRepositoryCustom;
     IProductMapper productMapper;
     IImageRepository iImageRepository;
     IImageMapper imageMapper;
 
+
+    @Override
+    public List<ProductDTO> findAll() {
+        log.info("Invoke to service find all product");
+        List<ProductEntity> productEntities = productRepository.findAll();
+        List<ProductDTO> productDTOS = productEntities.stream()
+                .map(productMapper::convertToDTO)
+                .collect(Collectors.toList());
+        productDTOS.forEach(productDTO -> productDTO.setImages(getImagesByProductID(productDTO.getId())));
+        return productDTOS;
+    }
+
+//    @Override
+//    public List<ProductDTO> findByName(String name) {
+//        log.info("Invoke to service find product by name: {}", name);
+//        List<ProductEntity> productEntities = productElasticRepository.findByNameContaining(name);
+//        List<ProductDTO> productDTOS = productEntities.stream()
+//                .map(productMapper::convertToDTO)
+//                .collect(Collectors.toList());
+//        productDTOS.forEach(productDTO -> productDTO.setImages(getImagesByProductID(productDTO.getId())));
+//        return productDTOS;
+//    }
+
+    @Override
+    public List<ProductDTO> findByMultiFields(ProductSearchRequest productSearchRequest) {
+        log.info("Invoke to service find product by multi fields");
+        List<ProductEntity> productEntities = productRepositoryCustom.findAllMultiField(productSearchRequest);
+        List<ProductDTO> productDTOS = productEntities.stream()
+                .map(productMapper::convertToDTO)
+                .collect(Collectors.toList());
+        productDTOS.forEach(productDTO -> productDTO.setImages(getImagesByProductID(productDTO.getId())));
+        return productDTOS;
+    }
 
     @Override
     public ProductDTO findByProductID(int productID) {
@@ -38,6 +74,7 @@ public class ProductServiceImpl implements IProductService {
         productDTO.setImages(imageDTOS);
         return productDTO;
     }
+
 
     private List<ImageDTO> getImagesByProductID(Integer productID) {
         return iImageRepository.getImagesByProductID(productID)
