@@ -8,8 +8,6 @@ import java.util.List;
 public interface IProductService {
     List<ProductDTO> findAll();
 
-//    List<ProductDTO> findByName(String name);
-
     List<ProductDTO> findByMultiFields(ProductSearchRequest productSearchRequest);
 
     ProductDTO findByProductID(int productID);

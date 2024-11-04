@@ -47,15 +47,6 @@ public class ProductController {
         }
     }
 
-//    @GetMapping("/search/{name}")
-//    public ResponseEntity<APIResponse<List<ProductDTO>>> searchProduct(@PathVariable String name) {
-//        log.info("GET /api/product/search/{}", name);
-//        if (productService.findByName(name).isEmpty()) {
-//            log.error("GET /api/product/search/{} failed", name);
-//            return ResponseBuilder.buildResponse(null, ErrorCode.NOT_FOUND);
-//        }
-//        return ResponseBuilder.buildResponse(productService.findByName(name), ErrorCode.FOUND);
-//    }
 
     @GetMapping("/search")
     public ResponseEntity<APIResponse<List<ProductDTO>>> findProduct(

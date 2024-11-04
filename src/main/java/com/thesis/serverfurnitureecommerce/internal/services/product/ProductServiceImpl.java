@@ -41,16 +41,6 @@ public class ProductServiceImpl implements IProductService {
         return productDTOS;
     }
 
-//    @Override
-//    public List<ProductDTO> findByName(String name) {
-//        log.info("Invoke to service find product by name: {}", name);
-//        List<ProductEntity> productEntities = productElasticRepository.findByNameContaining(name);
-//        List<ProductDTO> productDTOS = productEntities.stream()
-//                .map(productMapper::convertToDTO)
-//                .collect(Collectors.toList());
-//        productDTOS.forEach(productDTO -> productDTO.setImages(getImagesByProductID(productDTO.getId())));
-//        return productDTOS;
-//    }
 
     @Override
     public List<ProductDTO> findByMultiFields(ProductSearchRequest productSearchRequest) {
