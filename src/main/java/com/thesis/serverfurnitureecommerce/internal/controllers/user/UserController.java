@@ -8,11 +8,13 @@ import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.services.user.IUserService;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
+import com.thesis.serverfurnitureecommerce.pkg.utils.annotation.ApiMessage;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.InternalApi;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     IUserService userService;
 
+    @ApiMessage("Forgot password")
     @PostMapping("/forgot-password")
     public ResponseEntity<APIResponse<Void>> forgotPassword(@RequestBody EmailRequest emailRequest) {
         log.info("Request to forgot password for email: {}", emailRequest.getEmail());
@@ -33,6 +36,7 @@ public class UserController {
         });
     }
 
+    @ApiMessage("Verify forgot password")
     @PostMapping("/verify-forget-password")
     public ResponseEntity<APIResponse<String>> verifyForgetPassword(@RequestBody AccountVerifyRequest accountVerifyRequest) {
         log.info("Request to verify forgot password for email: {}", accountVerifyRequest.getEmail());
@@ -42,6 +46,7 @@ public class UserController {
         });
     }
 
+    @ApiMessage("Change password")
     @PostMapping("/change-password")
     public ResponseEntity<APIResponse<String>> changePassword(@RequestBody @Valid NewPasswordRequest newPasswordRequest) {
         log.info("Request to change password for email: {}", newPasswordRequest.getEmail());

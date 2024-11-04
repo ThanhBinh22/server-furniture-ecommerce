@@ -6,6 +6,7 @@ import com.thesis.serverfurnitureecommerce.internal.services.support.ISupportCus
 import com.thesis.serverfurnitureecommerce.model.dto.SupportCustomerDTO;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
+import com.thesis.serverfurnitureecommerce.pkg.utils.annotation.ApiMessage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SupportController {
     ISupportCustomerService supportCustomerService;
 
+    @ApiMessage("Save contact")
     @PostMapping()
     public ResponseEntity<APIResponse<Void>> saveContact(@RequestBody SupportCustomerDTO supportCustomerDTO) {
         log.info("saveContact: {}", supportCustomerDTO);

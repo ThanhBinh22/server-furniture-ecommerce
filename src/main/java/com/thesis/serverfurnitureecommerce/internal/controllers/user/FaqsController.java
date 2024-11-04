@@ -5,6 +5,7 @@ import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.services.faqs.IFaqsService;
 import com.thesis.serverfurnitureecommerce.model.dto.FaqsDTO;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
+import com.thesis.serverfurnitureecommerce.pkg.utils.annotation.ApiMessage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,6 +25,7 @@ import java.util.List;
 public class FaqsController {
     IFaqsService faqsService;
 
+    @ApiMessage("Get all faqs")
     @GetMapping
     public ResponseEntity<APIResponse<List<FaqsDTO>>> getFaqs() {
         log.info("Get all faqs");

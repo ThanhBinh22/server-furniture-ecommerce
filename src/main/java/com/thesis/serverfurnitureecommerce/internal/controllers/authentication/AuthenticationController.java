@@ -12,6 +12,7 @@ import com.thesis.serverfurnitureecommerce.internal.services.jwt.JwtService;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
+import com.thesis.serverfurnitureecommerce.pkg.utils.annotation.ApiMessage;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class AuthenticationController {
     JwtService jwtService;
     IAuthenticationService authenticationService;
 
+    @ApiMessage("Register")
     @PostMapping("/sign-up")
     public ResponseEntity<APIResponse<Void>> register(@RequestBody @Valid RegisterRequest registerRequest) {
         log.info("Registering user with username: {}", registerRequest.getUsername());
@@ -41,6 +43,7 @@ public class AuthenticationController {
         });
     }
 
+    @ApiMessage("Login")
     @PostMapping("/login")
     public ResponseEntity<APIResponse<LoginResponse>> authenticate(@RequestBody AuthenticationRequest login) {
         log.info("Requesting login for user: {}", login.getUsername());
@@ -53,6 +56,7 @@ public class AuthenticationController {
         return ResponseBuilder.buildResponse(loginResponse, ErrorCode.SUCCESS);
     }
 
+    @ApiMessage("Logout")
     @PostMapping("/logout")
     public ResponseEntity<APIResponse<Void>> logout(@RequestBody @Valid LogoutRequest logoutRequest) {
         log.info("Requesting logout for token: {}", logoutRequest.getToken());
@@ -62,6 +66,7 @@ public class AuthenticationController {
         });
     }
 
+    @ApiMessage("Verify OTP")
     @PostMapping("/confirm-account")
     public ResponseEntity<APIResponse<Void>> verifyOtp(@RequestParam String otp, HttpServletResponse response) {
         log.info("Verifying OTP: {}", otp);
@@ -78,6 +83,7 @@ public class AuthenticationController {
         }
     }
 
+    @ApiMessage("Resend OTP")
     @PostMapping("/resend-otp")
     public ResponseEntity<APIResponse<Void>> resendOtp(@RequestBody String email) {
         log.info("Requesting OTP resend for email: {}", email);
