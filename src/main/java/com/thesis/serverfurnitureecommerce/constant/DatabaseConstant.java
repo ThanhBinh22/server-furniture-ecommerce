@@ -24,6 +24,7 @@ public class DatabaseConstant {
     public static final String WISH_LIST_TABLE = "wishlists";
     public static final String ROOM_TABLE = "rooms";
     public static final String PROMOTION_TABLE = "promotions";
+    public static final String IMAGE_TABLE = "images";
     public static final String ADDRESS_TABLE = "address";
     public static final String SUPPORT_CUSTOMER_TABLE = "support_customers";
     public static final String FAQS_TABLE = "faqs";
