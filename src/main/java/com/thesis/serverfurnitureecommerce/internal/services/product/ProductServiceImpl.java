@@ -1,5 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.services.product;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thesis.serverfurnitureecommerce.domain.request.ProductSearchRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IImageRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IProductRepository;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +30,7 @@ public class ProductServiceImpl implements IProductService {
     IProductMapper productMapper;
     IImageRepository iImageRepository;
     IImageMapper imageMapper;
+    ObjectMapper objectMapper;
 
 
     @Override
@@ -41,17 +44,17 @@ public class ProductServiceImpl implements IProductService {
         return productDTOS;
     }
 
-
     @Override
-    public List<ProductDTO> findByMultiFields(ProductSearchRequest productSearchRequest) {
-        log.info("Invoke to service find product by multi fields");
-        List<ProductEntity> productEntities = productRepositoryCustom.findAllMultiField(productSearchRequest);
+    public List<ProductDTO> findByMultiFields(Map<String, Object> productSearchRequest) {
+        ProductSearchRequest searchRequest = objectMapper.convertValue(productSearchRequest, ProductSearchRequest.class);
+        List<ProductEntity> productEntities = productRepositoryCustom.findAllMultiField(searchRequest);
         List<ProductDTO> productDTOS = productEntities.stream()
                 .map(productMapper::convertToDTO)
                 .collect(Collectors.toList());
         productDTOS.forEach(productDTO -> productDTO.setImages(getImagesByProductID(productDTO.getId())));
         return productDTOS;
     }
+
 
     @Override
     public ProductDTO findByProductID(int productID) {

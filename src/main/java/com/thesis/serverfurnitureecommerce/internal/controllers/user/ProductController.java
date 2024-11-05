@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/product")
@@ -48,28 +49,41 @@ public class ProductController {
     }
 
 
+//    @GetMapping("/search")
+//    public ResponseEntity<APIResponse<List<ProductDTO>>> findProduct(
+//            @RequestParam(required = false) String name,
+//            @RequestParam(required = false) String category,
+//            @RequestParam(required = false) String supplier,
+//            @RequestParam(required = false) Double minPrice,
+//            @RequestParam(required = false) String room,
+//            @RequestParam(required = false) Double maxPrice) {
+//
+//        log.info("Request to search product: name={}, category={}, supplier={}, minPrice={}, maxPrice={}, room={}",
+//                name, category, supplier, minPrice, maxPrice, room);
+//        try {
+//            ProductSearchRequest productSearchRequest = new ProductSearchRequest();
+//            productSearchRequest.setName(name);
+//            productSearchRequest.setCategory(category);
+//            productSearchRequest.setSupplier(supplier);
+//            productSearchRequest.setRoom(room);
+//            productSearchRequest.setMinPrice(minPrice);
+//            productSearchRequest.setMaxPrice(maxPrice);
+//
+//            List<ProductDTO> products = productService.findByMultiFields(productSearchRequest);
+//            return ResponseBuilder.buildResponse(products, ErrorCode.FOUND);
+//        } catch (Exception ex) {
+//            throw new AppException(ErrorCode.INVALID_REQUEST);
+//        }
+//    }
+
     @GetMapping("/search")
-    public ResponseEntity<APIResponse<List<ProductDTO>>> findProduct(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String supplier,
-            @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice) {
-
-        log.info("Request to search product: name={}, category={}, supplier={}, minPrice={}, maxPrice={}",
-                name, category, supplier, minPrice, maxPrice);
-        try {
-            ProductSearchRequest productSearchRequest = new ProductSearchRequest();
-            productSearchRequest.setName(name);
-            productSearchRequest.setCategory(category);
-            productSearchRequest.setSupplier(supplier);
-            productSearchRequest.setMinPrice(minPrice);
-            productSearchRequest.setMaxPrice(maxPrice);
-
-            List<ProductDTO> products = productService.findByMultiFields(productSearchRequest);
+    public ResponseEntity<APIResponse<List<ProductDTO>>> findProduct(@RequestParam Map<String, Object> search) {
+        log.info("Search product by multi field");
+//        try {
+            List<ProductDTO> products = productService.findByMultiFields(search);
             return ResponseBuilder.buildResponse(products, ErrorCode.FOUND);
-        } catch (Exception ex) {
-            throw new AppException(ErrorCode.INVALID_REQUEST);
-        }
+//        } catch (Exception ex) {
+//            throw new AppException(ErrorCode.INVALID_REQUEST);
+//        }
     }
 }

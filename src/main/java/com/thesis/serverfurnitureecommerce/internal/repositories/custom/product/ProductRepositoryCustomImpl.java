@@ -3,6 +3,7 @@ package com.thesis.serverfurnitureecommerce.internal.repositories.custom.product
 import com.thesis.serverfurnitureecommerce.domain.request.ProductSearchRequest;
 import com.thesis.serverfurnitureecommerce.model.entity.CategoryEntity;
 import com.thesis.serverfurnitureecommerce.model.entity.ProductEntity;
+import com.thesis.serverfurnitureecommerce.model.entity.RoomEntity;
 import com.thesis.serverfurnitureecommerce.model.entity.SupplierEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -28,8 +29,9 @@ public class ProductRepositoryCustomImpl implements IProductRepositoryCustom {
 
         Join<ProductEntity, CategoryEntity> categoryJoin = root.join("category");
         Join<ProductEntity, SupplierEntity> supplierJoin = root.join("supplier");
+        Join<ProductEntity, RoomEntity> roomJoin = root.join("rooms");
 
-        List<Predicate> predicates = buildPredicates(productSearchRequest, cb, root, categoryJoin, supplierJoin);
+        List<Predicate> predicates = buildPredicates(productSearchRequest, cb, root, categoryJoin, supplierJoin, roomJoin);
 
         criteriaQuery.where(predicates.toArray(new Predicate[0]));
 
@@ -42,7 +44,8 @@ public class ProductRepositoryCustomImpl implements IProductRepositoryCustom {
                                             CriteriaBuilder cb,
                                             Root<ProductEntity> product,
                                             Join<ProductEntity, CategoryEntity> categoryJoin,
-                                            Join<ProductEntity, SupplierEntity> supplierJoin) {
+                                            Join<ProductEntity, SupplierEntity> supplierJoin,
+                                            Join<ProductEntity, RoomEntity> roomJoin) {
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -54,6 +57,9 @@ public class ProductRepositoryCustomImpl implements IProductRepositoryCustom {
 
         Optional.ofNullable(productSearchRequest.getSupplier())
                 .ifPresent(supplier -> predicates.add(cb.equal(supplierJoin.get("name"), supplier)));
+
+        Optional.ofNullable(productSearchRequest.getRoom())
+                        .ifPresent(room -> predicates.add(cb.equal(roomJoin.get("name"), room)));
 
         Optional.ofNullable(productSearchRequest.getMinPrice())
                 .ifPresent(minPrice -> predicates.add(cb.greaterThanOrEqualTo(product.get("price"), minPrice)));

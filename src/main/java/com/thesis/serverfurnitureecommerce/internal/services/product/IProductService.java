@@ -4,11 +4,12 @@ import com.thesis.serverfurnitureecommerce.domain.request.ProductSearchRequest;
 import com.thesis.serverfurnitureecommerce.model.dto.ProductDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IProductService {
     List<ProductDTO> findAll();
 
-    List<ProductDTO> findByMultiFields(ProductSearchRequest productSearchRequest);
+    List<ProductDTO> findByMultiFields(Map<String, Object> productSearchRequest);
 
     ProductDTO findByProductID(int productID);
 }
