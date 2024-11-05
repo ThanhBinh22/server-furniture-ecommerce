@@ -33,6 +33,10 @@ spring:
               - email
               - profile
               - openid
+  elasticsearch:
+    uris: http://localhost:9200
+    username: ${ELASTICSEARCH_USERNAME}
+    password: ${ELASTICSEARCH_PASSWORD}
 security:
   jwt:
     secret-key: ${JWT_SECRET_KEY}

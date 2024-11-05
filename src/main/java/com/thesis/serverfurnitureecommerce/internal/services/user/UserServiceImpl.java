@@ -41,14 +41,13 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public boolean verifyForgetPassword(AccountVerifyRequest accountVerifyRequest) {
+    public void verifyForgetPassword(AccountVerifyRequest accountVerifyRequest) {
         log.info("Verifying OTP for email: {}", accountVerifyRequest.getEmail());
         UserEntity user = userRepository.findByEmail(accountVerifyRequest.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         checkOtpExpiration(user);
         if (isOtpValid(accountVerifyRequest.getOtp(), user.getOtp())) {
             clearOtp(user);
-            return true;
         } else {
             throw new AppException(ErrorCode.INVALID_OTP);
         }

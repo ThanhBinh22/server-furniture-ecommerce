@@ -33,12 +33,9 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public UserEntity authenticate(AuthenticationRequest authenticationRequest) {
         log.info("Authenticating user: {}", authenticationRequest.getUsername());
-
         authenticateUser(authenticationRequest);
-
         UserEntity userEntity = findUser(authenticationRequest.getUsername());
         validateUserStatus(userEntity);
-
         return userEntity;
     }
 

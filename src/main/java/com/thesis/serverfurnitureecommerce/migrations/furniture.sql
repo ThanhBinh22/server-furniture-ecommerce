@@ -100,11 +100,10 @@ create table roles
     updated_at  timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
     deleted_at  timestamp                           null
 );
-INSERT INTO `roles`
-VALUES (1, 'ADMIN', 'Quản trị viên hệ thống, có toàn quyền quyết định trong hệ thống', '2024-09-28 08:44:00',
-        '2024-09-28 08:44:00', NULL),
-       (2, 'MOD', 'Người điều hành nội dung', '2024-09-28 08:44:00', '2024-09-28 08:44:00', NULL),
-       (3, 'USER', 'Người dùng thông thường', '2024-09-28 08:44:00', '2024-09-28 08:44:00', NULL);
+INSERT INTO `roles` (name, description)
+VALUES ('ADMIN', 'Quản trị viên hệ thống, có toàn quyền quyết định trong hệ thống'),
+       ('MOD', 'Người điều hành nội dung'),
+       ('USER', 'Người dùng thông thường');
 
 CREATE TABLE `users`
 (
@@ -385,23 +384,158 @@ CREATE TABLE `wishlists`
 
 create table support_customers
 (
-    `id`       int not null primary key,
-    `user_id`  bigint not null,
-    `message`  text,
-    `feedback` text,
-    `is_solve` tinyint,
-    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+    `id`         int auto_increment not null primary key,
+    `email`      varchar(100)       not null,
+    `title`      text               not null,
+    `message`    text,
+    `feedback`   text,
+    `is_solve`   bool                    default false,
+    `created_at` timestamp          NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp          NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` timestamp          NULL DEFAULT NULL
 );
 
 create table policies
 (
-    `id`         int           not null primary key,
+    `id`         int auto_increment          not null primary key,
     `title`      NVARCHAR(255) not null,
-    `content`    text,
+    `content`    json,
     `created_at` timestamp     NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` timestamp     NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` timestamp     NULL DEFAULT NULL
 );
+INSERT INTO policies (title, content)
+    VALUE ('Chính sách bảo hành', '{
+  "warranty_policy": {
+    "warranty_period": "12 tháng",
+    "conditions": {
+      "eligible": [
+        "Sản phẩm bị lỗi kỹ thuật do nhà sản xuất",
+        "Sản phẩm không có dấu hiệu sửa chữa hoặc can thiệp từ bên thứ ba",
+        "Cung cấp phiếu bảo hành và hóa đơn mua hàng"
+      ],
+      "ineligible": [
+        "Hư hỏng do sử dụng sai hướng dẫn",
+        "Hư hỏng do tác động môi trường bên ngoài (nước, nhiệt độ cao)",
+        "Thiên tai, hỏa hoạn, lũ lụt"
+      ]
+    },
+    "process": [
+      "Liên hệ bộ phận chăm sóc khách hàng qua hotline hoặc email",
+      "Hướng dẫn gửi sản phẩm hoặc kiểm tra tận nơi",
+      "Thời gian xử lý bảo hành trong vòng 7-15 ngày làm việc",
+      "Trả sản phẩm và cung cấp thông tin sau bảo hành"
+    ]
+  }
+}');
+INSERT INTO policies (title, content) VALUE
+    ('Chính sách đổi trả sản phẩm', '{
+  "return_policy": {
+    "return_period": "15 ngày",
+    "conditions": {
+      "eligible": [
+        "Sản phẩm còn nguyên tem, bao bì và không có dấu hiệu sử dụng",
+        "Có hóa đơn mua hàng và phiếu bảo hành đi kèm",
+        "Lỗi kỹ thuật do nhà sản xuất hoặc hư hỏng trong quá trình vận chuyển"
+      ],
+      "ineligible": [
+        "Sản phẩm đã qua sử dụng hoặc không còn nguyên trạng",
+        "Không có hóa đơn mua hàng hoặc phiếu bảo hành",
+        "Sản phẩm giảm giá hoặc khuyến mãi không áp dụng đổi trả"
+      ]
+    },
+    "process": [
+      "Liên hệ bộ phận chăm sóc khách hàng để yêu cầu đổi trả",
+      "Xác nhận điều kiện sản phẩm và chuẩn bị hồ sơ cần thiết",
+      "Gửi sản phẩm về trung tâm đổi trả hoặc cửa hàng gần nhất",
+      "Xử lý và hoàn tất đổi trả trong 7 ngày làm việc"
+    ]
+  }
+}');
+INSERT INTO policies (title, content) VALUES
+    ('Chính sách vận chuyển và giao hàng', '{
+      "shipping_policy": {
+        "shipping_time": {
+          "standard": "3-5 ngày làm việc",
+          "express": "1-2 ngày làm việc"
+        },
+        "costs": {
+          "standard": "Miễn phí với đơn hàng trên 1 triệu VNĐ",
+          "express": "Phí 50.000 VNĐ"
+        },
+        "process": [
+          "Xác nhận đơn hàng và chuẩn bị sản phẩm trong vòng 24 giờ",
+          "Thông báo thời gian giao hàng và mã vận đơn qua email",
+          "Theo dõi trạng thái đơn hàng qua hệ thống hoặc trang web đối tác vận chuyển",
+          "Nhận hàng và kiểm tra tình trạng sản phẩm khi giao"
+        ],
+        "notes": [
+          "Khách hàng kiểm tra kỹ sản phẩm khi nhận hàng để tránh các trường hợp hư hỏng do vận chuyển",
+          "Nếu sản phẩm có dấu hiệu hư hỏng, vui lòng từ chối nhận hàng và báo lại ngay cho chúng tôi"
+        ]
+      }
+    }');
+INSERT INTO policies (title, content) VALUES
+    ('Chính sách thanh toán', '{
+      "payment_policy": {
+        "methods": [
+          "Thanh toán qua thẻ tín dụng/thẻ ghi nợ",
+          "Chuyển khoản ngân hàng",
+          "Thanh toán khi nhận hàng (COD)"
+        ],
+        "guidelines": {
+          "secure_payment": "Cam kết bảo mật thông tin thanh toán của khách hàng.",
+          "payment_confirmation": "Xác nhận thanh toán sẽ được gửi qua email hoặc SMS."
+        },
+        "refund_process": [
+          "Nếu khách hàng hủy đơn hàng trước khi giao, tiền sẽ được hoàn lại trong vòng 5-7 ngày làm việc.",
+          "Đối với các đơn hàng đã nhận, hoàn tiền sẽ tuân theo chính sách đổi trả sản phẩm."
+        ]
+      }
+    }');
+INSERT INTO policies (title, content) VALUES
+    ('Chính sách bảo mật thông tin', '{
+      "privacy_policy": {
+        "data_collection": [
+          "Chúng tôi thu thập thông tin cá nhân để xử lý đơn hàng và hỗ trợ khách hàng.",
+          "Thông tin bao gồm họ tên, địa chỉ, số điện thoại, và email."
+        ],
+        "data_usage": [
+          "Thông tin của khách hàng chỉ được sử dụng trong các hoạt động liên quan đến giao dịch và chăm sóc khách hàng.",
+          "Thông tin sẽ không được chia sẻ cho bên thứ ba mà không có sự đồng ý của khách hàng, trừ khi được yêu cầu bởi pháp luật."
+        ],
+        "data_protection": [
+          "Dữ liệu của khách hàng được bảo mật bằng công nghệ mã hóa SSL.",
+          "Chúng tôi tuân thủ các quy định bảo mật dữ liệu để đảm bảo an toàn cho thông tin của khách hàng."
+        ]
+      }
+    }');
+
+CREATE TABLE faqs (
+                      `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                      `question` TEXT NOT NULL,
+                      `answer` TEXT NOT NULL,
+                      `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+                      `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                      `deleted_at` TIMESTAMP NULL DEFAULT NULL
+);
+
+INSERT INTO faqs (question, answer) VALUES
+                                        ('Thời gian giao hàng là bao lâu?', 'Thời gian giao hàng từ 3 đến 7 ngày làm việc, tùy thuộc vào địa điểm của bạn.'),
+                                        ('Tôi có thể thay đổi địa chỉ giao hàng không?', 'Có, bạn có thể thay đổi địa chỉ giao hàng trước khi đơn hàng được xử lý. Hãy liên hệ với chúng tôi để được hỗ trợ.'),
+                                        ('Sản phẩm có được bảo hành không?', 'Có, tất cả các sản phẩm đều được bảo hành theo chính sách bảo hành của chúng tôi.'),
+                                        ('Tôi có thể trả lại sản phẩm nếu không hài lòng?', 'Có, bạn có thể trả lại sản phẩm trong vòng 30 ngày kể từ ngày nhận hàng nếu sản phẩm còn mới và chưa sử dụng.'),
+                                        ('Có chương trình khuyến mãi nào không?', 'Chúng tôi thường xuyên có các chương trình khuyến mãi. Bạn hãy theo dõi trang web hoặc đăng ký nhận bản tin để nhận thông tin mới nhất.'),
+                                        ('Có thể thanh toán bằng hình thức nào?', 'Chúng tôi chấp nhận nhiều hình thức thanh toán, bao gồm thẻ tín dụng, thẻ ghi nợ, và chuyển khoản ngân hàng.'),
+                                        ('Sản phẩm có thể tùy chỉnh không?', 'Có, một số sản phẩm của chúng tôi có thể được tùy chỉnh theo yêu cầu của khách hàng. Vui lòng liên hệ với chúng tôi để biết thêm chi tiết.'),
+                                        ('Tôi có thể nhận được hỗ trợ lắp đặt không?', 'Chúng tôi cung cấp dịch vụ hỗ trợ lắp đặt cho một số sản phẩm. Bạn có thể chọn dịch vụ này khi đặt hàng.'),
+                                        ('Chính sách bảo mật thông tin cá nhân của bạn như thế nào?', 'Chúng tôi cam kết bảo mật thông tin cá nhân của khách hàng và chỉ sử dụng thông tin này cho mục đích xử lý đơn hàng và cung cấp dịch vụ.'),
+                                        ('Tôi có thể liên hệ với bộ phận hỗ trợ khách hàng bằng cách nào?', 'Bạn có thể liên hệ với bộ phận hỗ trợ khách hàng qua số điện thoại, email, hoặc chat trực tiếp trên website. Chúng tôi luôn sẵn sàng hỗ trợ bạn.');
+
+
+
+
+
 
 CREATE TABLE `invalidated_tokens`
 (
