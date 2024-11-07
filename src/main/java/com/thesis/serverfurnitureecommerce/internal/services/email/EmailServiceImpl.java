@@ -5,6 +5,7 @@ import jakarta.annotation.PreDestroy;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,9 +42,9 @@ public class EmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public void sendMailForgotPassword(String to, String resetLink) {
+    public void sendMailForgotPassword(String to, Integer otp) {
         log.info("Sending forgot password email to {}", to);
-        String content = generateEmailContent(resetLink, "Bạn đã yêu cầu đặt lại mật khẩu. Vui lòng nhấp vào liên kết sau để đặt lại mật khẩu: %s");
+        String content = generateEmailContent(otp, StringConstant.TEMPLATE_EMAIL_FORGOT_PASSWORD);
         sendMail(to, FORGOT_PASSWORD_SUBJECT, content);
     }
 

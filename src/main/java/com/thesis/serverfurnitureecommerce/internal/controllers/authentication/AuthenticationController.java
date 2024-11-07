@@ -27,8 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-
 @RequestMapping("/api/auth")
 @RestController
 @RequiredArgsConstructor
@@ -93,20 +91,25 @@ public class AuthenticationController {
 
     @ApiMessage("Verify OTP")
     @PostMapping("/confirm-account")
-    public ResponseEntity<APIResponse<Void>> verifyOtp(@RequestParam String otp, HttpServletResponse response) {
+    public ResponseEntity<APIResponse<Void>> verifyOtp(@RequestParam String otp) {
         log.info("Verifying OTP: {}", otp);
         try {
             accountService.verifyAccountAfterRegister(otp);
-            response.sendRedirect("http://localhost:5173/sign-in");
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
         } catch (AppException ex) {
             log.error("Error occurred: {}", ex.getErrorCode(), ex);
             return ResponseBuilder.buildResponse(null, ex.getErrorCode());
-        } catch (IOException e) {
-            log.error("Failed to redirect after OTP verification", e);
-            throw new RuntimeException("Redirect failed", e);
         }
     }
+
+    @ApiMessage("Check account verification status")
+    @GetMapping("/check-account-verification-status")
+    public ResponseEntity<Boolean> checkAccountVerificationStatus(@RequestParam String email) {
+        log.info("Checking account verification status for email: {}", email);
+        boolean isVerified = accountService.isAccountVerified(email);
+        return ResponseEntity.ok(isVerified);
+    }
+
 
     @ApiMessage("Resend OTP")
     @PostMapping("/resend-otp")

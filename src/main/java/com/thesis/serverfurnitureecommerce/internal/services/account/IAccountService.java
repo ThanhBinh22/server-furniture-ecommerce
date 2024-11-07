@@ -10,4 +10,5 @@ public interface IAccountService {
 
     void resendOTP(String email);
 
+    boolean isAccountVerified(String email);
 }

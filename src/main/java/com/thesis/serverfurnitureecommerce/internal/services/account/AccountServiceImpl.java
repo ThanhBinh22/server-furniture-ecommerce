@@ -171,4 +171,11 @@ public class AccountServiceImpl implements IAccountService {
         userRepository.save(user);
     }
 
+    @Override
+    public boolean isAccountVerified(String email) {
+        return userRepository.findByEmail(email)
+                .map(user -> user.getIsActive() == 1)
+                .orElse(false);
+    }
+
 }

@@ -54,6 +54,7 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )
+                        .loginPage("/api/auth/login")
                         .defaultSuccessUrl("/home", true)
                 )
                 .sessionManagement(session -> session

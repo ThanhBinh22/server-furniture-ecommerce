@@ -37,7 +37,7 @@ public class UserServiceImpl implements IUserService {
         user.setOtp(otp);
         user.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
         userRepository.save(user);
-        emailService.sendMailOTP(email, otp);
+        emailService.sendMailForgotPassword(email, otp);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class UserServiceImpl implements IUserService {
         log.info("Changing password for email: {}", newPasswordRequest.getEmail());
         UserEntity user = userRepository.findByEmail(newPasswordRequest.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        user.setPassword(passwordEncoder.encode(newPasswordRequest.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(newPasswordRequest.getPassword()));
         userRepository.save(user);
     }
 }
