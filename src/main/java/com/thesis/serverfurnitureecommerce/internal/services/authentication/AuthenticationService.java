@@ -4,10 +4,12 @@ import com.thesis.serverfurnitureecommerce.domain.request.AuthenticationRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.LogoutRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.InvalidatedTokenRepository;
+import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.InvalidatedTokenEntity;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.IUserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,7 @@ public class AuthenticationService implements IAuthenticationService {
     AuthenticationManager authenticationManager;
     PasswordEncoder passwordEncoder;
     InvalidatedTokenRepository invalidatedTokenRepository;
+    IUserMapper userMapper;
 
     @Override
     public UserEntity authenticate(AuthenticationRequest authenticationRequest) {

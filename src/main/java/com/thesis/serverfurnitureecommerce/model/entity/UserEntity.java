@@ -25,27 +25,31 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    @Column(nullable = false, unique = true)
+
     String username;
-    @Column(nullable = false)
     String password;
-    @Column(nullable = false, unique = true)
     String email;
     String phone;
     @Column(name = "full_name")
     String fullName;
+
     @JsonIgnore
     @Column(name = "otp")
     Integer otp;
+
     @JsonIgnore
     @Column(name = "otp_expired")
     LocalDateTime otpExpired;
+
     @Column(name = "oauth2_id")
     String oauth2Id;
+
     @Column(name = "oauth2_provider")
     String oauth2Provider;
+
     @Column(name = "is_active", nullable = false)
     Short isActive;
+
     @Column(name = "is_locked", nullable = false)
     Short isLocked;
 
@@ -71,6 +75,8 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<AddressEntity> addresses = new HashSet<>();
 
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
@@ -86,7 +92,6 @@ public class UserEntity extends BaseEntity implements UserDetails {
         return this.isActive != null && this.isActive == 1;
     }
 
-    // static factory method
     public static UserEntity createNewUserEntity() {
         return new UserEntity();
     }

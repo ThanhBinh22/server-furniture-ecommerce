@@ -138,7 +138,6 @@ CREATE TABLE `products`
     `description` text,
     `price`       decimal(18, 0)                                                     DEFAULT NULL,
     `stock`       int                                                                DEFAULT '0',
-    `image`       varchar(255)                                                       DEFAULT NULL,
     `category_id` int                                                           NOT NULL,
     `supplier_id` int                                                           NOT NULL,
     `is_active`   tinyint(1)                                                         DEFAULT '1',
@@ -152,27 +151,84 @@ CREATE TABLE `products`
     CONSTRAINT `fk_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE,
     CONSTRAINT `products_ibfk_1` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`)
 );
-INSERT INTO `products`
-VALUES (1, 'Đèn Spotlight', NULL, 25500000, 12,
-        'https://www.decor-walther.com/img/products/0219400/Studio-S_Perspektive-3_chrom.png', 6, 13, 1,
-        '2024-09-28 08:44:00', '2024-09-28 08:44:00', NULL),
-       (2, 'Hộp khăn giấy', NULL, 10000000, 5,
-        'https://www.decor-walther.com/img/products/0830400/0830400_KB%2082_chrom-web.png', 10, 13, 1,
-        '2024-09-28 08:44:00', '2024-09-28 08:44:00', NULL),
-       (3, 'Đèn cầm tay mini vàng', NULL, 26118408, 5,
-        'https://www.saint-louis.com/media/catalog/product/…ble_lamp_saint-louis_crystal_lighting_gold_or.jpg', 6, 7, 1,
-        '2024-09-28 08:44:00', '2024-09-28 08:44:00', NULL),
-       (4, 'Đĩa sứ họa tiết cánh hoa', NULL, 5058723, 8,
-        '	https://www.fuerstenberg-porzellan.com/thumbnail/d…0919800/img1_fl2011325900_platzteller_600x600.png', 5,
-        10, 1, '2024-09-28 08:44:00', '2024-09-28 08:44:00', NULL),
-       (5, 'Đĩa ăn Pasta đáy lõm', NULL, 1457132, 5,
-        'https://www.fuerstenberg-porzellan.com/thumbnail/8a/a1/ca/1710921104/img1_tf_68328weiss_gourmetteller_tief_600x600.png',
-        5, 10, 1, '2024-09-28 08:44:00', '2024-09-28 08:44:00', NULL),
-       (6, 'Gương trang điểm', NULL, 34472846, 2, 'https://www.decor-walther.com/img/products/0110900/0110900.png', 11,
-        13, 1, '2024-09-28 08:44:00', '2024-09-28 08:44:00', NULL),
-       (7, 'Đèn treo tường Flannel xám', NULL, 33266604, 1,
-        'https://www.saint-louis.com/media/catalog/product/cache/e1648193c4bd079fe5e6c9e530413384/1/0/10170716-1.jpg',
-        6, 7, 1, '2024-09-28 08:44:00', '2024-09-28 08:44:00', NULL);
+INSERT INTO `products` (name, description, price, stock, category_id, supplier_id)
+VALUES ('Đèn Spotlight', 'Đèn chiếu sáng với thiết kế hiện đại.', 25500000, 12, 8, 1),
+       ('Hộp khăn giấy', 'Hộp đựng khăn giấy sang trọng.', 10000000, 5, 12, 6),
+       ('Đèn cầm tay mini vàng', 'Đèn cầm tay nhỏ gọn, dễ dàng mang theo.', 26118408, 5, 8, 4),
+       ('Đĩa sứ họa tiết cánh hoa', 'Đĩa sứ tinh tế với họa tiết đẹp mắt.', 5058723, 8, 5, 3),
+       ('Đĩa ăn Pasta đáy lõm', 'Đĩa ăn cho món pasta với thiết kế đáy lõm.', 1457132, 5, 5, 5),
+       ('Gương trang điểm', 'Gương trang điểm với thiết kế sang trọng.', 34472846, 2, 11, 11),
+       ('Đèn treo tường Flannel xám', 'Đèn treo tường với phong cách Flannel.', 33266604, 1, 8, 12),
+       ('Đèn trần - Ánh sáng trắng hiện đại',
+        'Đèn trần cung cấp ánh sáng trắng rực rỡ, phù hợp cho phòng khách và văn phòng.', 72836284, 23, 8, 13),
+       ('Đèn spotlight - Chiếu sáng điểm nhấn',
+        'Đèn spotlight mạnh mẽ, lý tưởng để chiếu sáng các khu vực cụ thể hoặc làm nổi bật các chi tiết nội thất.',
+        35246273, 10, 8, 13),
+       ('Đèn trần - Hiện đại', 'Đèn trần hiện đại sử dụng công nghệ LED tiết kiệm năng lượng.', 253647254, 12, 8, 13),
+       ('Đèn trần và đèn tường', 'Đèn có thể lắp trên trần và tường, thích hợp cho không gian linh hoạt.', 153738463,
+        13, 8, 13),
+       ('Đèn trần - Cổ điển', 'Đèn trần với thiết kế cổ điển, tạo ánh sáng ấm áp.', 47283647, 16, 8, 13),
+       ('Đèn trần - Tối giản', 'Đèn trần với thiết kế tối giản, phù hợp cho nội thất hiện đại.', 15263745, 5, 8, 13),
+       ('Đèn trần - Sang trọng', 'Thiết kế sang trọng, hoàn hảo cho không gian cao cấp.', 15264728, 7, 8, 13),
+       ('Đèn trần - Phong cách công nghiệp', 'Đèn trần phong cách công nghiệp, mạnh mẽ và độc đáo.', 15362746, 8, 8,
+        13),
+       ('Đèn trần - Tiết kiệm năng lượng',
+        'Sử dụng công nghệ tiết kiệm năng lượng, thích hợp cho phòng khách và phòng ngủ.', 25342765, 13, 8, 13),
+       ('Đèn trần - Ánh sáng vàng ấm', 'Đèn trần cung cấp ánh sáng vàng ấm, phù hợp cho không gian thư giãn.', 13443245,
+        6, 8, 13),
+       ('Clip-on light for mirror', null, 23456534, 4, 8, 13),
+       ('Clip-on light for mirror', null, 23456534, 4, 8, 13),
+       ('Clip-on light for mirror', null, 23456534, 4, 8, 13),
+       ('Clip-on light for mirror', null, 23456534, 4, 8, 13),
+       ('Clip-on light for mirror', null, 23456534, 4, 8, 13),
+       ('Clip-on light for mirror', null, 23456534, 4, 8, 13),
+       ('Clip-on light for mirror', null, 23456534, 4, 8, 13),
+       ('Clip-on light for mirror', null, 23456534, 4, 8, 13),
+       ('Clip-on light for mirror', null, 23456534, 4, 8, 13),
+       ('Clip-on light for mirror', null, 23456534, 4, 8, 13);
+
+
+CREATE TABLE `images`
+(
+    `id`         INT                                                           NOT NULL AUTO_INCREMENT,
+    `product_id` INT                                                           NOT NULL,
+    `image_url`  VARCHAR(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+    `created_at` TIMESTAMP                                                     NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP                                                     NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at`  timestamp                                                     NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
+);
+INSERT INTO `images` (product_id, image_url)
+VALUES (1, 'https://www.decor-walther.com/img/products/0219400/Studio-S_Perspektive-3_chrom.png'),
+       (2, 'https://www.decor-walther.com/img/products/0830400/0830400_KB%2082_chrom-web.png'),
+       (3, 'https://www.saint-louis.com/media/catalog/product/…ble_lamp_saint-louis_crystal_lighting_gold_or.jpg'),
+       (4, 'https://www.fuerstenberg-porzellan.com/thumbnail/d…0919800/img1_fl2011325900_platzteller_600x600.png'),
+       (5,'https://www.fuerstenberg-porzellan.com/thumbnail/8a/a1/ca/1710921104/img1_tf_68328weiss_gourmetteller_tief_600x600.png'),
+       (6, 'https://www.decor-walther.com/img/products/0110900/0110900.png'),
+       (7,'https://www.saint-louis.com/media/catalog/product/cache/e1648193c4bd079fe5e6c9e530413384/1/0/10170716-1.jpg'),
+       (8, 'https://www.decor-walther.com/img/products/0213100/0213100_GLOBE%2020_Chrom_web.png'),
+       (9, '	https://www.decor-walther.com/img/products/0219500/Studio-L_Perspektive-1_chrom.png'),
+       (10, 'https://www.decor-walther.com/img/products/0218800/0218800_CUT%2030%20N%20LED_Chrom.png'),
+       (11, 'https://www.decor-walther.com/img/products/0219300/0219300_BAUHAUS%203%20N%20LED_Chrom.png'),
+       (12, 'https://www.decor-walther.com/img/products/0219100/0219100_CONECT%2026%20N%20LED_Chrom.png'),
+       (13, 'https://www.decor-walther.com/img/products/0219200/0219200.png'),
+       (14, 'https://www.decor-walther.com/img/products/0218700/0218700_CUT%2018%20N%20LED_Chrom.png'),
+       (15, 'https://www.decor-walther.com/img/products/0219000/0216000%20GLOW%2028%20LED_1.png'),
+       (16, 'https://www.decor-walther.com/img/products/0218900/0218900_CUT%2040%20N%20LED_Chrom.png'),
+       (17, 'https://www.decor-walther.com/img/products/0333900/0333900_BAUHAUS%201%20N%20LED_Chrom.png'),
+       (18, 'https://www.decor-walther.com/img/products/0411000/0411000_BOX%201-15_Chrom.png'),
+       (19, 'https://www.decor-walther.com/img/products/0411200/0411200_BOX%201-60_Chrom.png'),
+       (20, 'https://www.decor-walther.com/img/products/0413700/0413700_BOX%201-25_Chrom.png'),
+       (21, 'https://www.decor-walther.com/img/products/0418700/0418700_FLAT%201%20LED_Chrom.png'),
+       (22, 'https://www.decor-walther.com/img/products/0411100/0411100_BOX%201-40_Chrom.png'),
+       (23, 'https://www.decor-walther.com/img/products/0409300/0409300_BOX%201-10_Chrom.png'),
+       (24, 'https://www.decor-walther.com/img/products/0402200/0402200_OMEGA%201_Chrom.png'),
+       (25, 'https://www.decor-walther.com/img/products/0420300/0420300_BOX%201-40%20N%20LED_Chrom.png'),
+       (26, 'https://www.decor-walther.com/img/products/0420200/0420200_BOX%201-25%20N%20LED_chrome.png'),
+       (27, 'https://www.decor-walther.com/img/products/0420100/0420100_BOX%201-15%20N%20LED_Chrom.png');
+
+
 
 CREATE TABLE `carts`
 (
@@ -311,18 +367,19 @@ CREATE TABLE `reviews`
     CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 );
 
-CREATE TABLE `room_product`
+CREATE TABLE `room_products`
 (
-    `id`         int NOT NULL AUTO_INCREMENT,
-    `room_id`    int NOT NULL,
-    `product_id` int NOT NULL,
+    `id`         INT NOT NULL AUTO_INCREMENT,
+    `room_id`    INT NOT NULL,
+    `product_id` INT NOT NULL,
     PRIMARY KEY (`id`),
     KEY `fk_room` (`room_id`),
-    KEY `fk_product` (`product_id`),
-    CONSTRAINT `fk_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_room` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`) ON DELETE CASCADE
+    KEY `fk_product_id` (`product_id`), -- Đổi tên chỉ mục nếu cần
+    CONSTRAINT `fk_room_product_room` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_room_product_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
 );
-INSERT INTO `room_product`
+
+INSERT INTO `room_products`
 VALUES (1, 1, 1),
        (2, 2, 1),
        (3, 3, 1),
@@ -397,12 +454,12 @@ create table support_customers
 
 create table policies
 (
-    `id`         int auto_increment          not null primary key,
-    `title`      NVARCHAR(255) not null,
+    `id`         int auto_increment not null primary key,
+    `title`      NVARCHAR(255)      not null,
     `content`    json,
-    `created_at` timestamp     NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` timestamp     NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` timestamp     NULL DEFAULT NULL
+    `created_at` timestamp          NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp          NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` timestamp          NULL DEFAULT NULL
 );
 INSERT INTO policies (title, content)
     VALUE ('Chính sách bảo hành', '{
@@ -430,110 +487,118 @@ INSERT INTO policies (title, content)
 }');
 INSERT INTO policies (title, content) VALUE
     ('Chính sách đổi trả sản phẩm', '{
-  "return_policy": {
-    "return_period": "15 ngày",
-    "conditions": {
-      "eligible": [
-        "Sản phẩm còn nguyên tem, bao bì và không có dấu hiệu sử dụng",
-        "Có hóa đơn mua hàng và phiếu bảo hành đi kèm",
-        "Lỗi kỹ thuật do nhà sản xuất hoặc hư hỏng trong quá trình vận chuyển"
-      ],
-      "ineligible": [
-        "Sản phẩm đã qua sử dụng hoặc không còn nguyên trạng",
-        "Không có hóa đơn mua hàng hoặc phiếu bảo hành",
-        "Sản phẩm giảm giá hoặc khuyến mãi không áp dụng đổi trả"
-      ]
+      "return_policy": {
+        "return_period": "15 ngày",
+        "conditions": {
+          "eligible": [
+            "Sản phẩm còn nguyên tem, bao bì và không có dấu hiệu sử dụng",
+            "Có hóa đơn mua hàng và phiếu bảo hành đi kèm",
+            "Lỗi kỹ thuật do nhà sản xuất hoặc hư hỏng trong quá trình vận chuyển"
+          ],
+          "ineligible": [
+            "Sản phẩm đã qua sử dụng hoặc không còn nguyên trạng",
+            "Không có hóa đơn mua hàng hoặc phiếu bảo hành",
+            "Sản phẩm giảm giá hoặc khuyến mãi không áp dụng đổi trả"
+          ]
+        },
+        "process": [
+          "Liên hệ bộ phận chăm sóc khách hàng để yêu cầu đổi trả",
+          "Xác nhận điều kiện sản phẩm và chuẩn bị hồ sơ cần thiết",
+          "Gửi sản phẩm về trung tâm đổi trả hoặc cửa hàng gần nhất",
+          "Xử lý và hoàn tất đổi trả trong 7 ngày làm việc"
+        ]
+      }
+    }');
+INSERT INTO policies (title, content)
+VALUES ('Chính sách vận chuyển và giao hàng', '{
+  "shipping_policy": {
+    "shipping_time": {
+      "standard": "3-5 ngày làm việc",
+      "express": "1-2 ngày làm việc"
+    },
+    "costs": {
+      "standard": "Miễn phí với đơn hàng trên 1 triệu VNĐ",
+      "express": "Phí 50.000 VNĐ"
     },
     "process": [
-      "Liên hệ bộ phận chăm sóc khách hàng để yêu cầu đổi trả",
-      "Xác nhận điều kiện sản phẩm và chuẩn bị hồ sơ cần thiết",
-      "Gửi sản phẩm về trung tâm đổi trả hoặc cửa hàng gần nhất",
-      "Xử lý và hoàn tất đổi trả trong 7 ngày làm việc"
+      "Xác nhận đơn hàng và chuẩn bị sản phẩm trong vòng 24 giờ",
+      "Thông báo thời gian giao hàng và mã vận đơn qua email",
+      "Theo dõi trạng thái đơn hàng qua hệ thống hoặc trang web đối tác vận chuyển",
+      "Nhận hàng và kiểm tra tình trạng sản phẩm khi giao"
+    ],
+    "notes": [
+      "Khách hàng kiểm tra kỹ sản phẩm khi nhận hàng để tránh các trường hợp hư hỏng do vận chuyển",
+      "Nếu sản phẩm có dấu hiệu hư hỏng, vui lòng từ chối nhận hàng và báo lại ngay cho chúng tôi"
     ]
   }
 }');
-INSERT INTO policies (title, content) VALUES
-    ('Chính sách vận chuyển và giao hàng', '{
-      "shipping_policy": {
-        "shipping_time": {
-          "standard": "3-5 ngày làm việc",
-          "express": "1-2 ngày làm việc"
-        },
-        "costs": {
-          "standard": "Miễn phí với đơn hàng trên 1 triệu VNĐ",
-          "express": "Phí 50.000 VNĐ"
-        },
-        "process": [
-          "Xác nhận đơn hàng và chuẩn bị sản phẩm trong vòng 24 giờ",
-          "Thông báo thời gian giao hàng và mã vận đơn qua email",
-          "Theo dõi trạng thái đơn hàng qua hệ thống hoặc trang web đối tác vận chuyển",
-          "Nhận hàng và kiểm tra tình trạng sản phẩm khi giao"
-        ],
-        "notes": [
-          "Khách hàng kiểm tra kỹ sản phẩm khi nhận hàng để tránh các trường hợp hư hỏng do vận chuyển",
-          "Nếu sản phẩm có dấu hiệu hư hỏng, vui lòng từ chối nhận hàng và báo lại ngay cho chúng tôi"
-        ]
-      }
-    }');
-INSERT INTO policies (title, content) VALUES
-    ('Chính sách thanh toán', '{
-      "payment_policy": {
-        "methods": [
-          "Thanh toán qua thẻ tín dụng/thẻ ghi nợ",
-          "Chuyển khoản ngân hàng",
-          "Thanh toán khi nhận hàng (COD)"
-        ],
-        "guidelines": {
-          "secure_payment": "Cam kết bảo mật thông tin thanh toán của khách hàng.",
-          "payment_confirmation": "Xác nhận thanh toán sẽ được gửi qua email hoặc SMS."
-        },
-        "refund_process": [
-          "Nếu khách hàng hủy đơn hàng trước khi giao, tiền sẽ được hoàn lại trong vòng 5-7 ngày làm việc.",
-          "Đối với các đơn hàng đã nhận, hoàn tiền sẽ tuân theo chính sách đổi trả sản phẩm."
-        ]
-      }
-    }');
-INSERT INTO policies (title, content) VALUES
-    ('Chính sách bảo mật thông tin', '{
-      "privacy_policy": {
-        "data_collection": [
-          "Chúng tôi thu thập thông tin cá nhân để xử lý đơn hàng và hỗ trợ khách hàng.",
-          "Thông tin bao gồm họ tên, địa chỉ, số điện thoại, và email."
-        ],
-        "data_usage": [
-          "Thông tin của khách hàng chỉ được sử dụng trong các hoạt động liên quan đến giao dịch và chăm sóc khách hàng.",
-          "Thông tin sẽ không được chia sẻ cho bên thứ ba mà không có sự đồng ý của khách hàng, trừ khi được yêu cầu bởi pháp luật."
-        ],
-        "data_protection": [
-          "Dữ liệu của khách hàng được bảo mật bằng công nghệ mã hóa SSL.",
-          "Chúng tôi tuân thủ các quy định bảo mật dữ liệu để đảm bảo an toàn cho thông tin của khách hàng."
-        ]
-      }
-    }');
+INSERT INTO policies (title, content)
+VALUES ('Chính sách thanh toán', '{
+  "payment_policy": {
+    "methods": [
+      "Thanh toán qua thẻ tín dụng/thẻ ghi nợ",
+      "Chuyển khoản ngân hàng",
+      "Thanh toán khi nhận hàng (COD)"
+    ],
+    "guidelines": {
+      "secure_payment": "Cam kết bảo mật thông tin thanh toán của khách hàng.",
+      "payment_confirmation": "Xác nhận thanh toán sẽ được gửi qua email hoặc SMS."
+    },
+    "refund_process": [
+      "Nếu khách hàng hủy đơn hàng trước khi giao, tiền sẽ được hoàn lại trong vòng 5-7 ngày làm việc.",
+      "Đối với các đơn hàng đã nhận, hoàn tiền sẽ tuân theo chính sách đổi trả sản phẩm."
+    ]
+  }
+}');
+INSERT INTO policies (title, content)
+VALUES ('Chính sách bảo mật thông tin', '{
+  "privacy_policy": {
+    "data_collection": [
+      "Chúng tôi thu thập thông tin cá nhân để xử lý đơn hàng và hỗ trợ khách hàng.",
+      "Thông tin bao gồm họ tên, địa chỉ, số điện thoại, và email."
+    ],
+    "data_usage": [
+      "Thông tin của khách hàng chỉ được sử dụng trong các hoạt động liên quan đến giao dịch và chăm sóc khách hàng.",
+      "Thông tin sẽ không được chia sẻ cho bên thứ ba mà không có sự đồng ý của khách hàng, trừ khi được yêu cầu bởi pháp luật."
+    ],
+    "data_protection": [
+      "Dữ liệu của khách hàng được bảo mật bằng công nghệ mã hóa SSL.",
+      "Chúng tôi tuân thủ các quy định bảo mật dữ liệu để đảm bảo an toàn cho thông tin của khách hàng."
+    ]
+  }
+}');
 
-CREATE TABLE faqs (
-                      `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                      `question` TEXT NOT NULL,
-                      `answer` TEXT NOT NULL,
-                      `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-                      `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                      `deleted_at` TIMESTAMP NULL DEFAULT NULL
+CREATE TABLE faqs
+(
+    `id`         INT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `question`   TEXT      NOT NULL,
+    `answer`     TEXT      NOT NULL,
+    `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` TIMESTAMP NULL DEFAULT NULL
 );
 
-INSERT INTO faqs (question, answer) VALUES
-                                        ('Thời gian giao hàng là bao lâu?', 'Thời gian giao hàng từ 3 đến 7 ngày làm việc, tùy thuộc vào địa điểm của bạn.'),
-                                        ('Tôi có thể thay đổi địa chỉ giao hàng không?', 'Có, bạn có thể thay đổi địa chỉ giao hàng trước khi đơn hàng được xử lý. Hãy liên hệ với chúng tôi để được hỗ trợ.'),
-                                        ('Sản phẩm có được bảo hành không?', 'Có, tất cả các sản phẩm đều được bảo hành theo chính sách bảo hành của chúng tôi.'),
-                                        ('Tôi có thể trả lại sản phẩm nếu không hài lòng?', 'Có, bạn có thể trả lại sản phẩm trong vòng 30 ngày kể từ ngày nhận hàng nếu sản phẩm còn mới và chưa sử dụng.'),
-                                        ('Có chương trình khuyến mãi nào không?', 'Chúng tôi thường xuyên có các chương trình khuyến mãi. Bạn hãy theo dõi trang web hoặc đăng ký nhận bản tin để nhận thông tin mới nhất.'),
-                                        ('Có thể thanh toán bằng hình thức nào?', 'Chúng tôi chấp nhận nhiều hình thức thanh toán, bao gồm thẻ tín dụng, thẻ ghi nợ, và chuyển khoản ngân hàng.'),
-                                        ('Sản phẩm có thể tùy chỉnh không?', 'Có, một số sản phẩm của chúng tôi có thể được tùy chỉnh theo yêu cầu của khách hàng. Vui lòng liên hệ với chúng tôi để biết thêm chi tiết.'),
-                                        ('Tôi có thể nhận được hỗ trợ lắp đặt không?', 'Chúng tôi cung cấp dịch vụ hỗ trợ lắp đặt cho một số sản phẩm. Bạn có thể chọn dịch vụ này khi đặt hàng.'),
-                                        ('Chính sách bảo mật thông tin cá nhân của bạn như thế nào?', 'Chúng tôi cam kết bảo mật thông tin cá nhân của khách hàng và chỉ sử dụng thông tin này cho mục đích xử lý đơn hàng và cung cấp dịch vụ.'),
-                                        ('Tôi có thể liên hệ với bộ phận hỗ trợ khách hàng bằng cách nào?', 'Bạn có thể liên hệ với bộ phận hỗ trợ khách hàng qua số điện thoại, email, hoặc chat trực tiếp trên website. Chúng tôi luôn sẵn sàng hỗ trợ bạn.');
-
-
-
+INSERT INTO faqs (question, answer)
+VALUES ('Thời gian giao hàng là bao lâu?',
+        'Thời gian giao hàng từ 3 đến 7 ngày làm việc, tùy thuộc vào địa điểm của bạn.'),
+       ('Tôi có thể thay đổi địa chỉ giao hàng không?',
+        'Có, bạn có thể thay đổi địa chỉ giao hàng trước khi đơn hàng được xử lý. Hãy liên hệ với chúng tôi để được hỗ trợ.'),
+       ('Sản phẩm có được bảo hành không?',
+        'Có, tất cả các sản phẩm đều được bảo hành theo chính sách bảo hành của chúng tôi.'),
+       ('Tôi có thể trả lại sản phẩm nếu không hài lòng?',
+        'Có, bạn có thể trả lại sản phẩm trong vòng 30 ngày kể từ ngày nhận hàng nếu sản phẩm còn mới và chưa sử dụng.'),
+       ('Có chương trình khuyến mãi nào không?',
+        'Chúng tôi thường xuyên có các chương trình khuyến mãi. Bạn hãy theo dõi trang web hoặc đăng ký nhận bản tin để nhận thông tin mới nhất.'),
+       ('Có thể thanh toán bằng hình thức nào?',
+        'Chúng tôi chấp nhận nhiều hình thức thanh toán, bao gồm thẻ tín dụng, thẻ ghi nợ, và chuyển khoản ngân hàng.'),
+       ('Sản phẩm có thể tùy chỉnh không?',
+        'Có, một số sản phẩm của chúng tôi có thể được tùy chỉnh theo yêu cầu của khách hàng. Vui lòng liên hệ với chúng tôi để biết thêm chi tiết.'),
+       ('Tôi có thể nhận được hỗ trợ lắp đặt không?',
+        'Chúng tôi cung cấp dịch vụ hỗ trợ lắp đặt cho một số sản phẩm. Bạn có thể chọn dịch vụ này khi đặt hàng.'),
+       ('Chính sách bảo mật thông tin cá nhân của bạn như thế nào?',
+        'Chúng tôi cam kết bảo mật thông tin cá nhân của khách hàng và chỉ sử dụng thông tin này cho mục đích xử lý đơn hàng và cung cấp dịch vụ.'),
+       ('Tôi có thể liên hệ với bộ phận hỗ trợ khách hàng bằng cách nào?',
+        'Bạn có thể liên hệ với bộ phận hỗ trợ khách hàng qua số điện thoại, email, hoặc chat trực tiếp trên website. Chúng tôi luôn sẵn sàng hỗ trợ bạn.');
 
 
 

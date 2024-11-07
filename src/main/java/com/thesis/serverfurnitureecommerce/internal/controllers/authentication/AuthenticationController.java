@@ -2,6 +2,7 @@ package com.thesis.serverfurnitureecommerce.internal.controllers.authentication;
 
 import com.thesis.serverfurnitureecommerce.domain.request.AuthenticationRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.LogoutRequest;
+import com.thesis.serverfurnitureecommerce.domain.request.RefreshTokenRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.LoginResponse;
@@ -9,10 +10,14 @@ import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.services.account.IAccountService;
 import com.thesis.serverfurnitureecommerce.internal.services.authentication.IAuthenticationService;
 import com.thesis.serverfurnitureecommerce.internal.services.jwt.JwtService;
+import com.thesis.serverfurnitureecommerce.internal.services.token.IRefreshTokenService;
+import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
+import com.thesis.serverfurnitureecommerce.model.entity.RefreshTokenEntity;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.anotation.ratelimit.WithRateLimitProtection;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.IUserMapper;
 import com.thesis.serverfurnitureecommerce.pkg.utils.annotation.ApiMessage;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -33,6 +38,8 @@ public class AuthenticationController {
     IAccountService accountService;
     JwtService jwtService;
     IAuthenticationService authenticationService;
+    IUserMapper userMapper;
+    IRefreshTokenService refreshTokenService;
 
     @ApiMessage("Register")
     @PostMapping("/sign-up")
@@ -51,11 +58,27 @@ public class AuthenticationController {
         log.info("Requesting login for user: {}", login.getUsername());
         UserEntity authenticatedUser = authenticationService.authenticate(login);
         String jwtToken = jwtService.generateToken(authenticatedUser);
+        RefreshTokenEntity refreshToken = refreshTokenService.createRefreshToken(authenticatedUser);
         LoginResponse loginResponse = new LoginResponse()
-                .setToken(jwtToken)
+                .setAccessToken(jwtToken)
+                .setRefreshToken(refreshToken.getTokenId())
                 .setExpiresIn(jwtService.getExpirationTime());
+        loginResponse.setUser(userMapper.toDTO(authenticatedUser));
 
         return ResponseBuilder.buildResponse(loginResponse, ErrorCode.SUCCESS);
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<LoginResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        String requestRefreshToken = refreshTokenRequest.getRefreshToken();
+        String newAccessToken = refreshTokenService.generateAccessTokenAgain(requestRefreshToken);
+        UserDTO userDTO = refreshTokenService.getUserByRefreshToken(requestRefreshToken);
+        return ResponseEntity.ok(new LoginResponse()
+                .setAccessToken(newAccessToken)
+                .setUser(userDTO)
+                .setRefreshToken(requestRefreshToken)
+                .setExpiresIn(jwtService.getExpirationTime())
+        );
     }
 
     @ApiMessage("Logout")
@@ -94,6 +117,7 @@ public class AuthenticationController {
             return ResponseBuilder.buildResponse(null, ErrorCode.SUCCESS);
         });
     }
+
 
     private <T> ResponseEntity<APIResponse<T>> handleRequest(RequestHandler<T> handler) {
         try {

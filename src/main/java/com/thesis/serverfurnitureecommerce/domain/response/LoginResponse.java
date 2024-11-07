@@ -1,5 +1,6 @@
 package com.thesis.serverfurnitureecommerce.domain.response;
 
+import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +25,9 @@ public class LoginResponse {
      * This token should be included in subsequent requests to
      * access protected resources.
      */
-    private String token;
+    private String accessToken;
+    private String refreshToken;
+    private UserDTO user;
 
     /**
      * The duration in seconds until the token expires.

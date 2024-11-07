@@ -40,7 +40,8 @@ spring:
 security:
   jwt:
     secret-key: ${JWT_SECRET_KEY}
-    expiration-time: 3600000
+    expiration-time: ${JWT_EXPIRATION_TIME}
+    refresh-expiration-time: ${JWT_REFRESH_EXPIRATION_TIME}
 server:
   port: 8085
   shutdown: graceful
