@@ -20,4 +20,5 @@ public class ProductDTO {
     List<ImageDTO> images;
     CategoryDTO category;
     SupplierDTO supplier;
+    List<ReviewDTO> reviewDTO;
 }

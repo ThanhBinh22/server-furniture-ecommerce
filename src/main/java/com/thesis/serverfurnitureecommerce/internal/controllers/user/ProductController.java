@@ -1,6 +1,5 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
-import com.thesis.serverfurnitureecommerce.domain.request.ProductSearchRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.services.product.IProductService;
@@ -35,7 +34,7 @@ public class ProductController {
         return ResponseBuilder.buildResponse(productService.findAll(), ErrorCode.FOUND);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<APIResponse<ProductDTO>> getInforProduct(@PathVariable Integer id) {
         log.info("GET /api/product/{}", id);
         ProductDTO productDTO = productService.findByProductID(id);
@@ -53,5 +52,19 @@ public class ProductController {
         log.info("Search product by multi field");
             List<ProductDTO> products = productService.findByMultiFields(search);
             return ResponseBuilder.buildResponse(products, ErrorCode.FOUND);
+    }
+
+    private <T> ResponseEntity<APIResponse<T>> handleProductAction(ProductController.ProductAction<T> action) {
+        try {
+            return action.execute();
+        } catch (AppException ex) {
+            log.error("Error during user action: {}", ex.getMessage());
+            return ResponseBuilder.buildResponse(null, ex.getErrorCode());
+        }
+    }
+
+    @FunctionalInterface
+    private interface ProductAction<T> {
+        ResponseEntity<APIResponse<T>> execute();
     }
 }

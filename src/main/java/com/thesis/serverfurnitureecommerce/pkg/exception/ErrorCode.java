@@ -45,6 +45,8 @@ public enum ErrorCode {
     INVALID_EMAIL(HttpStatus.BAD_REQUEST.value(), "Email chưa được đăng ký tài khoản"),
     TOKEN_EXPIRED(HttpStatus.BAD_REQUEST.value(), "Token expired"),
     INVALID_TOKEN(HttpStatus.BAD_REQUEST.value(), "Invalid token"),
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Product not found"),
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Review not found"),
     // Server Error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error"),
     SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE.value(), "Service Unavailable"),

@@ -1,6 +1,5 @@
 package com.thesis.serverfurnitureecommerce.internal.services.product;
 
-import com.thesis.serverfurnitureecommerce.domain.request.ProductSearchRequest;
 import com.thesis.serverfurnitureecommerce.model.dto.ProductDTO;
 
 import java.util.List;
@@ -12,4 +11,5 @@ public interface IProductService {
     List<ProductDTO> findByMultiFields(Map<String, Object> productSearchRequest);
 
     ProductDTO findByProductID(int productID);
+
 }

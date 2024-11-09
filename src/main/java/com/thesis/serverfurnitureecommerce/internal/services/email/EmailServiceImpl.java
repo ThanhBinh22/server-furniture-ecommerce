@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 public class EmailServiceImpl implements IEmailService {
 
     private static final String OTP_SUBJECT = "[XÁC NHẬN OTP TỪ FURNITURE]";
-    private static final String FORGOT_PASSWORD_SUBJECT = "[Yêu Cầu Đặt Lại Mật Khẩu]";
+    private static final String FORGOT_PASSWORD_SUBJECT = "[YÊU CẦU ĐẶT LẠI MẬT KHẨU TỪ FURNITURE]";
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(3);
     private final JavaMailSender mailSender;

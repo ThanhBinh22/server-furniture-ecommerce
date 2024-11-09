@@ -4,12 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thesis.serverfurnitureecommerce.domain.request.ProductSearchRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IImageRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.IProductRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.IReviewRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.custom.product.IProductRepositoryCustom;
 import com.thesis.serverfurnitureecommerce.model.dto.ImageDTO;
 import com.thesis.serverfurnitureecommerce.model.dto.ProductDTO;
+import com.thesis.serverfurnitureecommerce.model.dto.ReviewDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.ProductEntity;
 import com.thesis.serverfurnitureecommerce.pkg.mapper.IImageMapper;
 import com.thesis.serverfurnitureecommerce.pkg.mapper.IProductMapper;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.IReviewMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,9 +32,12 @@ public class ProductServiceImpl implements IProductService {
     IProductRepository productRepository;
     IProductRepositoryCustom productRepositoryCustom;
     IProductMapper productMapper;
-    IImageRepository iImageRepository;
+    IImageRepository imageRepository;
+    IReviewRepository reviewRepository;
     IImageMapper imageMapper;
     ObjectMapper objectMapper;
+    IUserRepository userRepository;
+    IReviewMapper reviewMapper;
 
 
     @Override
@@ -63,16 +70,26 @@ public class ProductServiceImpl implements IProductService {
                 .filter(product -> product.getIsActive() == 1)
                 .orElse(null);
         List<ImageDTO> imageDTOS = getImagesByProductID(productID);
+        List<ReviewDTO> reviewDTOS = getReviewByProductID(productID);
         ProductDTO productDTO = productMapper.convertToDTO(productEntity);
         productDTO.setImages(imageDTOS);
+        productDTO.setReviewDTO(reviewDTOS);
         return productDTO;
     }
 
 
     private List<ImageDTO> getImagesByProductID(Integer productID) {
-        return iImageRepository.getImagesByProductID(productID)
+        return imageRepository.getImagesByProductID(productID)
                 .stream()
                 .map(imageMapper::convertToDTO)
                 .collect(Collectors.toList());
     }
+
+    private List<ReviewDTO> getReviewByProductID(Integer productID) {
+        return reviewRepository.getReviewByProductID(productID)
+                .stream()
+                .map(reviewMapper::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
 }
