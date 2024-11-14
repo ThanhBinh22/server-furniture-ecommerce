@@ -2,9 +2,9 @@ package com.thesis.serverfurnitureecommerce.internal.services.account;
 
 import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
 
-public interface IAccountService {
+public interface AccountService {
 
-    void RegisterAccount(RegisterRequest registerRequest);
+    void registerAccount(RegisterRequest registerRequest);
 
     Boolean verifyAccountAfterRegister(String otp);
 

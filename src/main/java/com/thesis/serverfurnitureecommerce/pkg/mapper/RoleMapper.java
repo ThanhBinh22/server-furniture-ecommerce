@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
  * hai đối rượng RoleEntity và RoleDTO với nhau
  */
 @Mapper(componentModel = "spring")
-public interface IRoleMapper {
+public interface RoleMapper {
     /**
      * Chuyển đổi RoleEntity sang RoleDTO
      *

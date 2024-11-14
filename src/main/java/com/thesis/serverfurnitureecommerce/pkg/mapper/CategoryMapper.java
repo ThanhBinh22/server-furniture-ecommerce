@@ -5,7 +5,7 @@ import com.thesis.serverfurnitureecommerce.model.entity.CategoryEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface ICategoryMapper {
+public interface CategoryMapper {
 
     CategoryEntity convertToEntity(CategoryDTO categoryDTO);
 

@@ -5,7 +5,6 @@ import jakarta.annotation.PreDestroy;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +17,7 @@ import java.util.concurrent.Executors;
 
 @Service
 @Slf4j
-public class EmailServiceImpl implements IEmailService {
+public class EmailServiceImpl implements EmailService {
 
     private static final String OTP_SUBJECT = "[XÁC NHẬN OTP TỪ FURNITURE]";
     private static final String FORGOT_PASSWORD_SUBJECT = "[YÊU CẦU ĐẶT LẠI MẬT KHẨU TỪ FURNITURE]";

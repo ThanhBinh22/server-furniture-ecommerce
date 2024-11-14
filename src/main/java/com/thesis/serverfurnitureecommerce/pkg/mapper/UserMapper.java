@@ -14,9 +14,9 @@ import java.util.List;
  * convert RegisterRequest to UserEntity, and vice versa.
  */
 @Mapper(componentModel = "spring")
-public interface IUserMapper {
+public interface UserMapper {
 
-    IUserMapper INSTANCE = Mappers.getMapper(IUserMapper.class);
+    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     /**
      * Converts a UserEntity to a UserDTO.

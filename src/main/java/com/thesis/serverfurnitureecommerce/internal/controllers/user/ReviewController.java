@@ -3,7 +3,7 @@ package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 import com.thesis.serverfurnitureecommerce.domain.request.ReviewRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
-import com.thesis.serverfurnitureecommerce.internal.services.review.IReviewService;
+import com.thesis.serverfurnitureecommerce.internal.services.review.ReviewService;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import lombok.AccessLevel;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequestMapping("/api/review")
 public class ReviewController {
-    IReviewService reviewService;
+    ReviewService reviewService;
 
     @PostMapping
     public ResponseEntity<APIResponse<Void>> createReview(@RequestBody ReviewRequest reviewRequest) {

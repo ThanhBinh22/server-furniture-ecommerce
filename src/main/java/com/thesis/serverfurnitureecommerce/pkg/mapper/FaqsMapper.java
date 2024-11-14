@@ -5,7 +5,7 @@ import com.thesis.serverfurnitureecommerce.model.entity.FaqsEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface IFaqsMapper {
+public interface FaqsMapper {
 
     FaqsEntity convertToEntity(FaqsDTO faqsDTO);
 

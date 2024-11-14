@@ -1,6 +1,6 @@
 package com.thesis.serverfurnitureecommerce.configs;
 
-import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.UserRepository;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -26,14 +26,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class WebConfig {
-    IUserRepository userRepository;
+    UserRepository userRepository;
 
     /**
      * Constructs a WebConfig instance with the given IUserRepository.
      *
      * @param userRepository the user repository to be used for user lookups
      */
-    public WebConfig(IUserRepository userRepository) {
+    public WebConfig(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

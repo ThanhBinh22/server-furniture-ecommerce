@@ -1,14 +1,14 @@
 package com.thesis.serverfurnitureecommerce.internal.services.token;
 
-import com.thesis.serverfurnitureecommerce.internal.repositories.IRefreshTokenRepository;
-import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.RefreshTokenRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.UserRepository;
 import com.thesis.serverfurnitureecommerce.internal.services.jwt.JwtService;
 import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.RefreshTokenEntity;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
-import com.thesis.serverfurnitureecommerce.pkg.mapper.IUserMapper;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.UserMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,11 +20,11 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RefreshTokenServiceImpl implements IRefreshTokenService{
-    IRefreshTokenRepository refreshTokenRepository;
-    IUserRepository userRepository;
+public class RefreshTokenServiceImpl implements RefreshTokenService {
+    RefreshTokenRepository refreshTokenRepository;
+    UserRepository userRepository;
     JwtService jwtService;
-    IUserMapper userMapper;
+    UserMapper userMapper;
 
     @Override
     public RefreshTokenEntity createRefreshToken(UserEntity user) {

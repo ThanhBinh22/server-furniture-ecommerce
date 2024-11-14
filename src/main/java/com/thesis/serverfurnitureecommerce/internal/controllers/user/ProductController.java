@@ -2,7 +2,7 @@ package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
-import com.thesis.serverfurnitureecommerce.internal.services.product.IProductService;
+import com.thesis.serverfurnitureecommerce.internal.services.product.ProductService;
 import com.thesis.serverfurnitureecommerce.model.dto.ProductDTO;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
@@ -22,7 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductController {
-    IProductService productService;
+    ProductService productService;
 
     @GetMapping
     public ResponseEntity<APIResponse<List<ProductDTO>>> getAllProduct() {

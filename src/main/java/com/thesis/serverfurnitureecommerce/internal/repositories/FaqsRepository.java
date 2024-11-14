@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IFaqsRepository extends CrudRepository<FaqsEntity, Integer> {
+public interface FaqsRepository extends CrudRepository<FaqsEntity, Integer> {
 }

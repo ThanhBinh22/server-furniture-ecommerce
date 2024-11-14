@@ -7,19 +7,18 @@ import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.LoginResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
-import com.thesis.serverfurnitureecommerce.internal.services.account.IAccountService;
-import com.thesis.serverfurnitureecommerce.internal.services.authentication.IAuthenticationService;
+import com.thesis.serverfurnitureecommerce.internal.services.account.AccountService;
+import com.thesis.serverfurnitureecommerce.internal.services.authentication.AuthenticationService;
 import com.thesis.serverfurnitureecommerce.internal.services.jwt.JwtService;
-import com.thesis.serverfurnitureecommerce.internal.services.token.IRefreshTokenService;
+import com.thesis.serverfurnitureecommerce.internal.services.token.RefreshTokenService;
 import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.RefreshTokenEntity;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.anotation.ratelimit.WithRateLimitProtection;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
-import com.thesis.serverfurnitureecommerce.pkg.mapper.IUserMapper;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.UserMapper;
 import com.thesis.serverfurnitureecommerce.pkg.utils.annotation.ApiMessage;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -33,11 +32,11 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class AuthenticationController {
-    IAccountService accountService;
+    AccountService accountService;
     JwtService jwtService;
-    IAuthenticationService authenticationService;
-    IUserMapper userMapper;
-    IRefreshTokenService refreshTokenService;
+    AuthenticationService authenticationService;
+    UserMapper userMapper;
+    RefreshTokenService refreshTokenService;
 
     @ApiMessage("Register")
     @PostMapping("/sign-up")
@@ -45,7 +44,7 @@ public class AuthenticationController {
     public ResponseEntity<APIResponse<Void>> register(@RequestBody @Valid RegisterRequest registerRequest) {
         log.info("Registering user with username: {}", registerRequest.getUsername());
         return handleRequest(() -> {
-            accountService.RegisterAccount(registerRequest);
+            accountService.registerAccount(registerRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
         });
     }

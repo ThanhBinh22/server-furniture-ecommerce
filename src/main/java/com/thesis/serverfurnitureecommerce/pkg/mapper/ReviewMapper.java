@@ -6,7 +6,7 @@ import com.thesis.serverfurnitureecommerce.model.entity.ReviewEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface IReviewMapper {
+public interface ReviewMapper {
     ReviewDTO convertToDTO(ReviewEntity reviewEntity);
 
     ReviewEntity convertToEntity(ReviewDTO reviewDTO);

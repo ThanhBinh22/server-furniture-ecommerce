@@ -5,7 +5,7 @@ import com.thesis.serverfurnitureecommerce.model.entity.SupportCustomerEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface ISupportCustomerMapper {
+public interface SupportCustomerMapper {
 
     SupportCustomerEntity toEntity(SupportCustomerDTO supportCustomerDTO);
 

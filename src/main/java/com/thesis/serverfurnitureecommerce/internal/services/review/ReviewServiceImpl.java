@@ -1,15 +1,15 @@
 package com.thesis.serverfurnitureecommerce.internal.services.review;
 
 import com.thesis.serverfurnitureecommerce.domain.request.ReviewRequest;
-import com.thesis.serverfurnitureecommerce.internal.repositories.IProductRepository;
-import com.thesis.serverfurnitureecommerce.internal.repositories.IReviewRepository;
-import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.ProductRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.ReviewRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.UserRepository;
 import com.thesis.serverfurnitureecommerce.model.entity.ProductEntity;
 import com.thesis.serverfurnitureecommerce.model.entity.ReviewEntity;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
-import com.thesis.serverfurnitureecommerce.pkg.mapper.IReviewMapper;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.ReviewMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,11 +18,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ReviewServiceImpl implements IReviewService {
-    IReviewRepository reviewRepository;
-    IProductRepository productRepository;
-    IUserRepository userRepository;
-    IReviewMapper reviewMapper;
+public class ReviewServiceImpl implements ReviewService {
+    ReviewRepository reviewRepository;
+    ProductRepository productRepository;
+    UserRepository userRepository;
+    ReviewMapper reviewMapper;
 
 
     @Override

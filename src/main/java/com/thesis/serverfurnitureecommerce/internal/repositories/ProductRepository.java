@@ -1,9 +1,9 @@
 package com.thesis.serverfurnitureecommerce.internal.repositories;
 
-import com.thesis.serverfurnitureecommerce.model.entity.SupportCustomerEntity;
+import com.thesis.serverfurnitureecommerce.model.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ISupportCustomerRepository extends JpaRepository<SupportCustomerEntity, Integer> {
+public interface ProductRepository extends JpaRepository<ProductEntity, Integer> {
 }

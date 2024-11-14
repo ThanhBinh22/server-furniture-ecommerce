@@ -13,7 +13,7 @@ import java.util.List;
 public class ProductDTO {
     Integer id;
     String name;
-    Integer price;
+    String price;
     Integer stock;
     String description;
     Short isActive;

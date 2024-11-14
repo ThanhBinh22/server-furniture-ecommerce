@@ -47,6 +47,7 @@ public enum ErrorCode {
     INVALID_TOKEN(HttpStatus.BAD_REQUEST.value(), "Invalid token"),
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Product not found"),
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Review not found"),
+    CART_ITEM_EMPTY(HttpStatus.OK.value(), "Cart item empty"),
     // Server Error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error"),
     SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE.value(), "Service Unavailable"),

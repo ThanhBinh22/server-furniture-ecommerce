@@ -2,13 +2,13 @@ package com.thesis.serverfurnitureecommerce.internal.services.user;
 
 import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.NewPasswordRequest;
-import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
-import com.thesis.serverfurnitureecommerce.internal.services.email.IEmailService;
+import com.thesis.serverfurnitureecommerce.internal.repositories.UserRepository;
+import com.thesis.serverfurnitureecommerce.internal.services.email.EmailService;
 import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
-import com.thesis.serverfurnitureecommerce.pkg.mapper.IUserMapper;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.UserMapper;
 import com.thesis.serverfurnitureecommerce.pkg.utils.OtpGenerator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +29,11 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserServiceImpl implements IUserService {
-    IUserRepository userRepository;
-    IEmailService emailService;
+public class UserServiceImpl implements UserService {
+    UserRepository userRepository;
+    EmailService emailService;
     PasswordEncoder passwordEncoder;
-    IUserMapper userMapper;
+    UserMapper userMapper;
 
     @Override
     public void forgotPassword(String email) {

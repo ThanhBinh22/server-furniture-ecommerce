@@ -2,7 +2,7 @@ package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
-import com.thesis.serverfurnitureecommerce.internal.services.support.ISupportCustomerService;
+import com.thesis.serverfurnitureecommerce.internal.services.support.SupportCustomerService;
 import com.thesis.serverfurnitureecommerce.model.dto.SupportCustomerDTO;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/user/support")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SupportController {
-    ISupportCustomerService supportCustomerService;
+    SupportCustomerService supportCustomerService;
 
     @ApiMessage("Save contact")
     @PostMapping()

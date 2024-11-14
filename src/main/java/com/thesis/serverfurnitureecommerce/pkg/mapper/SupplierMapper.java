@@ -5,7 +5,7 @@ import com.thesis.serverfurnitureecommerce.model.entity.SupplierEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface ISupplierMapper {
+public interface SupplierMapper {
 
     SupplierEntity convertToEntity(SupplierDTO supplierDTO);
 

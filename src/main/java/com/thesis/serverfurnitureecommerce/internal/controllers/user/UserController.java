@@ -5,7 +5,7 @@ import com.thesis.serverfurnitureecommerce.domain.request.EmailRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.NewPasswordRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
-import com.thesis.serverfurnitureecommerce.internal.services.user.IUserService;
+import com.thesis.serverfurnitureecommerce.internal.services.user.UserService;
 import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
@@ -15,7 +15,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.InternalApi;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
-    IUserService userService;
+    UserService userService;
 
     @ApiMessage("Forgot password")
     @PostMapping("/forgot-password")

@@ -5,8 +5,8 @@ import com.thesis.serverfurnitureecommerce.model.entity.ProductEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {IImageMapper.class})
-public interface IProductMapper {
+@Mapper(componentModel = "spring", uses = {ImageMapper.class})
+public interface ProductMapper {
     @Mapping(target = "images", source = "images")
     ProductEntity convertToEntity(ProductDTO productDTO);
 

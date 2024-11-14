@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface IReviewRepository extends JpaRepository<ReviewEntity, Long> {
+public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
     @Query("SELECT r FROM ReviewEntity r WHERE r.product.id = ?1")
     List<ReviewEntity> getReviewByProductID(Integer productID);
 }

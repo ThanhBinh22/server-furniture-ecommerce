@@ -4,7 +4,7 @@ import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.NewPasswordRequest;
 import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 
-public interface IUserService {
+public interface UserService {
 
     void forgotPassword(String email);
 

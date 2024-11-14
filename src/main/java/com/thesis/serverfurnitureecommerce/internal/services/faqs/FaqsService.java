@@ -4,6 +4,6 @@ import com.thesis.serverfurnitureecommerce.model.dto.FaqsDTO;
 
 import java.util.List;
 
-public interface IFaqsService {
+public interface FaqsService {
     List<FaqsDTO> getAllFaqs();
 }

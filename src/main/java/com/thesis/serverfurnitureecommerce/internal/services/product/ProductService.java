@@ -5,7 +5,7 @@ import com.thesis.serverfurnitureecommerce.model.dto.ProductDTO;
 import java.util.List;
 import java.util.Map;
 
-public interface IProductService {
+public interface ProductService {
     List<ProductDTO> findAll();
 
     List<ProductDTO> findByMultiFields(Map<String, Object> productSearchRequest);
