@@ -17,10 +17,10 @@ import java.util.concurrent.Executors;
 
 @Service
 @Slf4j
-public class EmailServiceImpl implements IEmailService {
+public class EmailServiceImpl implements EmailService {
 
     private static final String OTP_SUBJECT = "[XÁC NHẬN OTP TỪ FURNITURE]";
-    private static final String FORGOT_PASSWORD_SUBJECT = "[Yêu Cầu Đặt Lại Mật Khẩu]";
+    private static final String FORGOT_PASSWORD_SUBJECT = "[YÊU CẦU ĐẶT LẠI MẬT KHẨU TỪ FURNITURE]";
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(3);
     private final JavaMailSender mailSender;
@@ -41,9 +41,9 @@ public class EmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public void sendMailForgotPassword(String to, String resetLink) {
+    public void sendMailForgotPassword(String to, Integer otp) {
         log.info("Sending forgot password email to {}", to);
-        String content = generateEmailContent(resetLink, "Bạn đã yêu cầu đặt lại mật khẩu. Vui lòng nhấp vào liên kết sau để đặt lại mật khẩu: %s");
+        String content = generateEmailContent(otp, StringConstant.TEMPLATE_EMAIL_FORGOT_PASSWORD);
         sendMail(to, FORGOT_PASSWORD_SUBJECT, content);
     }
 

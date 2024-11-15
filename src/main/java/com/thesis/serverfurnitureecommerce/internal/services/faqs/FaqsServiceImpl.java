@@ -1,9 +1,9 @@
 package com.thesis.serverfurnitureecommerce.internal.services.faqs;
 
-import com.thesis.serverfurnitureecommerce.internal.repositories.IFaqsRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.FaqsRepository;
 import com.thesis.serverfurnitureecommerce.model.dto.FaqsDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.FaqsEntity;
-import com.thesis.serverfurnitureecommerce.pkg.mapper.IFaqsMapper;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.FaqsMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,9 +17,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 @Slf4j
-public class FaqsServiceImpl implements IFaqsService{
-    IFaqsRepository faqsRepository;
-    IFaqsMapper faqsMapper;
+public class FaqsServiceImpl implements FaqsService {
+    FaqsRepository faqsRepository;
+    FaqsMapper faqsMapper;
 
     @Override
     public List<FaqsDTO> getAllFaqs() {

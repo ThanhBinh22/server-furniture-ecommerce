@@ -1,9 +1,9 @@
 package com.thesis.serverfurnitureecommerce.internal.services.support;
 
-import com.thesis.serverfurnitureecommerce.internal.repositories.ISupportCustomerRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.SupportCustomerRepository;
 import com.thesis.serverfurnitureecommerce.model.dto.SupportCustomerDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.SupportCustomerEntity;
-import com.thesis.serverfurnitureecommerce.pkg.mapper.ISupportCustomerMapper;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.SupportCustomerMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class SupportCustomerServiceImpl implements ISupportCustomerService {
-    ISupportCustomerRepository supportCustomerRepository;
-    ISupportCustomerMapper supportCustomerMapper;
+public class SupportCustomerServiceImpl implements SupportCustomerService {
+    SupportCustomerRepository supportCustomerRepository;
+    SupportCustomerMapper supportCustomerMapper;
 
     @Override
     public void saveContact(SupportCustomerDTO supportCustomerDTO) {

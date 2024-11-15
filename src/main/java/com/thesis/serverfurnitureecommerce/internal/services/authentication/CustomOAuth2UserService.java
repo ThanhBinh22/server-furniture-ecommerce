@@ -1,6 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.services.authentication;
 
-import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.UserRepository;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -14,9 +14,9 @@ import java.util.Optional;
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    private final IUserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public CustomOAuth2UserService(IUserRepository userRepository) {
+    public CustomOAuth2UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

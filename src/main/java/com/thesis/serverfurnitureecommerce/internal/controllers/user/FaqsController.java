@@ -2,7 +2,7 @@ package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
-import com.thesis.serverfurnitureecommerce.internal.services.faqs.IFaqsService;
+import com.thesis.serverfurnitureecommerce.internal.services.faqs.FaqsService;
 import com.thesis.serverfurnitureecommerce.model.dto.FaqsDTO;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import com.thesis.serverfurnitureecommerce.pkg.utils.annotation.ApiMessage;
@@ -23,7 +23,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class FaqsController {
-    IFaqsService faqsService;
+    FaqsService faqsService;
 
     @ApiMessage("Get all faqs")
     @GetMapping

@@ -2,14 +2,18 @@ package com.thesis.serverfurnitureecommerce.internal.services.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thesis.serverfurnitureecommerce.domain.request.ProductSearchRequest;
-import com.thesis.serverfurnitureecommerce.internal.repositories.IImageRepository;
-import com.thesis.serverfurnitureecommerce.internal.repositories.IProductRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.ImageRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.ProductRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.ReviewRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.UserRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.custom.product.IProductRepositoryCustom;
 import com.thesis.serverfurnitureecommerce.model.dto.ImageDTO;
 import com.thesis.serverfurnitureecommerce.model.dto.ProductDTO;
+import com.thesis.serverfurnitureecommerce.model.dto.ReviewDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.ProductEntity;
-import com.thesis.serverfurnitureecommerce.pkg.mapper.IImageMapper;
-import com.thesis.serverfurnitureecommerce.pkg.mapper.IProductMapper;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.ImageMapper;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.ProductMapper;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.ReviewMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,13 +28,16 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ProductServiceImpl implements IProductService {
-    IProductRepository productRepository;
+public class ProductServiceImpl implements ProductService {
+    ProductRepository productRepository;
     IProductRepositoryCustom productRepositoryCustom;
-    IProductMapper productMapper;
-    IImageRepository iImageRepository;
-    IImageMapper imageMapper;
+    ProductMapper productMapper;
+    ImageRepository imageRepository;
+    ReviewRepository reviewRepository;
+    ImageMapper imageMapper;
     ObjectMapper objectMapper;
+    UserRepository userRepository;
+    ReviewMapper reviewMapper;
 
 
     @Override
@@ -63,16 +70,26 @@ public class ProductServiceImpl implements IProductService {
                 .filter(product -> product.getIsActive() == 1)
                 .orElse(null);
         List<ImageDTO> imageDTOS = getImagesByProductID(productID);
+        List<ReviewDTO> reviewDTOS = getReviewByProductID(productID);
         ProductDTO productDTO = productMapper.convertToDTO(productEntity);
         productDTO.setImages(imageDTOS);
+        productDTO.setReviewDTO(reviewDTOS);
         return productDTO;
     }
 
 
     private List<ImageDTO> getImagesByProductID(Integer productID) {
-        return iImageRepository.getImagesByProductID(productID)
+        return imageRepository.getImagesByProductID(productID)
                 .stream()
                 .map(imageMapper::convertToDTO)
                 .collect(Collectors.toList());
     }
+
+    private List<ReviewDTO> getReviewByProductID(Integer productID) {
+        return reviewRepository.getReviewByProductID(productID)
+                .stream()
+                .map(reviewMapper::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
 }

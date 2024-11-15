@@ -28,4 +28,5 @@ public class DatabaseConstant {
     public static final String ADDRESS_TABLE = "address";
     public static final String SUPPORT_CUSTOMER_TABLE = "support_customers";
     public static final String FAQS_TABLE = "faqs";
+    public static final String REFRESH_TOKEN_TABLE = "refresh_tokens";
 }

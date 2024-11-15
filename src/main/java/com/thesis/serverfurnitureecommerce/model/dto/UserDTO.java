@@ -20,9 +20,4 @@ public class UserDTO {
     LocalDateTime otpExpired;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
-    RoleDTO role;
-
-    public static UserDTO createUserDTO(){
-        return new UserDTO();
-    }
 }

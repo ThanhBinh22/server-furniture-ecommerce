@@ -31,5 +31,5 @@ public class NewPasswordRequest {
      * This field must not be blank.
      */
     @NotBlank(message = "PARAMETER_MISSING")
-    String newPassword;
+    String password;
 }

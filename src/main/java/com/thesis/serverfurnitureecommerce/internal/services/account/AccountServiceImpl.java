@@ -2,14 +2,14 @@ package com.thesis.serverfurnitureecommerce.internal.services.account;
 
 import com.thesis.serverfurnitureecommerce.constant.RoleConstant;
 import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
-import com.thesis.serverfurnitureecommerce.internal.repositories.IRoleRepository;
-import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
-import com.thesis.serverfurnitureecommerce.internal.services.email.IEmailService;
+import com.thesis.serverfurnitureecommerce.internal.repositories.RoleRepository;
+import com.thesis.serverfurnitureecommerce.internal.repositories.UserRepository;
+import com.thesis.serverfurnitureecommerce.internal.services.email.EmailService;
 import com.thesis.serverfurnitureecommerce.model.entity.RoleEntity;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
-import com.thesis.serverfurnitureecommerce.pkg.mapper.IUserMapper;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.UserMapper;
 import com.thesis.serverfurnitureecommerce.pkg.utils.OtpGenerator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +25,11 @@ import java.time.LocalDateTime;
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AccountServiceImpl implements IAccountService {
-    IUserRepository userRepository;
-    IEmailService emailService;
-    IUserMapper userMapper;
-    IRoleRepository roleRepository;
+public class AccountServiceImpl implements AccountService {
+    UserRepository userRepository;
+    EmailService emailService;
+    UserMapper userMapper;
+    RoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
 
     /**
@@ -38,7 +38,7 @@ public class AccountServiceImpl implements IAccountService {
      * @param registerRequest thông tin đăng ký tài khoản
      */
     @Override
-    public void RegisterAccount(RegisterRequest registerRequest) {
+    public void registerAccount(RegisterRequest registerRequest) {
         log.info("Invoke to service register");
 
         // Kiểm tra người dùng theo username, nếu tồn tại và chưa kích hoạt, cập nhật mật khẩu và gửi OTP
@@ -169,6 +169,13 @@ public class AccountServiceImpl implements IAccountService {
         user.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
         emailService.sendMailOTP(user.getEmail(), user.getOtp()); // Gửi lại OTP
         userRepository.save(user);
+    }
+
+    @Override
+    public boolean isAccountVerified(String email) {
+        return userRepository.findByEmail(email)
+                .map(user -> user.getIsActive() == 1)
+                .orElse(false);
     }
 
 }

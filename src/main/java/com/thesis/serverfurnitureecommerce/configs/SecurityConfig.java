@@ -47,7 +47,8 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/api/user/**", "/actuator/**", "/api/product/**", "/api/faqs").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/user/**", "/actuator/**", "/api/product/**", "/api/faqs", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/api/review/**","/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2

@@ -1,9 +1,8 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
-import com.thesis.serverfurnitureecommerce.domain.request.ProductSearchRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
-import com.thesis.serverfurnitureecommerce.internal.services.product.IProductService;
+import com.thesis.serverfurnitureecommerce.internal.services.product.ProductService;
 import com.thesis.serverfurnitureecommerce.model.dto.ProductDTO;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
@@ -23,7 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductController {
-    IProductService productService;
+    ProductService productService;
 
     @GetMapping
     public ResponseEntity<APIResponse<List<ProductDTO>>> getAllProduct() {
@@ -35,7 +34,7 @@ public class ProductController {
         return ResponseBuilder.buildResponse(productService.findAll(), ErrorCode.FOUND);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<APIResponse<ProductDTO>> getInforProduct(@PathVariable Integer id) {
         log.info("GET /api/product/{}", id);
         ProductDTO productDTO = productService.findByProductID(id);
@@ -48,42 +47,24 @@ public class ProductController {
         }
     }
 
-
-//    @GetMapping("/search")
-//    public ResponseEntity<APIResponse<List<ProductDTO>>> findProduct(
-//            @RequestParam(required = false) String name,
-//            @RequestParam(required = false) String category,
-//            @RequestParam(required = false) String supplier,
-//            @RequestParam(required = false) Double minPrice,
-//            @RequestParam(required = false) String room,
-//            @RequestParam(required = false) Double maxPrice) {
-//
-//        log.info("Request to search product: name={}, category={}, supplier={}, minPrice={}, maxPrice={}, room={}",
-//                name, category, supplier, minPrice, maxPrice, room);
-//        try {
-//            ProductSearchRequest productSearchRequest = new ProductSearchRequest();
-//            productSearchRequest.setName(name);
-//            productSearchRequest.setCategory(category);
-//            productSearchRequest.setSupplier(supplier);
-//            productSearchRequest.setRoom(room);
-//            productSearchRequest.setMinPrice(minPrice);
-//            productSearchRequest.setMaxPrice(maxPrice);
-//
-//            List<ProductDTO> products = productService.findByMultiFields(productSearchRequest);
-//            return ResponseBuilder.buildResponse(products, ErrorCode.FOUND);
-//        } catch (Exception ex) {
-//            throw new AppException(ErrorCode.INVALID_REQUEST);
-//        }
-//    }
-
     @GetMapping("/search")
     public ResponseEntity<APIResponse<List<ProductDTO>>> findProduct(@RequestParam Map<String, Object> search) {
         log.info("Search product by multi field");
-//        try {
             List<ProductDTO> products = productService.findByMultiFields(search);
             return ResponseBuilder.buildResponse(products, ErrorCode.FOUND);
-//        } catch (Exception ex) {
-//            throw new AppException(ErrorCode.INVALID_REQUEST);
-//        }
+    }
+
+    private <T> ResponseEntity<APIResponse<T>> handleProductAction(ProductController.ProductAction<T> action) {
+        try {
+            return action.execute();
+        } catch (AppException ex) {
+            log.error("Error during user action: {}", ex.getMessage());
+            return ResponseBuilder.buildResponse(null, ex.getErrorCode());
+        }
+    }
+
+    @FunctionalInterface
+    private interface ProductAction<T> {
+        ResponseEntity<APIResponse<T>> execute();
     }
 }

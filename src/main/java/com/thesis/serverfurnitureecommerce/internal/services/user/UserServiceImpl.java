@@ -2,30 +2,38 @@ package com.thesis.serverfurnitureecommerce.internal.services.user;
 
 import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.NewPasswordRequest;
-import com.thesis.serverfurnitureecommerce.internal.repositories.IUserRepository;
-import com.thesis.serverfurnitureecommerce.internal.services.email.IEmailService;
+import com.thesis.serverfurnitureecommerce.internal.repositories.UserRepository;
+import com.thesis.serverfurnitureecommerce.internal.services.email.EmailService;
+import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
+import com.thesis.serverfurnitureecommerce.pkg.mapper.UserMapper;
 import com.thesis.serverfurnitureecommerce.pkg.utils.OtpGenerator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserServiceImpl implements IUserService {
-    IUserRepository userRepository;
-    IEmailService emailService;
+public class UserServiceImpl implements UserService {
+    UserRepository userRepository;
+    EmailService emailService;
     PasswordEncoder passwordEncoder;
+    UserMapper userMapper;
 
     @Override
     public void forgotPassword(String email) {
@@ -37,7 +45,7 @@ public class UserServiceImpl implements IUserService {
         user.setOtp(otp);
         user.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
         userRepository.save(user);
-        emailService.sendMailOTP(email, otp);
+        emailService.sendMailForgotPassword(email, otp);
     }
 
     @Override
@@ -74,7 +82,51 @@ public class UserServiceImpl implements IUserService {
         log.info("Changing password for email: {}", newPasswordRequest.getEmail());
         UserEntity user = userRepository.findByEmail(newPasswordRequest.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        user.setPassword(passwordEncoder.encode(newPasswordRequest.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(newPasswordRequest.getPassword()));
         userRepository.save(user);
+    }
+
+    @Override
+    public void deleteAccount(Long userID) {
+        log.info("Deleting account for user ID: {}", userID);
+        UserEntity user = userRepository.findById(userID)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        try {
+            userRepository.delete(user);
+        } catch (Exception ex) {
+            throw new AppException(ErrorCode.DELETE_FAILED);
+        }
+
+    }
+
+    @Override
+    public void updateProfile(Long id, UserDTO userDTO) {
+        log.info("Updating profile for user ID: {}", id);
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        BeanUtils.copyProperties(userDTO, user, getNullPropertyNames(userDTO));
+        userRepository.save(user);
+    }
+
+    @Override
+    public UserDTO viewProfile(Long userID) {
+        log.info("Viewing profile for user ID: {}", userID);
+        UserEntity user = userRepository.findById(userID)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        return userMapper.toDTO(user);
+    }
+
+    // Phương thức phụ để lấy tên các thuộc tính null
+    private String[] getNullPropertyNames(Object source) {
+        final BeanWrapper wrappedSource = new BeanWrapperImpl(source);
+        Set<String> emptyNames = new HashSet<>();
+
+        for (var propertyDescriptor : wrappedSource.getPropertyDescriptors()) {
+            String propertyName = propertyDescriptor.getName();
+            if (wrappedSource.getPropertyValue(propertyName) == null) {
+                emptyNames.add(propertyName);
+            }
+        }
+        return emptyNames.toArray(new String[0]);
     }
 }
