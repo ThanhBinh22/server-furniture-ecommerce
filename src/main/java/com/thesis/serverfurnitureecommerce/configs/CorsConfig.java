@@ -19,7 +19,6 @@ import java.util.List;
  */
 @Configuration("corsConfig")
 public class CorsConfig {
-
     /**
      * Bean for CORS configuration source.
      *

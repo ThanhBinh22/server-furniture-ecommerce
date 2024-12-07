@@ -12,4 +12,5 @@ public interface ProductService {
 
     ProductDTO findByProductID(int productID);
 
+    void saveToWishlist(Integer productID, String email);
 }

@@ -21,4 +21,8 @@ public class ProductDTO {
     CategoryDTO category;
     SupplierDTO supplier;
     List<ReviewDTO> reviewDTO;
+
+    public static ProductDTO create() {
+        return new ProductDTO();
+    }
 }

@@ -1,5 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
+import com.thesis.serverfurnitureecommerce.domain.request.WishlistRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.services.product.ProductService;
@@ -52,6 +53,15 @@ public class ProductController {
         log.info("Search product by multi field");
             List<ProductDTO> products = productService.findByMultiFields(search);
             return ResponseBuilder.buildResponse(products, ErrorCode.FOUND);
+    }
+
+    @PostMapping("/add-to-wishlist")
+    public ResponseEntity<APIResponse<Void>> addToWishlist(@RequestBody WishlistRequest wishlistRequest) {
+        log.info("POST /api/product/add-to-wishlist");
+        return handleProductAction(() -> {
+            productService.saveToWishlist(wishlistRequest.getProductID(), wishlistRequest.getEmail());
+            return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
+        });
     }
 
     private <T> ResponseEntity<APIResponse<T>> handleProductAction(ProductController.ProductAction<T> action) {
