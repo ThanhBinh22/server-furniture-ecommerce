@@ -44,7 +44,6 @@ public class ProductServiceImpl implements ProductService {
     ReviewMapper reviewMapper;
     WishlistRepository wishlistRepository;
 
-
     @Override
     public List<ProductDTO> findAll() {
         log.info("Invoke to service find all product");
@@ -81,6 +80,7 @@ public class ProductServiceImpl implements ProductService {
         List<ImageDTO> imageDTOS = getImagesByProductID(productID);
         List<ReviewDTO> reviewDTOS = getReviewByProductID(productID);
         ProductDTO productDTO = productMapper.convertToDTO(productEntity);
+        assert productEntity != null;
         String price = CurrencyUtils.formatCurrencyVND(productEntity.getPrice());
         productDTO.setPrice(price);
         productDTO.setImages(imageDTOS);
@@ -89,9 +89,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void saveToWishlist(Integer productID, String email) {
+    public void saveToWishlist(Integer productID, String username) {
         log.info("Invoke to service save product to wishlist");
-        UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         ProductEntity product = productRepository.findById(productID).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         WishlistEntity wishlistEntity = WishlistEntity.create();
         wishlistEntity.setProduct(product);
@@ -99,25 +99,53 @@ public class ProductServiceImpl implements ProductService {
         wishlistRepository.save(wishlistEntity);
     }
 
-
-    private List<ImageDTO> getImagesByProductID(Integer productID) {
-        return imageRepository.getImagesByProductID(productID)
-                .stream()
-                .map(imageMapper::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    private List<ReviewDTO> getReviewByProductID(Integer productID) {
-        List<ReviewEntity> reviewEntities = reviewRepository.getReviewByProductID(productID);
-        List<ReviewDTO> reviews = new ArrayList<>();
-        for (ReviewEntity review : reviewEntities) {
-            UserEntity user = userRepository.findById(review.getUser().getId()).orElse(null);
-            ReviewDTO reviewDTO = reviewMapper.convertToDTO(review);
-            reviewDTO.setUsername(user.getUsername());
-            reviews.add(reviewDTO);
+    @Override
+    public List<ProductDTO> getWishlist(String username) {
+        log.info("Invoke to service get wishlist");
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        List<WishlistEntity> wishlistEntities = wishlistRepository.findByUser(user);
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        for (WishlistEntity wishlist : wishlistEntities) {
+            ProductEntity product = productRepository.findById(wishlist.getProduct().getId()).orElse(null);
+            ProductDTO productDTO = productMapper.convertToDTO(product);
+            assert product != null;
+            String price = CurrencyUtils.formatCurrencyVND(product.getPrice());
+            productDTO.setPrice(price);
+            productDTO.setImages(getImagesByProductID(productDTO.getId()));
+            productDTOS.add(productDTO);
         }
-        return reviews;
+        return productDTOS;
+    }
+
+    @Override
+    public void deleteWishlist(Integer productID, String username) {
+        log.info("Invoke to service delete product from wishlist");
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        ProductEntity product = productRepository.findById(productID).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        WishlistEntity wishlistEntity = wishlistRepository.findByUserAndProduct(user, product);
+        wishlistRepository.delete(wishlistEntity);
     }
 
 
-}
+        private List<ImageDTO> getImagesByProductID (Integer productID){
+            return imageRepository.getImagesByProductID(productID)
+                    .stream()
+                    .map(imageMapper::convertToDTO)
+                    .collect(Collectors.toList());
+        }
+
+        private List<ReviewDTO> getReviewByProductID (Integer productID){
+            List<ReviewEntity> reviewEntities = reviewRepository.getReviewByProductID(productID);
+            List<ReviewDTO> reviews = new ArrayList<>();
+            for (ReviewEntity review : reviewEntities) {
+                UserEntity user = userRepository.findById(review.getUser().getId()).orElse(null);
+                ReviewDTO reviewDTO = reviewMapper.convertToDTO(review);
+                assert user != null;
+                reviewDTO.setUsername(user.getUsername());
+                reviews.add(reviewDTO);
+            }
+            return reviews;
+        }
+
+
+    }

@@ -16,4 +16,6 @@ public interface CartService {
     CartResponse getCart(String email);
 
     void clearCart(String email);
+
+    int getQuantityInCart(String username);
 }

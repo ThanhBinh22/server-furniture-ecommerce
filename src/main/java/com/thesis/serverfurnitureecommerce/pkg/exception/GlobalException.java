@@ -61,7 +61,7 @@ public class GlobalException {
             errorDetail.setProperty("description", StringConstant.ACCOUNT_IS_LOCKED);
         }
 
-        if (exception instanceof AccessDeniedException) {
+        if (exception instanceof AccessDeniedException)  {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
             errorDetail.setProperty("description", StringConstant.NOT_AUTHENTICATED);
         }

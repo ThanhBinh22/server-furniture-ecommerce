@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     UserService userService;
 
-    @ApiMessage("Forgot password")
     @PostMapping("/forgot-password")
     public ResponseEntity<APIResponse<Void>> forgotPassword(@RequestBody EmailRequest emailRequest) {
         log.info("Request to forgot password for email: {}", emailRequest.getEmail());
@@ -36,7 +35,6 @@ public class UserController {
         });
     }
 
-    @ApiMessage("Verify forgot password")
     @PostMapping("/verify-forget-password")
     public ResponseEntity<APIResponse<String>> verifyForgetPassword(@RequestBody AccountVerifyRequest accountVerifyRequest) {
         log.info("Request to verify forgot password for email: {}", accountVerifyRequest.getEmail());
@@ -46,7 +44,6 @@ public class UserController {
         });
     }
 
-    @ApiMessage("Change password")
     @PostMapping("/change-password")
     public ResponseEntity<APIResponse<String>> changePassword(@RequestBody @Valid NewPasswordRequest newPasswordRequest) {
         log.info("Request to change password for email: {}", newPasswordRequest.getEmail());
@@ -54,7 +51,6 @@ public class UserController {
         return ResponseBuilder.buildResponse("Password changed successfully", ErrorCode.SUCCESS);
     }
 
-    @ApiMessage("Permanently delete account")
     @DeleteMapping("/delete-account")
     public ResponseEntity<APIResponse<Void>> deleteAccount(@RequestParam Long userID) {
         log.info("Request to delete account for email: {}", userID);
@@ -64,7 +60,6 @@ public class UserController {
         });
     }
 
-    @ApiMessage("Update profile")
     @PutMapping("/update-profile")
     public ResponseEntity<APIResponse<Void>> updateProfile(@RequestBody UserDTO userDTO) {
         log.info("Request to update profile for user: {}", userDTO.getId());
@@ -74,12 +69,20 @@ public class UserController {
         });
     }
 
-    @ApiMessage("View profile")
     @GetMapping("/view-profile")
     public ResponseEntity<APIResponse<UserDTO>> viewProfile(@RequestParam Long userID) {
         log.info("Request to view profile for user: {}", userID);
         return handleUserAction(() -> {
             UserDTO userDTO = userService.viewProfile(userID);
+            return ResponseBuilder.buildResponse(userDTO, ErrorCode.SUCCESS);
+        });
+    }
+
+    @GetMapping("/get-information-user")
+    public ResponseEntity<APIResponse<UserDTO>> getInformationUser(@RequestParam String accessToken) {
+        log.info("Request to get information user");
+        return handleUserAction(() -> {
+            UserDTO userDTO = userService.getInformationUser(accessToken);
             return ResponseBuilder.buildResponse(userDTO, ErrorCode.SUCCESS);
         });
     }

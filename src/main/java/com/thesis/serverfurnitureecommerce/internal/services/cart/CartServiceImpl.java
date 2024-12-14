@@ -15,7 +15,6 @@ import com.thesis.serverfurnitureecommerce.model.entity.ProductEntity;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
-import com.thesis.serverfurnitureecommerce.pkg.mapper.CartMapper;
 import com.thesis.serverfurnitureecommerce.pkg.mapper.ProductMapper;
 import com.thesis.serverfurnitureecommerce.pkg.mapper.UserMapper;
 import com.thesis.serverfurnitureecommerce.pkg.utils.CurrencyUtils;
@@ -23,6 +22,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,16 +39,17 @@ public class CartServiceImpl implements CartService {
     CartRepository cartRepository;
     UserRepository userRepository;
     ProductRepository productRepository;
-    CartMapper cartMapper;
     UserMapper userMapper;
     ProductMapper productMapper;
 
     @Override
     public void addCartItem(CartRequest cartRequest) {
-        UserEntity user = userRepository.findByEmail(cartRequest.getEmail())
+        log.info("Invoke to service addCartItem");
+        String username = getCurrentUsername();
+        UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         CartEntity cart = cartRepository.findByUser(user);
-        ProductEntity product = productRepository.findById(cartRequest.getProductID())
+        ProductEntity product = productRepository.findById(cartRequest.getProductId())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         Optional<CartItemEntity> existingCartItem = cartItemRepository.findByCartAndProduct(cart, product);
 
@@ -71,6 +72,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void removeCartItem(RemoveCartItemRequest removeCartItemRequest) {
+        log.info("Invoke to service removeCartItem");
         UserEntity user = userRepository.findByEmail(removeCartItemRequest.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         CartEntity cart = cartRepository.findByUser(user);
@@ -88,10 +90,12 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void increaseCartItemQuantity(CartRequest cartRequest) {
-        UserEntity user = userRepository.findByEmail(cartRequest.getEmail())
+        log.info("Invoke to service increaseCartItemQuantity");
+        String username = getCurrentUsername();
+        UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         CartEntity cart = cartRepository.findByUser(user);
-        ProductEntity product = productRepository.findById(cartRequest.getProductID())
+        ProductEntity product = productRepository.findById(cartRequest.getProductId())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         Optional<CartItemEntity> existingCartItem = cartItemRepository.findByCartAndProduct(cart, product);
 
@@ -114,10 +118,12 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void decreaseCartItemQuantity(CartRequest cartRequest) {
-        UserEntity user = userRepository.findByEmail(cartRequest.getEmail())
+        log.info("Invoke to service decreaseCartItemQuantity");
+        String username = getCurrentUsername();
+        UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         CartEntity cart = cartRepository.findByUser(user);
-        ProductEntity product = productRepository.findById(cartRequest.getProductID())
+        ProductEntity product = productRepository.findById(cartRequest.getProductId())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         Optional<CartItemEntity> existingCartItem = cartItemRepository.findByCartAndProduct(cart, product);
 
@@ -141,7 +147,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartResponse getCart(String email) {
-        UserEntity user =  userRepository.findByEmail(email)
+        log.info("Invoke to service getCart");
+        UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         CartEntity cart = cartRepository.findByUser(user);
         CartResponse cartResponse = CartResponse.create();
@@ -176,5 +183,18 @@ public class CartServiceImpl implements CartService {
 
     }
 
+    @Override
+    public int getQuantityInCart(String username) {
+        UserEntity user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            return 0;
+        }
+        CartEntity cart = cartRepository.findByUser(user);
+        return cart.getQuantity();
+    }
 
+    private String getCurrentUsername() {
+        log.info("username: {}", SecurityContextHolder.getContext().getAuthentication().getName());
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 }

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,6 +23,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user/cart")
 public class CartController {
     CartService cartService;
+
+    @GetMapping("/get-quantity-in-cart")
+    public ResponseEntity<APIResponse<Integer>> getQuantityInCart() {
+        log.info("GET /api/user/cart/get-quantity-in-cart");
+        String username = getCurrentUserEmail();
+        return handleRequest(() -> {
+            int quantity = cartService.getQuantityInCart(username);
+            return ResponseBuilder.buildResponse(quantity, ErrorCode.FOUND);
+        });
+    }
 
     @GetMapping("/get-cart")
     public ResponseEntity<APIResponse<CartResponse>> getCart(@RequestParam String email) {
@@ -34,7 +45,7 @@ public class CartController {
 
     @PostMapping("/add-product-into-cart")
     public ResponseEntity<APIResponse<Void>> addProductIntoCart(@RequestBody CartRequest cartRequest) {
-        log.info("POST /api/user/cart/add-product-into-cart");
+        log.info("POST /api/user/cart/add-product-into-cart with productID: {}", cartRequest.getProductId());
         return handleRequest(() -> {
             cartService.addCartItem(cartRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
@@ -66,6 +77,11 @@ public class CartController {
             cartService.removeCartItem(removeCartItemRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.DELETE_SUCCESS);
         });
+    }
+
+    private String getCurrentUserEmail() {
+        log.info("username: {}", SecurityContextHolder.getContext().getAuthentication().getName());
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     private <T> ResponseEntity<APIResponse<T>> handleRequest(CartController.RequestHandler<T> handler) {

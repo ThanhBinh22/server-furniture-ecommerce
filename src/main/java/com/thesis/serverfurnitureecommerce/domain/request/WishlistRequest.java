@@ -10,5 +10,5 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class WishlistRequest {
     Integer productID;
-    String email;
+//    String email;
 }

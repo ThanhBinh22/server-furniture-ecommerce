@@ -44,6 +44,7 @@ public class AccountServiceImpl implements AccountService {
         // Kiểm tra người dùng theo username, nếu tồn tại và chưa kích hoạt, cập nhật mật khẩu và gửi OTP
         UserEntity userByUsername = findUserByUsername(registerRequest.getUsername());
         if (userByUsername != null && userByUsername.getIsActive() == 1) {
+            log.warn("User already exists with username: {}", registerRequest.getUsername());
             throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
         }
         if (userByUsername != null && userByUsername.getIsActive() == 0) {
@@ -72,8 +73,9 @@ public class AccountServiceImpl implements AccountService {
      * @return UserEntity nếu tồn tại, ném AppException nếu đã tồn tại
      */
     private UserEntity findUserByUsername(String username) {
+        log.info("Invoke to service find user by username");
         return userRepository.findByUsername(username)
-                .filter(user -> user.getIsActive() == 0)
+//                .filter(user -> user.getIsActive() == 0)
                 .orElse(null);
     }
 

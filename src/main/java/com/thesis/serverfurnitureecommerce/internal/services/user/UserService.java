@@ -17,4 +17,7 @@ public interface UserService {
     void updateProfile(Long id, UserDTO userDTO);
 
     UserDTO viewProfile(Long userID);
+
+    UserDTO getInformationUser(String accessToken);
+
 }

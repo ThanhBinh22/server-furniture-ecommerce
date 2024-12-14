@@ -51,17 +51,8 @@ public class ProductController {
     @GetMapping("/search")
     public ResponseEntity<APIResponse<List<ProductDTO>>> findProduct(@RequestParam Map<String, Object> search) {
         log.info("Search product by multi field");
-            List<ProductDTO> products = productService.findByMultiFields(search);
-            return ResponseBuilder.buildResponse(products, ErrorCode.FOUND);
-    }
-
-    @PostMapping("/add-to-wishlist")
-    public ResponseEntity<APIResponse<Void>> addToWishlist(@RequestBody WishlistRequest wishlistRequest) {
-        log.info("POST /api/product/add-to-wishlist");
-        return handleProductAction(() -> {
-            productService.saveToWishlist(wishlistRequest.getProductID(), wishlistRequest.getEmail());
-            return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
-        });
+        List<ProductDTO> products = productService.findByMultiFields(search);
+        return ResponseBuilder.buildResponse(products, ErrorCode.FOUND);
     }
 
     private <T> ResponseEntity<APIResponse<T>> handleProductAction(ProductController.ProductAction<T> action) {
