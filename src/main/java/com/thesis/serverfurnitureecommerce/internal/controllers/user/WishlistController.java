@@ -7,6 +7,7 @@ import com.thesis.serverfurnitureecommerce.internal.services.product.ProductServ
 import com.thesis.serverfurnitureecommerce.model.dto.ProductDTO;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
+import com.thesis.serverfurnitureecommerce.pkg.utils.UserUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,7 +30,7 @@ public class WishlistController {
     public ResponseEntity<APIResponse<Void>> addToWishlist(@RequestBody WishlistRequest wishlistRequest) {
         log.info("POST /api/wishlist/add-to-wishlist");
         return handleProductAction(() -> {
-            String username = getCurrentUserEmail();
+            String username = UserUtil.getUsername();
             productService.saveToWishlist(wishlistRequest.getProductID(), username);
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
         });
@@ -39,7 +40,7 @@ public class WishlistController {
     public ResponseEntity<APIResponse<List<ProductDTO>>> getWishlist() {
         log.info("GET /api/wishlist");
         return handleProductAction(() -> {
-            String username = getCurrentUserEmail();
+            String username = UserUtil.getUsername();
             return ResponseBuilder.buildResponse(productService.getWishlist(username), ErrorCode.FOUND);
         });
     }
@@ -48,16 +49,16 @@ public class WishlistController {
     public ResponseEntity<APIResponse<Void>> deleteWishlist(@RequestBody WishlistRequest wishlistRequest) {
         log.info("DELETE /api/wishlist/delete-wishlist with productID: {}", wishlistRequest.getProductID());
         return handleProductAction(() -> {
-            String username = getCurrentUserEmail();
+            String username = UserUtil.getUsername();
             productService.deleteWishlist(wishlistRequest.getProductID(), username);
             return ResponseBuilder.buildResponse(null, ErrorCode.DELETE_SUCCESS);
         });
     }
 
-    private String getCurrentUserEmail() {
-        log.info("username: {}", SecurityContextHolder.getContext().getAuthentication().getName());
-        return SecurityContextHolder.getContext().getAuthentication().getName();
-    }
+//    private String getCurrentUserEmail() {
+//        log.info("username: {}", SecurityContextHolder.getContext().getAuthentication().getName());
+//        return SecurityContextHolder.getContext().getAuthentication().getName();
+//    }
 
     private <T> ResponseEntity<APIResponse<T>> handleProductAction(WishlistController.WishlistAction<T> action) {
         try {

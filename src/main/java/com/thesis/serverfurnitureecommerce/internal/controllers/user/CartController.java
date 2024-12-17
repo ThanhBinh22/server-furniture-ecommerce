@@ -1,19 +1,18 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
 import com.thesis.serverfurnitureecommerce.domain.request.CartRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.RemoveCartItemRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.CartResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.services.cart.CartService;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
+import com.thesis.serverfurnitureecommerce.pkg.utils.UserUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,7 +26,7 @@ public class CartController {
     @GetMapping("/get-quantity-in-cart")
     public ResponseEntity<APIResponse<Integer>> getQuantityInCart() {
         log.info("GET /api/user/cart/get-quantity-in-cart");
-        String username = getCurrentUserEmail();
+        String username = UserUtil.getUsername();
         return handleRequest(() -> {
             int quantity = cartService.getQuantityInCart(username);
             return ResponseBuilder.buildResponse(quantity, ErrorCode.FOUND);
@@ -35,17 +34,18 @@ public class CartController {
     }
 
     @GetMapping("/get-cart")
-    public ResponseEntity<APIResponse<CartResponse>> getCart(@RequestParam String email) {
+    public ResponseEntity<APIResponse<CartResponse>> getCart() {
         log.info("GET /api/user/cart/get-cart");
+        String username = UserUtil.getUsername();
         return handleRequest(() -> {
-            CartResponse cartResponse = cartService.getCart(email);
+            CartResponse cartResponse = cartService.getCart(username);
             return ResponseBuilder.buildResponse(cartResponse, ErrorCode.CREATE_SUCCESS);
         });
     }
 
     @PostMapping("/add-product-into-cart")
     public ResponseEntity<APIResponse<Void>> addProductIntoCart(@RequestBody CartRequest cartRequest) {
-        log.info("POST /api/user/cart/add-product-into-cart with productID: {}", cartRequest.getProductId());
+        log.info("POST /api/user/cart/add-product-into-cart with productID: {}", cartRequest.getProductID());
         return handleRequest(() -> {
             cartService.addCartItem(cartRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
@@ -70,18 +70,13 @@ public class CartController {
         });
     }
 
-    @DeleteMapping("/delete-product-from-cart")
-    public ResponseEntity<APIResponse<Void>> deleteProductFromCart(@RequestBody RemoveCartItemRequest removeCartItemRequest) {
+    @DeleteMapping("/delete-product-from-cart/{productID}")
+    public ResponseEntity<APIResponse<Void>> deleteProductFromCart(@PathVariable Integer productID) {
         log.info("DELETE /api/user/cart/delete-product-from-cart");
         return handleRequest(() -> {
-            cartService.removeCartItem(removeCartItemRequest);
+            cartService.removeCartItem(productID);
             return ResponseBuilder.buildResponse(null, ErrorCode.DELETE_SUCCESS);
         });
-    }
-
-    private String getCurrentUserEmail() {
-        log.info("username: {}", SecurityContextHolder.getContext().getAuthentication().getName());
-        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     private <T> ResponseEntity<APIResponse<T>> handleRequest(CartController.RequestHandler<T> handler) {
