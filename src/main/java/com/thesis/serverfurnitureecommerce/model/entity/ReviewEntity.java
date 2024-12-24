@@ -18,7 +18,7 @@ public class ReviewEntity extends BaseEntity{
     Long id;
     String comment;
     Integer rating;
-    Integer like;
+    Integer likes;
     @Column(name = "reviews_parent_id")
     Integer commentParentID;
     @ManyToOne(fetch = FetchType.LAZY)

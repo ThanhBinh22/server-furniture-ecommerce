@@ -16,7 +16,7 @@ public class CartResponse {
     UserDTO userDTO;
     List<CartItemResponse> cartItemResponse;
     Integer quantity;
-    String amount;
+    Double amount;
 
     public static CartResponse create(){
         return new CartResponse();

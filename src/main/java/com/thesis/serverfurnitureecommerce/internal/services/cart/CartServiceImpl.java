@@ -69,7 +69,7 @@ public class CartServiceImpl implements CartService {
     }
 
 
-    @Override
+    @Override   
     public void removeCartItem(Integer productID) {
         log.info("Invoke to service removeCartItem");
         String username = UserUtil.getUsername();
@@ -159,7 +159,7 @@ public class CartServiceImpl implements CartService {
         if (listCartItem == null) {
             return cartResponse;
         }
-        int amount = 0;
+        double amount = 0;
         for (CartItemEntity cartItemEntity : listCartItem) {
             ProductEntity product = productRepository.findById(cartItemEntity.getProduct().getId())
                     .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
@@ -173,7 +173,7 @@ public class CartServiceImpl implements CartService {
             cartItemResponse.setProductDTO(productDTO);
             cartResponse.getCartItemResponse().add(cartItemResponse);
         }
-        cartResponse.setAmount(CurrencyUtils.formatCurrencyVND(amount));
+        cartResponse.setAmount(amount);
         cartResponse.setQuantity(listCartItem.size());
         return cartResponse;
     }

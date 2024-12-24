@@ -25,4 +25,8 @@ public class UserLogEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     UserEntity user;
+
+    public static UserLogEntity create() {
+        return new UserLogEntity();
+    }
 }

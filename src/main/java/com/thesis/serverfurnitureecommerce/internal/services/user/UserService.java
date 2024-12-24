@@ -2,6 +2,7 @@ package com.thesis.serverfurnitureecommerce.internal.services.user;
 
 import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.NewPasswordRequest;
+import com.thesis.serverfurnitureecommerce.domain.request.UpdateAccountRequest;
 import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 
 public interface UserService {
@@ -14,7 +15,7 @@ public interface UserService {
 
     void deleteAccount(Long userID);
 
-    void updateProfile(Long id, UserDTO userDTO);
+    UpdateAccountRequest updateProfile(UpdateAccountRequest updateAccountRequest);
 
     UserDTO viewProfile(Long userID);
 

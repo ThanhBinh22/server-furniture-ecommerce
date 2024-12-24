@@ -1,6 +1,7 @@
 package com.thesis.serverfurnitureecommerce.pkg.mapper;
 
 import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
+import com.thesis.serverfurnitureecommerce.domain.request.UpdateAccountRequest;
 import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import org.mapstruct.Mapper;
@@ -42,6 +43,7 @@ public interface UserMapper {
      */
     UserEntity fromRequestToEntity(RegisterRequest registerRequest);
 
+    UserEntity fromUpdateToEntity(UpdateAccountRequest updateAccountRequest);
     /**
      * Converts a list of UserEntity objects to a list of UserDTOs.
      *

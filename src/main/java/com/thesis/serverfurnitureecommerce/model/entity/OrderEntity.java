@@ -1,6 +1,7 @@
 package com.thesis.serverfurnitureecommerce.model.entity;
 
 import com.thesis.serverfurnitureecommerce.constant.DatabaseConstant;
+import com.thesis.serverfurnitureecommerce.pkg.enums.StatusOrderEnum;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -25,7 +26,7 @@ public class OrderEntity extends BaseEntity {
     Long id;
     @Column(name = "total_amount")
     Double totalAmount;
-    String status;
+    StatusOrderEnum status;
     @Column(name = "payment")
     String payment;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,5 +39,14 @@ public class OrderEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "address_id")
     AddressEntity address;
+
+
+    public void setStatus(StatusOrderEnum status) {
+        this.status = status;
+    }
+
+    public static OrderEntity create(){
+        return new OrderEntity();
+    }
 }
 
