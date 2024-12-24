@@ -1,7 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.services.cart;
 
 import com.thesis.serverfurnitureecommerce.domain.request.CartRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.RemoveCartItemRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.CartItemResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.CartResponse;
 import com.thesis.serverfurnitureecommerce.internal.repositories.CartItemRepository;
@@ -15,10 +14,10 @@ import com.thesis.serverfurnitureecommerce.model.entity.ProductEntity;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
-import com.thesis.serverfurnitureecommerce.pkg.mapper.CartMapper;
 import com.thesis.serverfurnitureecommerce.pkg.mapper.ProductMapper;
 import com.thesis.serverfurnitureecommerce.pkg.mapper.UserMapper;
 import com.thesis.serverfurnitureecommerce.pkg.utils.CurrencyUtils;
+import com.thesis.serverfurnitureecommerce.pkg.utils.UserUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -39,13 +38,14 @@ public class CartServiceImpl implements CartService {
     CartRepository cartRepository;
     UserRepository userRepository;
     ProductRepository productRepository;
-    CartMapper cartMapper;
     UserMapper userMapper;
     ProductMapper productMapper;
 
     @Override
     public void addCartItem(CartRequest cartRequest) {
-        UserEntity user = userRepository.findByEmail(cartRequest.getEmail())
+        log.info("Invoke to service addCartItem");
+        String username = UserUtil.getUsername();
+        UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         CartEntity cart = cartRepository.findByUser(user);
         ProductEntity product = productRepository.findById(cartRequest.getProductID())
@@ -54,11 +54,11 @@ public class CartServiceImpl implements CartService {
 
         if (existingCartItem.isPresent()) {
             CartItemEntity cartItemEntity = existingCartItem.get();
-            cartItemEntity.setQuantity(cartItemEntity.getQuantity() + cartRequest.getQuantity());
+            cartItemEntity.setQuantity(cartItemEntity.getQuantity() + 1);
             cartItemRepository.save(cartItemEntity);
         } else {
             CartItemEntity cartItemEntity = CartItemEntity.create();
-            cartItemEntity.setQuantity(cartRequest.getQuantity());
+            cartItemEntity.setQuantity(1);
             cartItemEntity.setCart(cart);
             cartItemEntity.setProduct(product);
             cartItemEntity.setId(UUID.randomUUID().toString());
@@ -69,12 +69,14 @@ public class CartServiceImpl implements CartService {
     }
 
 
-    @Override
-    public void removeCartItem(RemoveCartItemRequest removeCartItemRequest) {
-        UserEntity user = userRepository.findByEmail(removeCartItemRequest.getEmail())
+    @Override   
+    public void removeCartItem(Integer productID) {
+        log.info("Invoke to service removeCartItem");
+        String username = UserUtil.getUsername();
+        UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         CartEntity cart = cartRepository.findByUser(user);
-        ProductEntity product = productRepository.findById(removeCartItemRequest.getProductID())
+        ProductEntity product = productRepository.findById(productID)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         Optional<CartItemEntity> existingCartItem = cartItemRepository.findByCartAndProduct(cart, product);
 
@@ -88,7 +90,9 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void increaseCartItemQuantity(CartRequest cartRequest) {
-        UserEntity user = userRepository.findByEmail(cartRequest.getEmail())
+        log.info("Invoke to service increaseCartItemQuantity");
+        String username = UserUtil.getUsername();
+        UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         CartEntity cart = cartRepository.findByUser(user);
         ProductEntity product = productRepository.findById(cartRequest.getProductID())
@@ -97,11 +101,11 @@ public class CartServiceImpl implements CartService {
 
         if (existingCartItem.isPresent()) {
             CartItemEntity cartItemEntity = existingCartItem.get();
-            cartItemEntity.setQuantity(cartItemEntity.getQuantity() + cartRequest.getQuantity());
+            cartItemEntity.setQuantity(cartItemEntity.getQuantity() + 1);
             cartItemRepository.save(cartItemEntity);
         } else {
             CartItemEntity newCartItem = CartItemEntity.create();
-            newCartItem.setQuantity(cartRequest.getQuantity());
+            newCartItem.setQuantity(1);
             newCartItem.setCart(cart);
             newCartItem.setProduct(product);
             newCartItem.setId(UUID.randomUUID().toString());
@@ -114,7 +118,9 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void decreaseCartItemQuantity(CartRequest cartRequest) {
-        UserEntity user = userRepository.findByEmail(cartRequest.getEmail())
+        log.info("Invoke to service decreaseCartItemQuantity");
+        String username = UserUtil.getUsername();
+        UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         CartEntity cart = cartRepository.findByUser(user);
         ProductEntity product = productRepository.findById(cartRequest.getProductID())
@@ -123,7 +129,7 @@ public class CartServiceImpl implements CartService {
 
         if (existingCartItem.isPresent()) {
             CartItemEntity cartItemEntity = existingCartItem.get();
-            int newQuantity = cartItemEntity.getQuantity() - cartRequest.getQuantity();
+            int newQuantity = cartItemEntity.getQuantity() - 1;
 
             if (newQuantity > 0) {
                 cartItemEntity.setQuantity(newQuantity);
@@ -140,8 +146,9 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public CartResponse getCart(String email) {
-        UserEntity user =  userRepository.findByEmail(email)
+    public CartResponse getCart(String username) {
+        log.info("Invoke to service getCart");
+        UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         CartEntity cart = cartRepository.findByUser(user);
         CartResponse cartResponse = CartResponse.create();
@@ -152,7 +159,7 @@ public class CartServiceImpl implements CartService {
         if (listCartItem == null) {
             return cartResponse;
         }
-        int amount = 0;
+        double amount = 0;
         for (CartItemEntity cartItemEntity : listCartItem) {
             ProductEntity product = productRepository.findById(cartItemEntity.getProduct().getId())
                     .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
@@ -166,8 +173,8 @@ public class CartServiceImpl implements CartService {
             cartItemResponse.setProductDTO(productDTO);
             cartResponse.getCartItemResponse().add(cartItemResponse);
         }
-        cartResponse.setAmount(CurrencyUtils.formatCurrencyVND(amount));
-
+        cartResponse.setAmount(amount);
+        cartResponse.setQuantity(listCartItem.size());
         return cartResponse;
     }
 
@@ -176,5 +183,14 @@ public class CartServiceImpl implements CartService {
 
     }
 
+    @Override
+    public int getQuantityInCart(String username) {
+        UserEntity user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            return 0;
+        }
+        CartEntity cart = cartRepository.findByUser(user);
+        return cart.getQuantity();
+    }
 
 }

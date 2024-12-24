@@ -1,24 +1,25 @@
+APP_NAME = server-furniture-ecommerce
+JAR_FILE = build/libs/$(APP_NAME).jar
 GRADLE = ./gradlew
-JAR_FILE = build/libs/$(shell basename "$(CURDIR)")-0.0.1-SNAPSHOT.jar
+PORT = 8085
 
-JAVA_VERSION = 23
+.PHONY: help
+help:
+	@echo "Usage: make [target]"
+	@echo "Targets:"
+	@echo "  build         Build the Spring Boot application"
+	@echo "  run           Run the application"
+	@echo "  clean         Clean the build files"
 
-.PHONY: all build run test clean
-
-all: build
-
+.PHONY: build
 build:
-	$(GRADLE) build
-
-run: build
-	$(GRADLE) bootRun
-
-
-jar:
 	$(GRADLE) bootJar
 
-run-jar: jar
+.PHONY: run
+run: build
+	@echo "Running application on port $(PORT)..."
 	java -jar $(JAR_FILE)
 
-setup-java:
-	$(GRADLE) -Porg.gradle.java.home=$(JAVA_VERSION)
+.PHONY: clean
+clean:
+	$(GRADLE) clean

@@ -9,6 +9,4 @@ import org.springframework.stereotype.Repository;
 public interface CartRepository extends CrudRepository<CartEntity, Long> {
 
         CartEntity findByUser(UserEntity user);
-
-        void deleteByUserEmail(String email);
 }

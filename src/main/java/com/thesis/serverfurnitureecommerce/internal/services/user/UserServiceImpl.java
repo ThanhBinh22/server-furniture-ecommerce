@@ -2,14 +2,18 @@ package com.thesis.serverfurnitureecommerce.internal.services.user;
 
 import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.NewPasswordRequest;
+import com.thesis.serverfurnitureecommerce.domain.request.UpdateAccountRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.UserRepository;
 import com.thesis.serverfurnitureecommerce.internal.services.email.EmailService;
+import com.thesis.serverfurnitureecommerce.internal.services.jwt.JwtService;
 import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import com.thesis.serverfurnitureecommerce.pkg.mapper.UserMapper;
 import com.thesis.serverfurnitureecommerce.pkg.utils.OtpGenerator;
+import com.thesis.serverfurnitureecommerce.pkg.utils.UserUtil;
+import io.jsonwebtoken.Jwts;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +33,15 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserServiceImpl implements UserService {
-    UserRepository userRepository;
-    EmailService emailService;
-    PasswordEncoder passwordEncoder;
-    UserMapper userMapper;
+    final UserRepository userRepository;
+    final EmailService emailService;
+    final PasswordEncoder passwordEncoder;
+    final UserMapper userMapper;
+
+    @Value("${security.jwt.secret-key}")
+    String secretKey;
 
     @Override
     public void forgotPassword(String email) {
@@ -100,12 +108,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateProfile(Long id, UserDTO userDTO) {
-        log.info("Updating profile for user ID: {}", id);
-        UserEntity user = userRepository.findById(id)
+    public UpdateAccountRequest updateProfile(UpdateAccountRequest updateAccountRequest) {
+        String username = UserUtil.getUsername();
+        log.info("Updating profile for username: {}", username);
+        UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        BeanUtils.copyProperties(userDTO, user, getNullPropertyNames(userDTO));
+        BeanUtils.copyProperties(updateAccountRequest, user, getNullPropertyNames(updateAccountRequest));
         userRepository.save(user);
+        return updateAccountRequest;
     }
 
     @Override
@@ -116,7 +126,22 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDTO(user);
     }
 
-    // Phương thức phụ để lấy tên các thuộc tính null
+    @Override
+    public UserDTO getInformationUser(String accessToken) {
+        log.info("Getting information user with access token: {}", accessToken);
+        String username = extractUserIdFromToken(accessToken);
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+        return userMapper.toDTO(user);
+    }
+
+    private String extractUserIdFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
     private String[] getNullPropertyNames(Object source) {
         final BeanWrapper wrappedSource = new BeanWrapperImpl(source);
         Set<String> emptyNames = new HashSet<>();

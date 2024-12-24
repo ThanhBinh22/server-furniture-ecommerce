@@ -356,7 +356,9 @@ CREATE TABLE `reviews`
     `product_id` int       NOT NULL,
     `user_id`    BIGINT    NOT NULL,
     `rating`     tinyint   NOT NULL,
+    `like` int NOT NULL DEFAULT 0,
     `comment`    text,
+    `reviews_parent_id` bigint not null,
     `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` timestamp NULL DEFAULT NULL,
@@ -366,6 +368,19 @@ CREATE TABLE `reviews`
     CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
     CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 );
+INSERT INTO `reviews` (`product_id`, `user_id`, `rating`, `like`, `comment`, `reviews_parent_id`, `created_at`, `updated_at`, `deleted_at`)
+VALUES
+-- Review 1 cho sản phẩm 1 bởi user 1
+(1, 1, 5, 10, 'Sản phẩm rất đẹp và chất lượng, giao hàng nhanh chóng.', 0, NOW(), NOW(), NULL),
+-- Review 2 cho sản phẩm 1 bởi user 1 (reply cho review 1)
+(1, 1, 4, 5, 'Cảm ơn bạn đã gửi đánh giá!', 0, NOW(), NOW(), NULL),
+-- Review 3 cho sản phẩm 1 bởi user 1
+(1, 1, 3, 2, 'Sản phẩm ổn, nhưng vẫn còn một số điểm cần cải thiện.', 0, NOW(), NOW(), NULL),
+-- Review 4 cho sản phẩm 1 bởi user 1 (reply cho review 3)
+(1, 1, 4, 3, 'Cảm ơn bạn đã phản hồi, chúng tôi sẽ cải thiện!', 0 , NOW(), NOW(), NULL),
+-- Review 5 cho sản phẩm 1 bởi user 1
+(1, 1, 5, 20, 'Rất hài lòng, sẽ ủng hộ thêm!', 0, NOW(), NOW(), NULL);
+
 
 CREATE TABLE `room_products`
 (
@@ -606,6 +621,14 @@ CREATE TABLE `invalidated_tokens`
 (
     token_id VARCHAR(255) NOT NULL PRIMARY KEY,
     expired  DATETIME
+);
+
+CREATE TABLE `refresh_tokens`
+(
+    token_id VARCHAR(50) NOT NULL PRIMARY KEY,
+    expired DATETIME,
+    `user_id`    BIGINT    NOT NULL,
+    CONSTRAINT `FK_refresh_tokens_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
 DELIMITER //

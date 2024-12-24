@@ -10,6 +10,7 @@ import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.services.account.AccountService;
 import com.thesis.serverfurnitureecommerce.internal.services.authentication.AuthenticationService;
 import com.thesis.serverfurnitureecommerce.internal.services.jwt.JwtService;
+import com.thesis.serverfurnitureecommerce.internal.services.logs.UserLogService;
 import com.thesis.serverfurnitureecommerce.internal.services.token.RefreshTokenService;
 import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.RefreshTokenEntity;
@@ -19,6 +20,7 @@ import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import com.thesis.serverfurnitureecommerce.pkg.mapper.UserMapper;
 import com.thesis.serverfurnitureecommerce.pkg.utils.annotation.ApiMessage;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -37,13 +39,15 @@ public class AuthenticationController {
     AuthenticationService authenticationService;
     UserMapper userMapper;
     RefreshTokenService refreshTokenService;
+    UserLogService userLogService;
 
     @ApiMessage("Register")
     @PostMapping("/sign-up")
     @WithRateLimitProtection
-    public ResponseEntity<APIResponse<Void>> register(@RequestBody @Valid RegisterRequest registerRequest) {
+    public ResponseEntity<APIResponse<Void>> register(@RequestBody @Valid RegisterRequest registerRequest, HttpServletRequest httpRequest) {
         log.info("Registering user with username: {}", registerRequest.getUsername());
         return handleRequest(() -> {
+            userLogService.log("Register","INFO", "User require register account", registerRequest.getUsername(), httpRequest.getRemoteAddr());
             accountService.registerAccount(registerRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
         });
@@ -51,9 +55,11 @@ public class AuthenticationController {
 
     @ApiMessage("Login")
     @PostMapping("/login")
-    public ResponseEntity<APIResponse<LoginResponse>> authenticate(@RequestBody AuthenticationRequest login) {
+    public ResponseEntity<APIResponse<LoginResponse>> authenticate(@RequestBody AuthenticationRequest login, HttpServletRequest httpRequest) {
         log.info("Requesting login for user: {}", login.getUsername());
         UserEntity authenticatedUser = authenticationService.authenticate(login);
+        userLogService.log("Login","INFO", "User require login account", login.getUsername(), httpRequest.getRemoteAddr());
+
         String jwtToken = jwtService.generateToken(authenticatedUser);
         RefreshTokenEntity refreshToken = refreshTokenService.createRefreshToken(authenticatedUser);
         LoginResponse loginResponse = new LoginResponse()
@@ -80,9 +86,10 @@ public class AuthenticationController {
 
     @ApiMessage("Logout")
     @PostMapping("/logout")
-    public ResponseEntity<APIResponse<Void>> logout(@RequestBody @Valid LogoutRequest logoutRequest) {
+    public ResponseEntity<APIResponse<Void>> logout(@RequestBody @Valid LogoutRequest logoutRequest, HttpServletRequest httpServletRequest) {
         log.info("Requesting logout for token: {}", logoutRequest.getToken());
         return handleRequest(() -> {
+            userLogService.log("Logout","INFO", "User require logout account", null, httpServletRequest.getRemoteAddr());
             authenticationService.logout(logoutRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.SUCCESS);
         });

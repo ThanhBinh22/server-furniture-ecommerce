@@ -22,4 +22,8 @@ public class WishlistEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     ProductEntity product;
+
+    public static WishlistEntity create() {
+         return new WishlistEntity();
+    }
 }

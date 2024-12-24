@@ -13,5 +13,4 @@ public class ReviewRequest {
     String comment;
     Integer rating;
     Integer productID;
-    String email;
 }

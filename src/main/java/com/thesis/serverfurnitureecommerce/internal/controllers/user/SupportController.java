@@ -2,11 +2,13 @@ package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
+import com.thesis.serverfurnitureecommerce.internal.services.logs.UserLogService;
 import com.thesis.serverfurnitureecommerce.internal.services.support.SupportCustomerService;
 import com.thesis.serverfurnitureecommerce.model.dto.SupportCustomerDTO;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import com.thesis.serverfurnitureecommerce.pkg.utils.annotation.ApiMessage;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,12 +26,14 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SupportController {
     SupportCustomerService supportCustomerService;
+    UserLogService userLogService;
 
     @ApiMessage("Save contact")
     @PostMapping()
-    public ResponseEntity<APIResponse<Void>> saveContact(@RequestBody SupportCustomerDTO supportCustomerDTO) {
+    public ResponseEntity<APIResponse<Void>> saveContact(@RequestBody SupportCustomerDTO supportCustomerDTO, HttpServletRequest httpServletRequest) {
         log.info("saveContact: {}", supportCustomerDTO);
         try {
+            userLogService.log("Save contact", "INFO", "User send contact", null, httpServletRequest.getRemoteAddr());
             supportCustomerService.saveContact(supportCustomerDTO);
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
         } catch (AppException ex) {

@@ -12,4 +12,9 @@ public interface ProductService {
 
     ProductDTO findByProductID(int productID);
 
+    void saveToWishlist(Integer productID, String username);
+
+    List<ProductDTO> getWishlist(String username);
+
+    void deleteWishlist(Integer productID, String username);
 }

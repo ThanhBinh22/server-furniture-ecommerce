@@ -30,4 +30,8 @@ public class AddressEntity extends BaseEntity {
     UserEntity user;
     @OneToMany(mappedBy = "address")
     Set<OrderEntity> orderEntities;
+
+    public static AddressEntity create() {
+        return new AddressEntity();
+    }
 }

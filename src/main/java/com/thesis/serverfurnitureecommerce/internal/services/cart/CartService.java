@@ -7,13 +7,15 @@ import com.thesis.serverfurnitureecommerce.domain.response.CartResponse;
 public interface CartService {
     void addCartItem(CartRequest cartRequest);
 
-    void removeCartItem(RemoveCartItemRequest removeCartItemRequest);
+    void removeCartItem(Integer productID);
 
     void increaseCartItemQuantity(CartRequest cartRequest);
 
     void decreaseCartItemQuantity(CartRequest cartRequest);
 
-    CartResponse getCart(String email);
+    CartResponse getCart(String username);
 
     void clearCart(String email);
+
+    int getQuantityInCart(String username);
 }
