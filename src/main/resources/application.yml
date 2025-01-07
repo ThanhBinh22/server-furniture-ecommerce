@@ -75,6 +75,10 @@ springdoc:
     disable-swagger-default-url: true
     operationsSorter: method
     tagsSorter: alpha
+paypal:
+  clientId: ${PAYPAL_CLIENT_ID}
+  clientSecret: ${PAYPAL_CLIENT_SECRET}
+  mode: sandbox
 
 
 

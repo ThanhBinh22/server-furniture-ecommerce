@@ -1,5 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.services.product;
 
+import com.thesis.serverfurnitureecommerce.domain.request.ProductRequest;
 import com.thesis.serverfurnitureecommerce.model.dto.ProductDTO;
 
 import java.util.List;
@@ -17,4 +18,8 @@ public interface ProductService {
     List<ProductDTO> getWishlist(String username);
 
     void deleteWishlist(Integer productID, String username);
+
+    ProductDTO updateProduct(ProductRequest product);
+
+    void deleteProduct(Integer id);
 }

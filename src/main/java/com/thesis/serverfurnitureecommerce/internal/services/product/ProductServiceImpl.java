@@ -1,16 +1,14 @@
 package com.thesis.serverfurnitureecommerce.internal.services.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thesis.serverfurnitureecommerce.domain.request.ProductRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.ProductSearchRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.*;
 import com.thesis.serverfurnitureecommerce.internal.repositories.custom.product.IProductRepositoryCustom;
 import com.thesis.serverfurnitureecommerce.model.dto.ImageDTO;
 import com.thesis.serverfurnitureecommerce.model.dto.ProductDTO;
 import com.thesis.serverfurnitureecommerce.model.dto.ReviewDTO;
-import com.thesis.serverfurnitureecommerce.model.entity.ProductEntity;
-import com.thesis.serverfurnitureecommerce.model.entity.ReviewEntity;
-import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
-import com.thesis.serverfurnitureecommerce.model.entity.WishlistEntity;
+import com.thesis.serverfurnitureecommerce.model.entity.*;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import com.thesis.serverfurnitureecommerce.pkg.mapper.ImageMapper;
@@ -43,11 +41,14 @@ public class ProductServiceImpl implements ProductService {
     UserRepository userRepository;
     ReviewMapper reviewMapper;
     WishlistRepository wishlistRepository;
+    CategoryRepository categoryRepository;
+    SupplierRepository supplierRepository;
 
     @Override
     public List<ProductDTO> findAll() {
         log.info("Invoke to service find all product");
-        List<ProductEntity> productEntities = productRepository.findAll();
+        List<ProductEntity> productEntities = productRepository.findAllByIsActive(1);
+        log.info("Found {} products", productEntities.size());
         List<ProductDTO> productDTOS = new ArrayList<>();
         for (ProductEntity product : productEntities) {
             String price = CurrencyUtils.formatCurrencyVND(product.getPrice());
@@ -69,7 +70,6 @@ public class ProductServiceImpl implements ProductService {
         productDTOS.forEach(productDTO -> productDTO.setImages(getImagesByProductID(productDTO.getId())));
         return productDTOS;
     }
-
 
     @Override
     public ProductDTO findByProductID(int productID) {
@@ -126,26 +126,55 @@ public class ProductServiceImpl implements ProductService {
         wishlistRepository.delete(wishlistEntity);
     }
 
-
-        private List<ImageDTO> getImagesByProductID (Integer productID){
-            return imageRepository.getImagesByProductID(productID)
-                    .stream()
-                    .map(imageMapper::convertToDTO)
-                    .collect(Collectors.toList());
+    @Override
+    public ProductDTO updateProduct(ProductRequest product) {
+        ProductEntity productEntity = productRepository.findById(product.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        productEntity.setName(product.getName());
+        productEntity.setPrice(product.getPrice());
+        productEntity.setDescription(product.getDescription());
+        if (product.getStock() != null) {
+            productEntity.setStock(product.getStock());
         }
-
-        private List<ReviewDTO> getReviewByProductID (Integer productID){
-            List<ReviewEntity> reviewEntities = reviewRepository.getReviewByProductID(productID);
-            List<ReviewDTO> reviews = new ArrayList<>();
-            for (ReviewEntity review : reviewEntities) {
-                UserEntity user = userRepository.findById(review.getUser().getId()).orElse(null);
-                ReviewDTO reviewDTO = reviewMapper.convertToDTO(review);
-                assert user != null;
-                reviewDTO.setUsername(user.getUsername());
-                reviews.add(reviewDTO);
-            }
-            return reviews;
+        if (product.getCategoryID() != null) {
+            CategoryEntity categoryEntity = categoryRepository.findById(product.getCategoryID())
+                    .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+            productEntity.setCategory(categoryEntity);
         }
+        if (product.getSupplierID() != null) {
+            SupplierEntity supplierEntity = supplierRepository.findById(product.getSupplierID())
+                    .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+            productEntity.setSupplier(supplierEntity);
+        }
+        productRepository.save(productEntity);
 
-
+        return productMapper.convertToDTO(productEntity);
     }
+
+    @Override
+    public void deleteProduct(Integer id) {
+        ProductEntity product = productRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        product.setIsActive((short) 0);
+        productRepository.save(product);
+    }
+
+    private List<ImageDTO> getImagesByProductID(Integer productID) {
+        return imageRepository.getImagesByProductID(productID)
+                .stream()
+                .map(imageMapper::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private List<ReviewDTO> getReviewByProductID(Integer productID) {
+        List<ReviewEntity> reviewEntities = reviewRepository.getReviewByProductID(productID);
+        List<ReviewDTO> reviews = new ArrayList<>();
+        for (ReviewEntity review : reviewEntities) {
+            UserEntity user = userRepository.findById(review.getUser().getId()).orElse(null);
+            ReviewDTO reviewDTO = reviewMapper.convertToDTO(review);
+            assert user != null;
+            reviewDTO.setUsername(user.getUsername());
+            reviews.add(reviewDTO);
+        }
+        return reviews;
+    }
+}

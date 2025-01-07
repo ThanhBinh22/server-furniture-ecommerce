@@ -1,7 +1,6 @@
 package com.thesis.serverfurnitureecommerce.domain.request;
 
-import com.thesis.serverfurnitureecommerce.model.dto.AddressDTO;
-import com.thesis.serverfurnitureecommerce.model.dto.OrderItemDTO;
+import com.thesis.serverfurnitureecommerce.pkg.enums.StatusOrderEnum;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,17 +8,20 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrderRequest {
-    Integer quantity;
+    Long id;
     Double totalAmount;
-    String phone;
+    StatusOrderEnum status;
+    String payment;
     String message;
-    String paymentMethod;
-    AddressDTO address;
-    List<OrderItemDTO> orderItems;
+    Long userId;
+    Long addressId;
+    List<OrderItemRequest> orderItemRequests;
+    Set<Long> promotionIds;
 }

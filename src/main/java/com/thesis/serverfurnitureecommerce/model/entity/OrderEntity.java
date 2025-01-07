@@ -26,9 +26,11 @@ public class OrderEntity extends BaseEntity {
     Long id;
     @Column(name = "total_amount")
     Double totalAmount;
+    @Setter
     StatusOrderEnum status;
     @Column(name = "payment")
     String payment;
+    String message;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     UserEntity user;
@@ -39,11 +41,6 @@ public class OrderEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "address_id")
     AddressEntity address;
-
-
-    public void setStatus(StatusOrderEnum status) {
-        this.status = status;
-    }
 
     public static OrderEntity create(){
         return new OrderEntity();
