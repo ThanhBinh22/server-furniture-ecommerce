@@ -158,8 +158,42 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
+    @Override
+    public void addProduct(ProductRequest productRequest) {
+        // Tạo và thiết lập ProductEntity
+        ProductEntity productEntity = ProductEntity.createNewProductEntity();
+        CategoryEntity categoryEntity = categoryRepository.findById(productRequest.getCategoryID())
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        SupplierEntity supplierEntity = supplierRepository.findById(productRequest.getSupplierID())
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        productEntity.setCategory(categoryEntity);
+        productEntity.setSupplier(supplierEntity);
+        productEntity.setName(productRequest.getName());
+        productEntity.setPrice(productRequest.getPrice());
+        productEntity.setDescription(productRequest.getDescription());
+        productEntity.setStock(productRequest.getStock());
+
+        // Bước 1: Lưu ProductEntity trước để đảm bảo id được tạo
+        ProductEntity savedProduct = productRepository.save(productEntity);
+        log.info("Sản phẩm vừa thêm: {}", savedProduct.getId());
+
+        // Bước 2: Thêm ImageEntity sau khi productEntity đã có id
+        if (productRequest.getImage() != null) {
+            ImageEntity imageEntity = new ImageEntity();
+            imageEntity.setImageUrl(productRequest.getImage());
+            imageEntity.setProduct(savedProduct); // Gán ProductEntity cho ImageEntity
+            savedProduct.getImages().add(imageEntity); // Thêm vào danh sách ảnh
+        }
+
+        // Bước 3: Lưu lại ProductEntity (Hibernate sẽ cascade ImageEntity)
+        productRepository.save(savedProduct);
+    }
+
+
+
     private List<ImageDTO> getImagesByProductID(Integer productID) {
-        return imageRepository.getImagesByProductID(productID)
+        ProductEntity product = productRepository.findById(productID).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        return imageRepository.getImagesByProduct(product)
                 .stream()
                 .map(imageMapper::convertToDTO)
                 .collect(Collectors.toList());

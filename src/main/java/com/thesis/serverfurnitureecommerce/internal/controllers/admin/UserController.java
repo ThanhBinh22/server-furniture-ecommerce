@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController(value = "adminUserController")
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/user")
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -29,22 +29,22 @@ public class UserController {
     UserService userService;
     UserLogService userLogService;
 
-    @GetMapping("/block-user/{id}")
+    @GetMapping("/get-user")
+    public ResponseEntity<APIResponse<List<UserDTO>>> getUser(HttpServletRequest httpServletRequest) {
+        log.info("Get user");
+        userLogService.log("Get user", "INFO", "Admin get user", null, httpServletRequest.getRemoteAddr());
+        return handleUserAction(() -> {
+            List<UserDTO> users = userService.getAllUser();
+            return ResponseBuilder.buildResponse(users, ErrorCode.SUCCESS);
+        });
+    }
+
+    @GetMapping("/block-unblock/{id}")
     public ResponseEntity<APIResponse<Void>> blockUser(@PathVariable Long id, HttpServletRequest httpServletRequest) {
         log.info("Block user {}", id);
         userLogService.log("Block user", "INFO", "Admin block user", null, httpServletRequest.getRemoteAddr());
         return handleUserAction(() -> {
             userService.blockUser(id);
-            return ResponseBuilder.buildResponse(null, ErrorCode.SUCCESS);
-        });
-    }
-
-    @GetMapping("/unblock-user/{id}")
-    public ResponseEntity<APIResponse<Void>> unblockUser(@PathVariable Long id, HttpServletRequest httpServletRequest) {
-        log.info("Unblock user {}", id);
-        userLogService.log("Unblock user", "INFO", "Admin unblock user", null, httpServletRequest.getRemoteAddr());
-        return handleUserAction(() -> {
-            userService.unblockUser(id);
             return ResponseBuilder.buildResponse(null, ErrorCode.SUCCESS);
         });
     }

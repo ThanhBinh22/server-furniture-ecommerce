@@ -22,4 +22,6 @@ public interface ProductService {
     ProductDTO updateProduct(ProductRequest product);
 
     void deleteProduct(Integer id);
+
+    void addProduct(ProductRequest productRequest);
 }

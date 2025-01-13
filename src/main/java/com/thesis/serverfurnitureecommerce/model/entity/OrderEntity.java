@@ -13,12 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = DatabaseConstant.ORDER_TABLE, indexes = {
-        @Index(name = "idx_order_total_price", columnList = "total_price"),
-        @Index(name = "idx_order_status", columnList = "status"),
-        @Index(name = "idx_order_user", columnList = "user_id"),
-        @Index(name = "idx_order_payment_method", columnList = "payment_method")
-})
+@Table(name = DatabaseConstant.ORDER_TABLE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderEntity extends BaseEntity {
     @Id

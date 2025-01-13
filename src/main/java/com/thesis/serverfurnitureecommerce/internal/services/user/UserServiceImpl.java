@@ -139,17 +139,16 @@ public class UserServiceImpl implements UserService {
     public void blockUser(Long userID) {
         UserEntity user = userRepository.findById(userID)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        user.setIsLocked((short) 1);
+        if (user.getIsLocked() == 1) {
+            log.info("Unlocking user ID: {}", userID);
+            user.setIsLocked((short) 0);
+        } else {
+            log.info("Locking user ID: {}", userID);
+            user.setIsLocked((short) 1);
+        }
         userRepository.save(user);
     }
 
-    @Override
-    public void unblockUser(Long userID) {
-        UserEntity user = userRepository.findById(userID)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        user.setIsLocked((short) 0);
-        userRepository.save(user);
-    }
 
     @Override
     public List<UserDTO> getAllUser() {

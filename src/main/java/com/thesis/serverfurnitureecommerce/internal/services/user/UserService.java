@@ -25,8 +25,6 @@ public interface UserService {
 
     void blockUser(Long userID);
 
-    void unblockUser(Long userID);
-
     List<UserDTO> getAllUser();
 
 }

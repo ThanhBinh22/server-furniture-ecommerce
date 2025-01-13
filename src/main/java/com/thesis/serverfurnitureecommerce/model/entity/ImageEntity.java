@@ -18,11 +18,10 @@ public class ImageEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Column(name = "product_id")
-    Integer productID;
     @Column(name = "image_url")
     String imageUrl;
     @ManyToOne
-    @JoinColumn(name = "product_id", insertable = false, updatable = false)
-    ProductEntity product;
+    @JoinColumn(name = "product_id", nullable = false)
+    private ProductEntity product;
+
 }

@@ -18,6 +18,9 @@ public class UserDTO {
     String fullName;
     String email;
     String phone;
+    Short isLocked;
+    Short isActive;
+    RoleDTO role;
     LocalDateTime otpExpired;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
