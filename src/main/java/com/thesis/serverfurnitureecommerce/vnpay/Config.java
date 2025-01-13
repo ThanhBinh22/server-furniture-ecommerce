@@ -1,4 +1,3 @@
-
 package com.thesis.serverfurnitureecommerce.vnpay;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,14 +10,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-/**
- *
- * @author CTT VNPAY
- */
 public class Config {
 
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8080/vnpay_jsp/vnpay_return.jsp";
+    public static String vnp_ReturnUrl = "http://localhost:8085/api/vnpay/payment-callback";
     public static String vnp_TmnCode = "";
     public static String secretKey = "";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
@@ -59,7 +54,6 @@ public class Config {
         return digest;
     }
 
-    //Util for VNPAY
     public static String hashAllFields(Map fields) {
         List fieldNames = new ArrayList(fields.keySet());
         Collections.sort(fieldNames);

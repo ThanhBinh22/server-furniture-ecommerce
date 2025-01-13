@@ -24,5 +24,4 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
             SELECT u FROM UserEntity u WHERE u.isActive = :isActive AND u.otpExpired < CURRENT_TIMESTAMP
             """)
     List<UserEntity> findByIsActiveAndOtpExpiredBefore(Short isActive);
-
 }

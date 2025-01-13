@@ -5,6 +5,8 @@ import com.thesis.serverfurnitureecommerce.domain.request.NewPasswordRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.UpdateAccountRequest;
 import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 
+import java.util.List;
+
 public interface UserService {
 
     void forgotPassword(String email);
@@ -20,5 +22,9 @@ public interface UserService {
     UserDTO viewProfile(Long userID);
 
     UserDTO getInformationUser(String accessToken);
+
+    void blockUser(Long userID);
+
+    List<UserDTO> getAllUser();
 
 }

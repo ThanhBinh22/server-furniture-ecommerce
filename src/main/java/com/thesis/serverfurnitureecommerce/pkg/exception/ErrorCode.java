@@ -28,6 +28,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED.value(), "Unauthenticated"),
     UNAUTHORIZED(HttpStatus.FORBIDDEN.value(), "You do not have permission"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "User not found"),
+    ORDER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Order not found"),
     USER_NOT_ENABLED(HttpStatus.BAD_REQUEST.value(), "Account not verified"),
     USER_LOCKED(HttpStatus.BAD_REQUEST.value(), "Account has been locked"),
     NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Not found"),

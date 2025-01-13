@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -27,8 +29,8 @@ public class ProductEntity extends BaseEntity {
     @Column(name = "is_active")
     Short isActive;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    Set<ImageEntity> images = new HashSet<>();
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ImageEntity> images = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
@@ -57,4 +59,8 @@ public class ProductEntity extends BaseEntity {
         return new ProductEntity();
     }
 
+    @PrePersist
+    public void prePersist(){
+        this.isActive = 1;
+    }
 }

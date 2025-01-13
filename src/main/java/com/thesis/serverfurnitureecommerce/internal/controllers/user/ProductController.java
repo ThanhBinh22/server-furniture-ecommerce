@@ -1,5 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
+import com.thesis.serverfurnitureecommerce.domain.request.ProductRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.services.logs.UserLogService;
@@ -59,6 +60,17 @@ public class ProductController {
         List<ProductDTO> products = productService.findByMultiFields(search);
         return ResponseBuilder.buildResponse(products, ErrorCode.FOUND);
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<APIResponse<ProductDTO>> updateProduct(@RequestBody ProductRequest product){
+        log.info("Update product with id: {}", product.getId());
+        return handleProductAction(() -> {
+            ProductDTO productDTO = productService.updateProduct(product);
+            return ResponseBuilder.buildResponse(productDTO, ErrorCode.SUCCESS);
+        });
+    }
+
+
 
     private <T> ResponseEntity<APIResponse<T>> handleProductAction(ProductController.ProductAction<T> action) {
         try {

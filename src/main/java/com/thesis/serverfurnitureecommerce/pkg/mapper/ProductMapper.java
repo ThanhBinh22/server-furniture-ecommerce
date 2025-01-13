@@ -1,5 +1,6 @@
 package com.thesis.serverfurnitureecommerce.pkg.mapper;
 
+import com.thesis.serverfurnitureecommerce.domain.request.ProductRequest;
 import com.thesis.serverfurnitureecommerce.model.dto.ProductDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.ProductEntity;
 import org.mapstruct.Mapper;

@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -132,6 +133,30 @@ public class UserServiceImpl implements UserService {
         String username = extractUserIdFromToken(accessToken);
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
         return userMapper.toDTO(user);
+    }
+
+    @Override
+    public void blockUser(Long userID) {
+        UserEntity user = userRepository.findById(userID)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (user.getIsLocked() == 1) {
+            log.info("Unlocking user ID: {}", userID);
+            user.setIsLocked((short) 0);
+        } else {
+            log.info("Locking user ID: {}", userID);
+            user.setIsLocked((short) 1);
+        }
+        userRepository.save(user);
+    }
+
+
+    @Override
+    public List<UserDTO> getAllUser() {
+        List<UserEntity> users = userRepository.findAll();
+        if (!users.isEmpty()) {
+            return userMapper.toListDTO(users);
+        }
+        return List.of();
     }
 
     private String extractUserIdFromToken(String token) {

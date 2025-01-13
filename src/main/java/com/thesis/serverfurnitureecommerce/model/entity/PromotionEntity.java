@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,11 +27,11 @@ public class PromotionEntity extends BaseEntity {
     @Column(name = "min_order")
     Double minOrder;
     @Column(name = "max_discount_amount")
-    Double maxDiscountAcount;
+    Double maxDiscountAccount;
     @Column(name = "start_date")
-    Long startDate;
+    LocalDateTime startDate;
     @Column(name = "end_date")
-    Long endDate;
+    LocalDateTime endDate;
     @Column(name = "is_active")
     Boolean isActive = true;
     @Column(name = "usage_limit")
