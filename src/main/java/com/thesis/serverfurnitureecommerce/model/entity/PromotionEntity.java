@@ -19,7 +19,7 @@ import java.util.Set;
 public class PromotionEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    String id;
+    Integer id;
     String description;
     String code;
     @Column(name = "discount_percent")

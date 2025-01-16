@@ -25,7 +25,7 @@ public class AddressEntity extends BaseEntity {
     String province;
     String country;
     Boolean isDefault;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", nullable = false)
     UserEntity user;
     @OneToMany(mappedBy = "address")
