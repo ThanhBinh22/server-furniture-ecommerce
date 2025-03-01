@@ -4,6 +4,8 @@ import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.RefreshTokenEntity;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 
+import java.util.UUID;
+
 public interface RefreshTokenService {
     RefreshTokenEntity createRefreshToken(UserEntity user);
 
@@ -13,5 +15,5 @@ public interface RefreshTokenService {
 
     UserDTO getUserByRefreshToken(String refreshToken);
 
-    void deleteByUserId(Long userID);
+    void deleteByUserId(UUID userID);
 }

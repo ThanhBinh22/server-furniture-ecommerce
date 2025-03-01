@@ -52,7 +52,7 @@ security:
     expiration-time: ${JWT_EXPIRATION_TIME}
     refresh-expiration-time: ${JWT_REFRESH_EXPIRATION_TIME}
 server:
-  port: 8085
+  port: 8081
   shutdown: graceful
 management:
   endpoint:

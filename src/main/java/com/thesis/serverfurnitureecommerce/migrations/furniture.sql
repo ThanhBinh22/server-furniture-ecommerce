@@ -1,6 +1,6 @@
-drop database if exists furniture3;
-create database if not exists furniture3;
-use furniture3;
+drop database if exists furniture;
+create database if not exists furniture;
+use furniture;
 
 create table if not exists suppliers
 (
@@ -227,8 +227,6 @@ VALUES (1, 'https://www.decor-walther.com/img/products/0219400/Studio-S_Perspekt
        (25, 'https://www.decor-walther.com/img/products/0420300/0420300_BOX%201-40%20N%20LED_Chrom.png'),
        (26, 'https://www.decor-walther.com/img/products/0420200/0420200_BOX%201-25%20N%20LED_chrome.png'),
        (27, 'https://www.decor-walther.com/img/products/0420100/0420100_BOX%201-15%20N%20LED_Chrom.png');
-
-
 
 CREATE TABLE `carts`
 (

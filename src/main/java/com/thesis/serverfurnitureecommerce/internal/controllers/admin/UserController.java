@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController(value = "adminUserController")
 @RequestMapping("/api/admin/user")
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/block-unblock/{id}")
-    public ResponseEntity<APIResponse<Void>> blockUser(@PathVariable Long id, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<APIResponse<Void>> blockUser(@PathVariable UUID id, HttpServletRequest httpServletRequest) {
         log.info("Block user {}", id);
         userLogService.log("Block user", "INFO", "Admin block user", null, httpServletRequest.getRemoteAddr());
         return handleUserAction(() -> {

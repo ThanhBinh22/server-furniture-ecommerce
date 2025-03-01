@@ -21,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -57,7 +59,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete-account")
-    public ResponseEntity<APIResponse<Void>> deleteAccount(@RequestParam Long userID, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<APIResponse<Void>> deleteAccount(@RequestParam UUID userID, HttpServletRequest httpServletRequest) {
         log.info("Request to delete account for email: {}", userID);
         return handleUserAction(() -> {
             userLogService.log("Delete account", "INFO", "User require delete account", null, httpServletRequest.getRemoteAddr());
@@ -67,7 +69,7 @@ public class UserController {
     }
 
     @GetMapping("/view-profile")
-    public ResponseEntity<APIResponse<UserDTO>> viewProfile(@RequestParam Long userID, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<APIResponse<UserDTO>> viewProfile(@RequestParam UUID userID, HttpServletRequest httpServletRequest) {
         log.info("Request to view profile for user: {}", userID);
         return handleUserAction(() -> {
             userLogService.log("View profile", "INFO", "User require view profile", null, httpServletRequest.getRemoteAddr());

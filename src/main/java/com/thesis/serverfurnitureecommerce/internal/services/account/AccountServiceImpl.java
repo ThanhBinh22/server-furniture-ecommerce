@@ -32,15 +32,10 @@ public class AccountServiceImpl implements AccountService {
     RoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
 
-    /**
-     * Đăng ký tài khoản mới nếu người dùng không tồn tại
-     *
-     * @param registerRequest thông tin đăng ký tài khoản
-     */
+
     @Override
     public void registerAccount(RegisterRequest registerRequest) {
         log.info("Invoke to service register");
-
         // Kiểm tra người dùng theo username, nếu tồn tại và chưa kích hoạt, cập nhật mật khẩu và gửi OTP
         UserEntity userByUsername = findUserByUsername(registerRequest.getUsername());
         if (userByUsername != null && userByUsername.getIsActive() == 1) {
@@ -66,12 +61,6 @@ public class AccountServiceImpl implements AccountService {
         createNewUser(registerRequest);
     }
 
-    /**
-     * Tìm người dùng theo username
-     *
-     * @param username tên người dùng
-     * @return UserEntity nếu tồn tại, ném AppException nếu đã tồn tại
-     */
     private UserEntity findUserByUsername(String username) {
         log.info("Invoke to service find user by username");
         return userRepository.findByUsername(username)
@@ -79,12 +68,6 @@ public class AccountServiceImpl implements AccountService {
                 .orElse(null);
     }
 
-    /**
-     * Tìm người dùng theo email
-     *
-     * @param email địa chỉ email
-     * @return UserEntity nếu tồn tại, ném AppException nếu đã tồn tại
-     */
     private UserEntity findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .filter(user -> user.getIsActive() == 0)
@@ -106,11 +89,6 @@ public class AccountServiceImpl implements AccountService {
         emailService.sendMailOTP(user.getEmail(), user.getOtp());
     }
 
-    /**
-     * Tạo tài khoản người dùng mới và gửi OTP qua email
-     *
-     * @param registerRequest thông tin đăng ký
-     */
     private void createNewUser(RegisterRequest registerRequest) {
         UserEntity userEntity = userMapper.fromRequestToEntity(registerRequest);
         userEntity.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
@@ -124,12 +102,6 @@ public class AccountServiceImpl implements AccountService {
         emailService.sendMailOTP(userEntity.getEmail(), userEntity.getOtp());
     }
 
-    /**
-     * Xác thực tài khoản sau khi đăng ký bằng OTP
-     *
-     * @param otp mã OTP do người dùng cung cấp
-     * @return true nếu xác thực thành công, false nếu thất bại
-     */
     @Override
     public Boolean verifyAccountAfterRegister(String otp) {
         UserEntity user = userRepository.findByOtp(Integer.parseInt(otp))
@@ -146,11 +118,6 @@ public class AccountServiceImpl implements AccountService {
         return false;
     }
 
-    /**
-     * Kích hoạt tài khoản người dùng
-     *
-     * @param user người dùng
-     */
     private void activateUser(UserEntity user) {
         user.setIsActive((short) 1);
         user.setOtp(null);
@@ -158,11 +125,6 @@ public class AccountServiceImpl implements AccountService {
         userRepository.save(user);
     }
 
-    /**
-     * Gửi lại OTP cho người dùng
-     *
-     * @param email địa chỉ email của người dùng
-     */
     @Override
     public void resendOTP(String email) {
         UserEntity user = userRepository.findByEmail(email)

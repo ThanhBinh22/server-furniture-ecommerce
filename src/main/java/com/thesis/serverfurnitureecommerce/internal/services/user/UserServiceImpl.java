@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -96,7 +97,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteAccount(Long userID) {
+    public void deleteAccount(UUID userID) {
         log.info("Deleting account for user ID: {}", userID);
         UserEntity user = userRepository.findById(userID)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -120,7 +121,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO viewProfile(Long userID) {
+    public UserDTO viewProfile(UUID userID) {
         log.info("Viewing profile for user ID: {}", userID);
         UserEntity user = userRepository.findById(userID)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -136,7 +137,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void blockUser(Long userID) {
+    public void blockUser(UUID userID) {
         UserEntity user = userRepository.findById(userID)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         if (user.getIsLocked() == 1) {

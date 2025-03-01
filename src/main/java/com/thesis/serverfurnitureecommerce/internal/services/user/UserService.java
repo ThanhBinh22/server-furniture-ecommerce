@@ -6,6 +6,7 @@ import com.thesis.serverfurnitureecommerce.domain.request.UpdateAccountRequest;
 import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface UserService {
 
@@ -15,15 +16,15 @@ public interface UserService {
 
     void changePassword(NewPasswordRequest newPasswordRequest);
 
-    void deleteAccount(Long userID);
+    void deleteAccount(UUID userID);
 
     UpdateAccountRequest updateProfile(UpdateAccountRequest updateAccountRequest);
 
-    UserDTO viewProfile(Long userID);
+    UserDTO viewProfile(UUID userID);
 
     UserDTO getInformationUser(String accessToken);
 
-    void blockUser(Long userID);
+    void blockUser(UUID userID);
 
     List<UserDTO> getAllUser();
 

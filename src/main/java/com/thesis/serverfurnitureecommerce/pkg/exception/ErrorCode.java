@@ -3,10 +3,6 @@ package com.thesis.serverfurnitureecommerce.pkg.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-/**
- * Enum representing error codes for application-specific errors.
- * Each error code has an associated HTTP status code and a message.
- */
 @Getter
 public enum ErrorCode {
 
