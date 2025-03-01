@@ -28,10 +28,8 @@ public class SupportController {
     SupportCustomerService supportCustomerService;
     UserLogService userLogService;
 
-    @ApiMessage("Save contact")
     @PostMapping()
     public ResponseEntity<APIResponse<Void>> saveContact(@RequestBody SupportCustomerDTO supportCustomerDTO, HttpServletRequest httpServletRequest) {
-        log.info("saveContact: {}", supportCustomerDTO);
         try {
             userLogService.log("Save contact", "INFO", "User send contact", null, httpServletRequest.getRemoteAddr());
             supportCustomerService.saveContact(supportCustomerDTO);

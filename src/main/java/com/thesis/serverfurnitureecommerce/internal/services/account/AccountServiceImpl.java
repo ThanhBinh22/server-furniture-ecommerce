@@ -35,8 +35,6 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void registerAccount(RegisterRequest registerRequest) {
-        log.info("Invoke to service register");
-        // Kiểm tra người dùng theo username, nếu tồn tại và chưa kích hoạt, cập nhật mật khẩu và gửi OTP
         UserEntity userByUsername = findUserByUsername(registerRequest.getUsername());
         if (userByUsername != null && userByUsername.getIsActive() == 1) {
             log.warn("User already exists with username: {}", registerRequest.getUsername());
@@ -46,25 +44,21 @@ public class AccountServiceImpl implements AccountService {
             handleExistingUser(userByUsername, registerRequest.getPassword());
             return;
         }
-        // Kiểm tra người dùng theo email, nếu tồn tại và chưa kích hoạt, cập nhật mật khẩu và gửi OTP
         UserEntity userByEmail = findUserByEmail(registerRequest.getEmail());
         if (userByEmail != null && userByEmail.getIsActive() == 1) {
             throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
-        // Nếu người dùng tồn tại nhưng chưa kích hoạt, xử lý tiếp tục
         if (userByEmail != null && userByEmail.getIsActive() == 0) {
             handleExistingUser(userByEmail, registerRequest.getPassword());
 
             return;
         }
-        // Tạo mới người dùng nếu chưa tồn tại
         createNewUser(registerRequest);
     }
 
     private UserEntity findUserByUsername(String username) {
         log.info("Invoke to service find user by username");
         return userRepository.findByUsername(username)
-//                .filter(user -> user.getIsActive() == 0)
                 .orElse(null);
     }
 
@@ -74,12 +68,7 @@ public class AccountServiceImpl implements AccountService {
                 .orElse(null);
     }
 
-    /**
-     * Xử lý người dùng đã tồn tại nhưng chưa kích hoạt
-     *
-     * @param user     người dùng đã tồn tại
-     * @param password mật khẩu mới của người dùng
-     */
+
     private void handleExistingUser(UserEntity user, String password) {
         user.setPassword(passwordEncoder.encode(password));
         user.setOtp(OtpGenerator.generate6DigitOtp());

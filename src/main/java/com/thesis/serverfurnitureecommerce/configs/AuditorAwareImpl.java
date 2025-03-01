@@ -15,10 +15,8 @@ public class AuditorAwareImpl implements AuditorAware<String> {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {
-            log.warn("No authenticated user found");
             return Optional.empty();
         }
-        log.info("Current auditor: {}", authentication.getName());
         return Optional.of(authentication.getName());
     }
 }

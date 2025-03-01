@@ -43,7 +43,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addCartItem(CartRequest cartRequest) {
-        log.info("Invoke to service addCartItem");
         String username = UserUtil.getUsername();
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -71,7 +70,6 @@ public class CartServiceImpl implements CartService {
 
     @Override   
     public void removeCartItem(Integer productID) {
-        log.info("Invoke to service removeCartItem");
         String username = UserUtil.getUsername();
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -90,7 +88,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void increaseCartItemQuantity(CartRequest cartRequest) {
-        log.info("Invoke to service increaseCartItemQuantity");
         String username = UserUtil.getUsername();
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -118,7 +115,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void decreaseCartItemQuantity(CartRequest cartRequest) {
-        log.info("Invoke to service decreaseCartItemQuantity");
         String username = UserUtil.getUsername();
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -147,7 +143,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartResponse getCart(String username) {
-        log.info("Invoke to service getCart");
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         CartEntity cart = cartRepository.findByUser(user);

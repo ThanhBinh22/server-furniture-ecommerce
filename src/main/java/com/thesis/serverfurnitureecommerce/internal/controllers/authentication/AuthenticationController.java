@@ -7,6 +7,7 @@ import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.LoginResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
+import com.thesis.serverfurnitureecommerce.internal.controllers.BaseController;
 import com.thesis.serverfurnitureecommerce.internal.services.account.AccountService;
 import com.thesis.serverfurnitureecommerce.internal.services.authentication.AuthenticationService;
 import com.thesis.serverfurnitureecommerce.internal.services.jwt.JwtService;
@@ -32,7 +33,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class AuthenticationController {
+public class AuthenticationController extends BaseController {
     AccountService accountService;
     JwtService jwtService;
     AuthenticationService authenticationService;
@@ -40,12 +41,9 @@ public class AuthenticationController {
     RefreshTokenService refreshTokenService;
     UserLogService userLogService;
 
-    @ApiMessage("Register")
     @PostMapping("/sign-up")
-    public ResponseEntity<APIResponse<Void>> register(@RequestBody @Valid RegisterRequest registerRequest, HttpServletRequest httpRequest) {
-        log.info("Registering user with username: {}", registerRequest.getUsername());
-        return handleRequest(() -> {
-            userLogService.log("Register","INFO", "User require register account", registerRequest.getUsername(), httpRequest.getRemoteAddr());
+    public ResponseEntity<APIResponse<Void>> register(@RequestBody @Valid RegisterRequest registerRequest) {
+        return handleAction(() -> {
             accountService.registerAccount(registerRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
         });
@@ -85,8 +83,7 @@ public class AuthenticationController {
     @ApiMessage("Logout")
     @PostMapping("/logout")
     public ResponseEntity<APIResponse<Void>> logout(@RequestBody @Valid LogoutRequest logoutRequest, HttpServletRequest httpServletRequest) {
-        log.info("Requesting logout for token: {}", logoutRequest.getToken());
-        return handleRequest(() -> {
+        return handleAction(() -> {
             userLogService.log("Logout","INFO", "User require logout account", null, httpServletRequest.getRemoteAddr());
             authenticationService.logout(logoutRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.SUCCESS);
@@ -96,7 +93,6 @@ public class AuthenticationController {
     @ApiMessage("Verify OTP")
     @PostMapping("/confirm-account")
     public ResponseEntity<APIResponse<Void>> verifyOtp(@RequestParam String otp) {
-        log.info("Verifying OTP: {}", otp);
         try {
             accountService.verifyAccountAfterRegister(otp);
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
@@ -109,7 +105,6 @@ public class AuthenticationController {
     @ApiMessage("Check account verification status")
     @GetMapping("/check-account-verification-status")
     public ResponseEntity<Boolean> checkAccountVerificationStatus(@RequestParam String email) {
-        log.info("Checking account verification status for email: {}", email);
         boolean isVerified = accountService.isAccountVerified(email);
         return ResponseEntity.ok(isVerified);
     }
@@ -118,25 +113,9 @@ public class AuthenticationController {
     @ApiMessage("Resend OTP")
     @PostMapping("/resend-otp")
     public ResponseEntity<APIResponse<Void>> resendOtp(@RequestBody String email) {
-        log.info("Requesting OTP resend for email: {}", email);
-        return handleRequest(() -> {
+        return handleAction(() -> {
             accountService.resendOTP(email);
             return ResponseBuilder.buildResponse(null, ErrorCode.SUCCESS);
         });
-    }
-
-
-    private <T> ResponseEntity<APIResponse<T>> handleRequest(RequestHandler<T> handler) {
-        try {
-            return handler.execute();
-        } catch (AppException ex) {
-            log.error("Error occurred: {}", ex.getErrorCode(), ex);
-            return ResponseBuilder.buildResponse(null, ex.getErrorCode());
-        }
-    }
-
-    @FunctionalInterface
-    private interface RequestHandler<T> {
-        ResponseEntity<APIResponse<T>> execute();
     }
 }

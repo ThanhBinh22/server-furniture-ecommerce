@@ -34,7 +34,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<ReviewDTO> getComment(Integer productID) {
-        log.info("Get comment for product {}", productID);
         ProductEntity product = productRepository.findById(productID).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         List<ReviewEntity> reviewEntities = reviewRepository.findByProduct(product);
         List<ReviewDTO> reviewDTOS = new ArrayList<>();
@@ -48,7 +47,6 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void saveComment(ReviewRequest reviewRequest) {
         String username = UserUtil.getUsername();
-        log.info("Saving comment for user {}", username);
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         ProductEntity productEntity = productRepository.findById(reviewRequest.getProductID())
