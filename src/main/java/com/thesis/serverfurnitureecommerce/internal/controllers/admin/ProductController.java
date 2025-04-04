@@ -2,7 +2,7 @@ package com.thesis.serverfurnitureecommerce.internal.controllers.admin;
 
 import com.thesis.serverfurnitureecommerce.domain.request.ProductRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
-import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
+import com.thesis.serverfurnitureecommerce.pkg.utils.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.services.product.ProductService;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;

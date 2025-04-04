@@ -1,7 +1,7 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers;
 
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
-import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
+import com.thesis.serverfurnitureecommerce.pkg.utils.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

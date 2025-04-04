@@ -5,7 +5,7 @@ import com.thesis.serverfurnitureecommerce.domain.request.EmailRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.NewPasswordRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.UpdateAccountRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
-import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
+import com.thesis.serverfurnitureecommerce.pkg.utils.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.controllers.BaseController;
 import com.thesis.serverfurnitureecommerce.internal.services.logs.UserLogService;
 import com.thesis.serverfurnitureecommerce.internal.services.user.UserService;

@@ -2,12 +2,11 @@ package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
 import com.thesis.serverfurnitureecommerce.domain.request.ProductRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
-import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
+import com.thesis.serverfurnitureecommerce.pkg.utils.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.controllers.BaseController;
 import com.thesis.serverfurnitureecommerce.internal.services.logs.UserLogService;
 import com.thesis.serverfurnitureecommerce.internal.services.product.ProductService;
 import com.thesis.serverfurnitureecommerce.model.dto.ProductDTO;
-import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;

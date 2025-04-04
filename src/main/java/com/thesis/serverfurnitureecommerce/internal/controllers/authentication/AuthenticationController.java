@@ -6,7 +6,7 @@ import com.thesis.serverfurnitureecommerce.domain.request.RefreshTokenRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.LoginResponse;
-import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
+import com.thesis.serverfurnitureecommerce.pkg.utils.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.controllers.BaseController;
 import com.thesis.serverfurnitureecommerce.internal.services.account.AccountService;
 import com.thesis.serverfurnitureecommerce.internal.services.authentication.AuthenticationService;

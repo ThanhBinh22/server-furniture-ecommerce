@@ -1,11 +1,10 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers.admin;
 
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
-import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
+import com.thesis.serverfurnitureecommerce.pkg.utils.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.controllers.BaseController;
 import com.thesis.serverfurnitureecommerce.internal.services.category.CategoryService;
 import com.thesis.serverfurnitureecommerce.model.dto.CategoryDTO;
-import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
