@@ -1,6 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.services.review;
 
-import com.thesis.serverfurnitureecommerce.domain.request.ReviewRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.ReviewRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.ProductRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.ReviewRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.UserRepository;
@@ -49,7 +49,7 @@ public class ReviewServiceImpl implements ReviewService {
         String username = UserUtil.getUsername();
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        ProductEntity productEntity = productRepository.findById(reviewRequest.getProductID())
+        ProductEntity productEntity = productRepository.findById(reviewRequest.productID())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         ReviewEntity review = reviewMapper.convertEntityFromRequest(reviewRequest);
         review.setUser(user);
@@ -59,9 +59,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void updateComment(ReviewRequest reviewRequest) {
-        ReviewEntity review = reviewRepository.findById(reviewRequest.getId())
+        ReviewEntity review = reviewRepository.findById(reviewRequest.id())
                 .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
-        review.setComment(reviewRequest.getComment());
+        review.setComment(reviewRequest.comment());
         reviewRepository.save(review);
     }
 

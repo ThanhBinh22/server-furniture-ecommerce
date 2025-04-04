@@ -1,9 +1,9 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
-import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.EmailRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.NewPasswordRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.UpdateAccountRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.AccountVerifyRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.EmailRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.NewPasswordRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.UpdateAccountRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.pkg.utils.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.controllers.BaseController;
@@ -34,7 +34,7 @@ public class UserController extends BaseController {
     @PostMapping("/forgot-password")
     public ResponseEntity<APIResponse<Void>> forgotPassword(@RequestBody EmailRequest emailRequest) {
         return handleAction(() -> {
-            userService.forgotPassword(emailRequest.getEmail());
+            userService.forgotPassword(emailRequest.email());
             return ResponseBuilder.buildResponse(null, ErrorCode.SUCCESS);
         });
     }

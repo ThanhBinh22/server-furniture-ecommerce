@@ -1,6 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.services.cart;
 
-import com.thesis.serverfurnitureecommerce.domain.request.CartRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.CartRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.CartItemResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.CartResponse;
 import com.thesis.serverfurnitureecommerce.internal.repositories.CartItemRepository;
@@ -47,7 +47,7 @@ public class CartServiceImpl implements CartService {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         CartEntity cart = cartRepository.findByUser(user);
-        ProductEntity product = productRepository.findById(cartRequest.getProductID())
+        ProductEntity product = productRepository.findById(cartRequest.productID())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         Optional<CartItemEntity> existingCartItem = cartItemRepository.findByCartAndProduct(cart, product);
 
@@ -92,7 +92,7 @@ public class CartServiceImpl implements CartService {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         CartEntity cart = cartRepository.findByUser(user);
-        ProductEntity product = productRepository.findById(cartRequest.getProductID())
+        ProductEntity product = productRepository.findById(cartRequest.productID())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         Optional<CartItemEntity> existingCartItem = cartItemRepository.findByCartAndProduct(cart, product);
 
@@ -119,7 +119,7 @@ public class CartServiceImpl implements CartService {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         CartEntity cart = cartRepository.findByUser(user);
-        ProductEntity product = productRepository.findById(cartRequest.getProductID())
+        ProductEntity product = productRepository.findById(cartRequest.productID())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         Optional<CartItemEntity> existingCartItem = cartItemRepository.findByCartAndProduct(cart, product);
 

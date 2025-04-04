@@ -1,6 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers.admin;
 
-import com.thesis.serverfurnitureecommerce.domain.request.ProductRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.ProductRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.pkg.utils.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.services.product.ProductService;

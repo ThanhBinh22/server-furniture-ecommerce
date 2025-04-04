@@ -1,6 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.services.account;
 
-import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.RegisterRequest;
 
 public interface AccountService {
 

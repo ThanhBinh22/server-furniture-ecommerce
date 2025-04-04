@@ -1,7 +1,7 @@
 package com.thesis.serverfurnitureecommerce.internal.services.account;
 
 import com.thesis.serverfurnitureecommerce.constant.RoleConstant;
-import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.RoleRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.UserRepository;
 import com.thesis.serverfurnitureecommerce.internal.services.email.EmailService;
@@ -36,21 +36,21 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void registerAccount(RegisterRequest registerRequest) {
-        UserEntity userByUsername = findUserByUsername(registerRequest.getUsername());
+        UserEntity userByUsername = findUserByUsername(registerRequest.username());
         if (userByUsername != null && userByUsername.getIsActive() == 1) {
-            log.warn("User already exists with username: {}", registerRequest.getUsername());
+            log.warn("User already exists with username: {}", registerRequest.username());
             throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
         }
         if (userByUsername != null && userByUsername.getIsActive() == 0) {
-            handleExistingUser(userByUsername, registerRequest.getPassword());
+            handleExistingUser(userByUsername, registerRequest.password());
             return;
         }
-        UserEntity userByEmail = findUserByEmail(registerRequest.getEmail());
+        UserEntity userByEmail = findUserByEmail(registerRequest.email());
         if (userByEmail != null && userByEmail.getIsActive() == 1) {
             throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
         if (userByEmail != null && userByEmail.getIsActive() == 0) {
-            handleExistingUser(userByEmail, registerRequest.getPassword());
+            handleExistingUser(userByEmail, registerRequest.password());
 
             return;
         }
@@ -81,7 +81,7 @@ public class AccountServiceImpl implements AccountService {
 
     private void createNewUser(RegisterRequest registerRequest) {
         UserEntity userEntity = userMapper.fromRequestToEntity(registerRequest);
-        userEntity.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        userEntity.setPassword(passwordEncoder.encode(registerRequest.password()));
         userEntity.setOtp(OtpGenerator.generate6DigitOtp());
         userEntity.setIsActive((short) 0);
         userEntity.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));

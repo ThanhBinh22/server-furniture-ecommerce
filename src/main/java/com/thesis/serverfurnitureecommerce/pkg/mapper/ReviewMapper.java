@@ -1,6 +1,6 @@
 package com.thesis.serverfurnitureecommerce.pkg.mapper;
 
-import com.thesis.serverfurnitureecommerce.domain.request.ReviewRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.ReviewRequest;
 import com.thesis.serverfurnitureecommerce.model.dto.ReviewDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.ReviewEntity;
 import org.mapstruct.Mapper;

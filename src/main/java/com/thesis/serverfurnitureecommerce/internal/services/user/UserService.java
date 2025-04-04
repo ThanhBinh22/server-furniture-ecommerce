@@ -1,8 +1,8 @@
 package com.thesis.serverfurnitureecommerce.internal.services.user;
 
-import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.NewPasswordRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.UpdateAccountRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.AccountVerifyRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.NewPasswordRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.UpdateAccountRequest;
 import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 
 import java.util.List;

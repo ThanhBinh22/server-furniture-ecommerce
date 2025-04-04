@@ -1,6 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
-import com.thesis.serverfurnitureecommerce.domain.request.CartRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.CartRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.CartResponse;
 import com.thesis.serverfurnitureecommerce.pkg.utils.ResponseBuilder;
@@ -49,7 +49,7 @@ public class CartController extends BaseController {
 
     @PostMapping("/add-product-into-cart")
     public ResponseEntity<APIResponse<Void>> addProductIntoCart(@RequestBody CartRequest cartRequest, HttpServletRequest httpServletRequest) {
-        log.info("POST /api/user/cart/add-product-into-cart with productID: {}", cartRequest.getProductID());
+        log.info("POST /api/user/cart/add-product-into-cart with productID: {}", cartRequest.productID());
         return handleAction(() -> {
             userLogService.log("Add product into cart", "INFO", "User add product into cart", UserUtil.getUsername(), httpServletRequest.getRemoteAddr());
             cartService.addCartItem(cartRequest);

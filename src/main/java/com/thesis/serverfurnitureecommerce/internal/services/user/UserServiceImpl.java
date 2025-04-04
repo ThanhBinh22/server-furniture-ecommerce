@@ -1,11 +1,10 @@
 package com.thesis.serverfurnitureecommerce.internal.services.user;
 
-import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.NewPasswordRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.UpdateAccountRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.AccountVerifyRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.NewPasswordRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.UpdateAccountRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.UserRepository;
 import com.thesis.serverfurnitureecommerce.internal.services.email.EmailService;
-import com.thesis.serverfurnitureecommerce.internal.services.jwt.JwtService;
 import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 import com.thesis.serverfurnitureecommerce.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
@@ -60,11 +59,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void verifyForgetPassword(AccountVerifyRequest accountVerifyRequest) {
-        log.info("Verifying OTP for email: {}", accountVerifyRequest.getEmail());
-        UserEntity user = userRepository.findByEmail(accountVerifyRequest.getEmail())
+        log.info("Verifying OTP for email: {}", accountVerifyRequest.email());
+        UserEntity user = userRepository.findByEmail(accountVerifyRequest.email())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         checkOtpExpiration(user);
-        if (isOtpValid(accountVerifyRequest.getOtp(), user.getOtp())) {
+        if (isOtpValid(accountVerifyRequest.otp(), user.getOtp())) {
             clearOtp(user);
         } else {
             throw new AppException(ErrorCode.INVALID_OTP);
@@ -89,10 +88,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(NewPasswordRequest newPasswordRequest) {
-        log.info("Changing password for email: {}", newPasswordRequest.getEmail());
-        UserEntity user = userRepository.findByEmail(newPasswordRequest.getEmail())
+        log.info("Changing password for email: {}", newPasswordRequest.email());
+        UserEntity user = userRepository.findByEmail(newPasswordRequest.email())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        user.setPassword(passwordEncoder.encode(newPasswordRequest.getPassword()));
+        user.setPassword(passwordEncoder.encode(newPasswordRequest.password()));
         userRepository.save(user);
     }
 
@@ -161,7 +160,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private String extractUserIdFromToken(String token) {
-        return Jwts.parser()
+        return Jwts
+                .parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody()

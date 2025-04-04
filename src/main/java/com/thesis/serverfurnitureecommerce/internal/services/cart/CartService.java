@@ -1,7 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.services.cart;
 
-import com.thesis.serverfurnitureecommerce.domain.request.CartRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.RemoveCartItemRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.CartRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.CartResponse;
 
 public interface CartService {

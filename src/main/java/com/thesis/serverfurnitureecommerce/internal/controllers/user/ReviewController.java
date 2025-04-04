@@ -1,6 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
-import com.thesis.serverfurnitureecommerce.domain.request.ReviewRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.ReviewRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.pkg.utils.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.controllers.BaseController;
@@ -39,7 +39,7 @@ public class ReviewController extends BaseController {
     @PostMapping
     public ResponseEntity<APIResponse<Void>> createReview(@RequestBody ReviewRequest reviewRequest, HttpServletRequest httpServletRequest) {
         return handleAction(() -> {
-            userLogService.log("Create review", "INFO", "User require create review product with productID = " + reviewRequest.getProductID(),null, httpServletRequest.getRemoteAddr());
+            userLogService.log("Create review", "INFO", "User require create review product with productID = " + reviewRequest.productID(),null, httpServletRequest.getRemoteAddr());
             reviewService.saveComment(reviewRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
         });
@@ -48,7 +48,7 @@ public class ReviewController extends BaseController {
     @PutMapping("/update")
     public ResponseEntity<APIResponse<Void>> updateReview(@RequestBody ReviewRequest reviewRequest, HttpServletRequest httpServletRequest) {
         return handleAction(() -> {
-            userLogService.log("Update review", "INFO", "User require update review product with reviewID = " + reviewRequest.getId(), null, httpServletRequest.getRemoteAddr());
+            userLogService.log("Update review", "INFO", "User require update review product with reviewID = " + reviewRequest.id(), null, httpServletRequest.getRemoteAddr());
             reviewService.updateComment(reviewRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.UPDATE_SUCCESS);
         });

@@ -1,9 +1,9 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers.authentication;
 
-import com.thesis.serverfurnitureecommerce.domain.request.AuthenticationRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.LogoutRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.RefreshTokenRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.AuthenticationRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.LogoutRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.RefreshTokenRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.LoginResponse;
 import com.thesis.serverfurnitureecommerce.pkg.utils.ResponseBuilder;
@@ -52,9 +52,9 @@ public class AuthenticationController extends BaseController {
     @ApiMessage("Login")
     @PostMapping("/login")
     public ResponseEntity<APIResponse<LoginResponse>> authenticate(@RequestBody AuthenticationRequest login, HttpServletRequest httpRequest) {
-        log.info("Requesting login for user: {}", login.getUsername());
+        log.info("Requesting login for user: {}", login.username());
         UserEntity authenticatedUser = authenticationService.authenticate(login);
-        userLogService.log("Login","INFO", "User require login account", login.getUsername(), httpRequest.getRemoteAddr());
+        userLogService.log("Login","INFO", "User require login account", login.username(), httpRequest.getRemoteAddr());
 
         String jwtToken = jwtService.generateToken(authenticatedUser);
         RefreshTokenEntity refreshToken = refreshTokenService.createRefreshToken(authenticatedUser);
@@ -69,7 +69,7 @@ public class AuthenticationController extends BaseController {
 
     @PostMapping("/refresh-token")
     public ResponseEntity<LoginResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-        String requestRefreshToken = refreshTokenRequest.getRefreshToken();
+        String requestRefreshToken = refreshTokenRequest.refreshToken();
         String newAccessToken = refreshTokenService.generateAccessTokenAgain(requestRefreshToken);
         UserDTO userDTO = refreshTokenService.getUserByRefreshToken(requestRefreshToken);
         return ResponseEntity.ok(new LoginResponse()
