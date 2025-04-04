@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: false
     properties:
       hibernate:
@@ -52,7 +52,7 @@ security:
     expiration-time: ${JWT_EXPIRATION_TIME}
     refresh-expiration-time: ${JWT_REFRESH_EXPIRATION_TIME}
 server:
-  port: 8085
+  port: 8081
   shutdown: graceful
 management:
   endpoint:
@@ -75,10 +75,14 @@ springdoc:
     disable-swagger-default-url: true
     operationsSorter: method
     tagsSorter: alpha
+  show-actuator: true
 paypal:
   clientId: ${PAYPAL_CLIENT_ID}
   clientSecret: ${PAYPAL_CLIENT_SECRET}
   mode: sandbox
+bugsnap:
+  api:
+    key: ${BUGSNAP_API_KEY}
 
 
 

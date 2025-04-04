@@ -2,10 +2,10 @@ package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
-import com.thesis.serverfurnitureecommerce.domain.request.OrderRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.OrderRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.domain.response.PaymentResponse;
-import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
+import com.thesis.serverfurnitureecommerce.pkg.utils.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.services.paypal.PayPalService;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import com.thesis.serverfurnitureecommerce.pkg.utils.CurrencyConverterService;
@@ -34,11 +34,11 @@ public class OrderController {
         String cancelUrl = "http://localhost:5173/payment/cancel";
         String successUrl = "http://localhost:5173/payment/success";
 
-        String paymentMethod = orderRequest.getPayment();
+        String paymentMethod = orderRequest.payment();
         Payment payment = null;
         PaymentResponse response = null;
         if ("PAYPAL".equals(paymentMethod)) {
-            payment = payPalService.createPayment(currencyConverterService.convertVNDToUSD(orderRequest.getTotalAmount()), "USD", "paypal", "sale",
+            payment = payPalService.createPayment(currencyConverterService.convertVNDToUSD(orderRequest.totalAmount()), "USD", "paypal", "sale",
                     "payment description", cancelUrl, successUrl
             );
             response = PaymentResponse.builder().orderID(1 * 1l).paymentMethod(paymentMethod).build();

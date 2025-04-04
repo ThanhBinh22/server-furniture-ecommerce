@@ -63,7 +63,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    public void deleteByUserId(Long userID) {
+    public void deleteByUserId(UUID userID) {
         userRepository.deleteById(userID);
     }
 

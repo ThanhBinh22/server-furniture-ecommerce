@@ -1,14 +1,13 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
-import com.thesis.serverfurnitureecommerce.domain.request.ReviewRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.ReviewRequest;
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
-import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
+import com.thesis.serverfurnitureecommerce.pkg.utils.ResponseBuilder;
+import com.thesis.serverfurnitureecommerce.internal.controllers.BaseController;
 import com.thesis.serverfurnitureecommerce.internal.services.logs.UserLogService;
 import com.thesis.serverfurnitureecommerce.internal.services.review.ReviewService;
 import com.thesis.serverfurnitureecommerce.model.dto.ReviewDTO;
-import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +23,13 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 @RequestMapping("/api/review")
-public class ReviewController {
+public class ReviewController extends BaseController {
     ReviewService reviewService;
     UserLogService userLogService;
 
     @GetMapping("/{productID}")
     public ResponseEntity<APIResponse<List<ReviewDTO>>> getReviews(@PathVariable Integer productID, HttpServletRequest httpServletRequest){
-        log.info("Get reviews for {}", productID);
-        return handleReviewAction(() -> {
+        return handleAction(() -> {
             userLogService.log("Get reviews", "INFO", "User require get reviews product with productID = " + productID, null, httpServletRequest.getRemoteAddr());
             List<ReviewDTO> reviews = reviewService.getComment(productID);
             return ResponseBuilder.buildResponse(reviews, ErrorCode.SUCCESS);
@@ -40,9 +38,8 @@ public class ReviewController {
 
     @PostMapping
     public ResponseEntity<APIResponse<Void>> createReview(@RequestBody ReviewRequest reviewRequest, HttpServletRequest httpServletRequest) {
-        log.info("POST /api/review");
-        return handleReviewAction(() -> {
-            userLogService.log("Create review", "INFO", "User require create review product with productID = " + reviewRequest.getProductID(),null, httpServletRequest.getRemoteAddr());
+        return handleAction(() -> {
+            userLogService.log("Create review", "INFO", "User require create review product with productID = " + reviewRequest.productID(),null, httpServletRequest.getRemoteAddr());
             reviewService.saveComment(reviewRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
         });
@@ -50,9 +47,8 @@ public class ReviewController {
 
     @PutMapping("/update")
     public ResponseEntity<APIResponse<Void>> updateReview(@RequestBody ReviewRequest reviewRequest, HttpServletRequest httpServletRequest) {
-        log.info("Request to update review");
-        return handleReviewAction(() -> {
-            userLogService.log("Update review", "INFO", "User require update review product with reviewID = " + reviewRequest.getId(), null, httpServletRequest.getRemoteAddr());
+        return handleAction(() -> {
+            userLogService.log("Update review", "INFO", "User require update review product with reviewID = " + reviewRequest.id(), null, httpServletRequest.getRemoteAddr());
             reviewService.updateComment(reviewRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.UPDATE_SUCCESS);
         });
@@ -60,25 +56,10 @@ public class ReviewController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<APIResponse<Void>> deleteComment(@RequestParam Long reviewID, HttpServletRequest httpServletRequest) {
-        log.info("Request to delete review");
-        return handleReviewAction(() -> {
+        return handleAction(() -> {
             userLogService.log("Delete review", "INFO", "User require delete review product with reviewID = " + reviewID, null, httpServletRequest.getRemoteAddr());
             reviewService.deleteComment(reviewID);
             return ResponseBuilder.buildResponse(null, ErrorCode.DELETE_SUCCESS);
         });
-    }
-
-    private <T> ResponseEntity<APIResponse<T>> handleReviewAction(ReviewAction<T> action) {
-        try {
-            return action.execute();
-        } catch (AppException ex) {
-            log.error("Error during user action: {}", ex.getMessage());
-            return ResponseBuilder.buildResponse(null, ex.getErrorCode());
-        }
-    }
-
-    @FunctionalInterface
-    private interface ReviewAction<T> {
-        ResponseEntity<APIResponse<T>> execute();
     }
 }

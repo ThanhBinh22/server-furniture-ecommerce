@@ -1,6 +1,6 @@
 package com.thesis.serverfurnitureecommerce.internal.services.review;
 
-import com.thesis.serverfurnitureecommerce.domain.request.ReviewRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.ReviewRequest;
 import com.thesis.serverfurnitureecommerce.model.dto.ReviewDTO;
 
 import java.util.List;

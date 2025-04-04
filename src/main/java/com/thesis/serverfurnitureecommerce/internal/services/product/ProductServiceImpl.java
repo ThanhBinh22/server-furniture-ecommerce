@@ -1,7 +1,7 @@
 package com.thesis.serverfurnitureecommerce.internal.services.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thesis.serverfurnitureecommerce.domain.request.ProductRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.ProductRequest;
 import com.thesis.serverfurnitureecommerce.domain.request.ProductSearchRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.*;
 import com.thesis.serverfurnitureecommerce.internal.repositories.custom.product.IProductRepositoryCustom;
@@ -130,19 +130,19 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO updateProduct(ProductRequest product) {
         ProductEntity productEntity = productRepository.findById(product.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
-        productEntity.setName(product.getName());
-        productEntity.setPrice(product.getPrice());
-        productEntity.setDescription(product.getDescription());
-        if (product.getStock() != null) {
-            productEntity.setStock(product.getStock());
+        productEntity.setName(product.name());
+        productEntity.setPrice(product.price());
+        productEntity.setDescription(product.description());
+        if (product.stock() != null) {
+            productEntity.setStock(product.stock());
         }
-        if (product.getCategoryID() != null) {
-            CategoryEntity categoryEntity = categoryRepository.findById(product.getCategoryID())
+        if (product.categoryID() != null) {
+            CategoryEntity categoryEntity = categoryRepository.findById(product.categoryID())
                     .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
             productEntity.setCategory(categoryEntity);
         }
-        if (product.getSupplierID() != null) {
-            SupplierEntity supplierEntity = supplierRepository.findById(product.getSupplierID())
+        if (product.supplierID() != null) {
+            SupplierEntity supplierEntity = supplierRepository.findById(product.supplierID())
                     .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
             productEntity.setSupplier(supplierEntity);
         }
@@ -162,25 +162,25 @@ public class ProductServiceImpl implements ProductService {
     public void addProduct(ProductRequest productRequest) {
         // Tạo và thiết lập ProductEntity
         ProductEntity productEntity = ProductEntity.createNewProductEntity();
-        CategoryEntity categoryEntity = categoryRepository.findById(productRequest.getCategoryID())
+        CategoryEntity categoryEntity = categoryRepository.findById(productRequest.categoryID())
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-        SupplierEntity supplierEntity = supplierRepository.findById(productRequest.getSupplierID())
+        SupplierEntity supplierEntity = supplierRepository.findById(productRequest.supplierID())
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
         productEntity.setCategory(categoryEntity);
         productEntity.setSupplier(supplierEntity);
-        productEntity.setName(productRequest.getName());
-        productEntity.setPrice(productRequest.getPrice());
-        productEntity.setDescription(productRequest.getDescription());
-        productEntity.setStock(productRequest.getStock());
+        productEntity.setName(productRequest.name());
+        productEntity.setPrice(productRequest.price());
+        productEntity.setDescription(productRequest.description());
+        productEntity.setStock(productRequest.stock());
 
         // Bước 1: Lưu ProductEntity trước để đảm bảo id được tạo
         ProductEntity savedProduct = productRepository.save(productEntity);
         log.info("Sản phẩm vừa thêm: {}", savedProduct.getId());
 
         // Bước 2: Thêm ImageEntity sau khi productEntity đã có id
-        if (productRequest.getImage() != null) {
+        if (productRequest.image() != null) {
             ImageEntity imageEntity = new ImageEntity();
-            imageEntity.setImageUrl(productRequest.getImage());
+            imageEntity.setImageUrl(productRequest.image());
             imageEntity.setProduct(savedProduct); // Gán ProductEntity cho ImageEntity
             savedProduct.getImages().add(imageEntity); // Thêm vào danh sách ảnh
         }

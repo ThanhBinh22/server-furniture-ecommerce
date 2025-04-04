@@ -1,7 +1,7 @@
 package com.thesis.serverfurnitureecommerce.internal.services.account;
 
 import com.thesis.serverfurnitureecommerce.constant.RoleConstant;
-import com.thesis.serverfurnitureecommerce.domain.request.RegisterRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.RoleRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.UserRepository;
 import com.thesis.serverfurnitureecommerce.internal.services.email.EmailService;
@@ -11,6 +11,7 @@ import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import com.thesis.serverfurnitureecommerce.pkg.mapper.UserMapper;
 import com.thesis.serverfurnitureecommerce.pkg.utils.OtpGenerator;
+import jakarta.annotation.Resource;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,71 +33,43 @@ public class AccountServiceImpl implements AccountService {
     RoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
 
-    /**
-     * Đăng ký tài khoản mới nếu người dùng không tồn tại
-     *
-     * @param registerRequest thông tin đăng ký tài khoản
-     */
+
     @Override
     public void registerAccount(RegisterRequest registerRequest) {
-        log.info("Invoke to service register");
-
-        // Kiểm tra người dùng theo username, nếu tồn tại và chưa kích hoạt, cập nhật mật khẩu và gửi OTP
-        UserEntity userByUsername = findUserByUsername(registerRequest.getUsername());
+        UserEntity userByUsername = findUserByUsername(registerRequest.username());
         if (userByUsername != null && userByUsername.getIsActive() == 1) {
-            log.warn("User already exists with username: {}", registerRequest.getUsername());
+            log.warn("User already exists with username: {}", registerRequest.username());
             throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
         }
         if (userByUsername != null && userByUsername.getIsActive() == 0) {
-            handleExistingUser(userByUsername, registerRequest.getPassword());
+            handleExistingUser(userByUsername, registerRequest.password());
             return;
         }
-        // Kiểm tra người dùng theo email, nếu tồn tại và chưa kích hoạt, cập nhật mật khẩu và gửi OTP
-        UserEntity userByEmail = findUserByEmail(registerRequest.getEmail());
+        UserEntity userByEmail = findUserByEmail(registerRequest.email());
         if (userByEmail != null && userByEmail.getIsActive() == 1) {
             throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
-        // Nếu người dùng tồn tại nhưng chưa kích hoạt, xử lý tiếp tục
         if (userByEmail != null && userByEmail.getIsActive() == 0) {
-            handleExistingUser(userByEmail, registerRequest.getPassword());
+            handleExistingUser(userByEmail, registerRequest.password());
 
             return;
         }
-        // Tạo mới người dùng nếu chưa tồn tại
         createNewUser(registerRequest);
     }
 
-    /**
-     * Tìm người dùng theo username
-     *
-     * @param username tên người dùng
-     * @return UserEntity nếu tồn tại, ném AppException nếu đã tồn tại
-     */
     private UserEntity findUserByUsername(String username) {
         log.info("Invoke to service find user by username");
         return userRepository.findByUsername(username)
-//                .filter(user -> user.getIsActive() == 0)
                 .orElse(null);
     }
 
-    /**
-     * Tìm người dùng theo email
-     *
-     * @param email địa chỉ email
-     * @return UserEntity nếu tồn tại, ném AppException nếu đã tồn tại
-     */
     private UserEntity findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .filter(user -> user.getIsActive() == 0)
                 .orElse(null);
     }
 
-    /**
-     * Xử lý người dùng đã tồn tại nhưng chưa kích hoạt
-     *
-     * @param user     người dùng đã tồn tại
-     * @param password mật khẩu mới của người dùng
-     */
+
     private void handleExistingUser(UserEntity user, String password) {
         user.setPassword(passwordEncoder.encode(password));
         user.setOtp(OtpGenerator.generate6DigitOtp());
@@ -106,14 +79,9 @@ public class AccountServiceImpl implements AccountService {
         emailService.sendMailOTP(user.getEmail(), user.getOtp());
     }
 
-    /**
-     * Tạo tài khoản người dùng mới và gửi OTP qua email
-     *
-     * @param registerRequest thông tin đăng ký
-     */
     private void createNewUser(RegisterRequest registerRequest) {
         UserEntity userEntity = userMapper.fromRequestToEntity(registerRequest);
-        userEntity.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        userEntity.setPassword(passwordEncoder.encode(registerRequest.password()));
         userEntity.setOtp(OtpGenerator.generate6DigitOtp());
         userEntity.setIsActive((short) 0);
         userEntity.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
@@ -124,12 +92,6 @@ public class AccountServiceImpl implements AccountService {
         emailService.sendMailOTP(userEntity.getEmail(), userEntity.getOtp());
     }
 
-    /**
-     * Xác thực tài khoản sau khi đăng ký bằng OTP
-     *
-     * @param otp mã OTP do người dùng cung cấp
-     * @return true nếu xác thực thành công, false nếu thất bại
-     */
     @Override
     public Boolean verifyAccountAfterRegister(String otp) {
         UserEntity user = userRepository.findByOtp(Integer.parseInt(otp))
@@ -146,11 +108,6 @@ public class AccountServiceImpl implements AccountService {
         return false;
     }
 
-    /**
-     * Kích hoạt tài khoản người dùng
-     *
-     * @param user người dùng
-     */
     private void activateUser(UserEntity user) {
         user.setIsActive((short) 1);
         user.setOtp(null);
@@ -158,11 +115,6 @@ public class AccountServiceImpl implements AccountService {
         userRepository.save(user);
     }
 
-    /**
-     * Gửi lại OTP cho người dùng
-     *
-     * @param email địa chỉ email của người dùng
-     */
     @Override
     public void resendOTP(String email) {
         UserEntity user = userRepository.findByEmail(email)

@@ -1,7 +1,7 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers.user;
 
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
-import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
+import com.thesis.serverfurnitureecommerce.pkg.utils.ResponseBuilder;
 import com.thesis.serverfurnitureecommerce.internal.services.faqs.FaqsService;
 import com.thesis.serverfurnitureecommerce.internal.services.logs.UserLogService;
 import com.thesis.serverfurnitureecommerce.model.dto.FaqsDTO;

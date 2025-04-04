@@ -1,11 +1,12 @@
 package com.thesis.serverfurnitureecommerce.internal.services.user;
 
-import com.thesis.serverfurnitureecommerce.domain.request.AccountVerifyRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.NewPasswordRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.UpdateAccountRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.AccountVerifyRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.NewPasswordRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.UpdateAccountRequest;
 import com.thesis.serverfurnitureecommerce.model.dto.UserDTO;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface UserService {
 
@@ -15,15 +16,15 @@ public interface UserService {
 
     void changePassword(NewPasswordRequest newPasswordRequest);
 
-    void deleteAccount(Long userID);
+    void deleteAccount(UUID userID);
 
     UpdateAccountRequest updateProfile(UpdateAccountRequest updateAccountRequest);
 
-    UserDTO viewProfile(Long userID);
+    UserDTO viewProfile(UUID userID);
 
     UserDTO getInformationUser(String accessToken);
 
-    void blockUser(Long userID);
+    void blockUser(UUID userID);
 
     List<UserDTO> getAllUser();
 

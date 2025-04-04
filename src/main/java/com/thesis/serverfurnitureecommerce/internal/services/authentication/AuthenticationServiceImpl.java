@@ -1,7 +1,7 @@
 package com.thesis.serverfurnitureecommerce.internal.services.authentication;
 
-import com.thesis.serverfurnitureecommerce.domain.request.AuthenticationRequest;
-import com.thesis.serverfurnitureecommerce.domain.request.LogoutRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.AuthenticationRequest;
+import com.thesis.serverfurnitureecommerce.domain.requestv2.LogoutRequest;
 import com.thesis.serverfurnitureecommerce.internal.repositories.UserRepository;
 import com.thesis.serverfurnitureecommerce.internal.repositories.InvalidatedTokenRepository;
 import com.thesis.serverfurnitureecommerce.model.entity.InvalidatedTokenEntity;
@@ -34,17 +34,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public UserEntity authenticate(AuthenticationRequest authenticationRequest) {
-        log.info("Authenticating user: {}", authenticationRequest.getUsername());
+        log.info("Authenticating user: {}", authenticationRequest.username());
         authenticateUser(authenticationRequest);
-        UserEntity userEntity = findUser(authenticationRequest.getUsername());
+        UserEntity userEntity = findUser(authenticationRequest.username());
         validateUserStatus(userEntity);
         return userEntity;
     }
 
     private void authenticateUser(AuthenticationRequest authenticationRequest) {
         Authentication authenticationToken = new UsernamePasswordAuthenticationToken(
-                authenticationRequest.getUsername(),
-                authenticationRequest.getPassword()
+                authenticationRequest.username(),
+                authenticationRequest.password()
         );
         authenticationManager.authenticate(authenticationToken);
     }
@@ -65,9 +65,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void logout(LogoutRequest logoutRequest) {
-        log.info("Logging out user with token: {}", logoutRequest.getToken());
+        log.info("Logging out user with token: {}", logoutRequest.token());
         validateAuthentication();
-        invalidateToken(logoutRequest.getToken());
+        invalidateToken(logoutRequest.token());
         SecurityContextHolder.clearContext();
     }
 

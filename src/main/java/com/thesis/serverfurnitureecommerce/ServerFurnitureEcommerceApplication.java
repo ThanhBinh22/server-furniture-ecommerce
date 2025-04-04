@@ -9,6 +9,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ServerFurnitureEcommerceApplication {
     public static void main(String[] args) {
         SpringApplication.run(ServerFurnitureEcommerceApplication.class, args);
-        log.info("ServerFurnitureEcommerceApplication started successfully");
     }
 }

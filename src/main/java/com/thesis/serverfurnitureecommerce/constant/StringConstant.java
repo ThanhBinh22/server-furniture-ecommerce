@@ -1,45 +1,14 @@
 package com.thesis.serverfurnitureecommerce.constant;
 
-/**
- * A class that defines constant string messages used throughout the application.
- * <p>
- * This class centralizes string messages to improve maintainability and consistency
- * when handling user authentication, authorization, and email verification.
- * </p>
- */
-public class StringConstant {
-    /**
-     * Error message indicating that the username and password do not match.
-     */
-    public static final String USER_AND_PASSWORD_NOT_MATCH = "Username and password do not match";
-    /**
-     * Error message indicating that the account is locked.
-     */
-    public static final String ACCOUNT_IS_LOCKED = "User is locked";
-    /**
-     * Error message indicating that the OTP (One-Time Password) cannot be empty or blank.
-     */
-    public static final String OTP_NUll = "OTP cannot be empty or blank";
-    /**
-     * Error message indicating that the user is not authenticated to access the resource.
-     */
-    public static final String NOT_AUTHENTICATED = "You are not authorized to access this resource";
-    /**
-     * Error message indicating that the JWT (JSON Web Token) signature is invalid.
-     */
-    public static final String JWT_SIGNATURE_INVALID = "The JWT signature is invalid";
-    /**
-     * Error message indicating that the JWT token has expired.
-     */
-    public static final String JWT_TOKEN_EXPIRED = "The JWT token has expired";
 
-    /**
-     * Email template for account verification.
-     * <p>
-     * This template is used to send an email for verifying user accounts.
-     * The OTP placeholder (%s) should be replaced with the actual OTP when sending the email.
-     * </p>
-     */
+public class StringConstant {
+
+    public static final String USER_AND_PASSWORD_NOT_MATCH = "Username and password do not match";
+    public static final String ACCOUNT_IS_LOCKED = "User is locked";
+    public static final String OTP_NUll = "OTP cannot be empty or blank";
+    public static final String NOT_AUTHENTICATED = "You are not authorized to access this resource";
+    public static final String JWT_SIGNATURE_INVALID = "The JWT signature is invalid";
+    public static final String JWT_TOKEN_EXPIRED = "The JWT token has expired";
     public static final String TEMPLATE_EMAIL_VERIFY = """
             <div style="font-family: Arial, sans-serif; color: #333;">
                 <p style="font-size: 16px;">Chào bạn,</p>

@@ -1,10 +1,10 @@
 package com.thesis.serverfurnitureecommerce.internal.controllers.admin;
 
 import com.thesis.serverfurnitureecommerce.domain.response.APIResponse;
-import com.thesis.serverfurnitureecommerce.domain.response.ResponseBuilder;
+import com.thesis.serverfurnitureecommerce.pkg.utils.ResponseBuilder;
+import com.thesis.serverfurnitureecommerce.internal.controllers.BaseController;
 import com.thesis.serverfurnitureecommerce.internal.services.category.CategoryService;
 import com.thesis.serverfurnitureecommerce.model.dto.CategoryDTO;
-import com.thesis.serverfurnitureecommerce.pkg.exception.AppException;
 import com.thesis.serverfurnitureecommerce.pkg.exception.ErrorCode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,30 +23,15 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 @RequestMapping("/api/admin/category")
-public class CategoryController {
+public class CategoryController extends BaseController {
     CategoryService categoryService;
 
     @GetMapping
     public ResponseEntity<APIResponse<List<CategoryDTO>>> getCategory() {
         log.info("GET /api/admin/category");
-        return handleProductAction(()-> {
+        return handleAction(()-> {
             List<CategoryDTO> categoryDTOS = categoryService.getAll();
             return ResponseBuilder.buildResponse(categoryDTOS, ErrorCode.SUCCESS);
         });
-    }
-
-
-    private <T> ResponseEntity<APIResponse<T>> handleProductAction(CategoryController.CategoryAction<T> action) {
-        try {
-            return action.execute();
-        } catch (AppException ex) {
-            log.error("Error during user action: {}", ex.getMessage());
-            return ResponseBuilder.buildResponse(null, ex.getErrorCode());
-        }
-    }
-
-    @FunctionalInterface
-    private interface CategoryAction<T> {
-        ResponseEntity<APIResponse<T>> execute();
     }
 }

@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.Map;
-/**
- * Global exception handler for the application.
- * This class handles various exceptions and returns appropriate API responses.
- */
+
 @RestControllerAdvice
 public class GlobalException {
     @ExceptionHandler(value = AppException.class)

@@ -17,6 +17,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartEntity extends BaseEntity {
     @Id
+    @Column(name = "id")
     String id;
     Integer quantity;
     @OneToOne(fetch = FetchType.LAZY)
