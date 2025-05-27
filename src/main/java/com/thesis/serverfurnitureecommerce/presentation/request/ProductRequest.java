@@ -1,0 +1,21 @@
+package com.thesis.serverfurnitureecommerce.presentation.request;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Deprecated
+public class ProductRequest {
+    Integer id;
+    String name;
+    Integer categoryID;
+    String description;
+    Integer price;
+    Integer stock;
+    String image;
+    Integer supplierID;
+}

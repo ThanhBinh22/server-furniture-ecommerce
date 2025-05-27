@@ -1,0 +1,20 @@
+package com.thesis.serverfurnitureecommerce.presentation.request;
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Deprecated
+public class AccountVerifyRequest {
+    @NotBlank(message = "PARAMETER_MISSING")
+    private String email;
+
+    @NotBlank(message = "PARAMETER_MISSING")
+    private String otp;
+}
