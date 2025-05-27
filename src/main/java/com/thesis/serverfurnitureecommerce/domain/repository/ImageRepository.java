@@ -1,4 +1,4 @@
-package com.thesis.serverfurnitureecommerce.infrastructure.persistence;
+package com.thesis.serverfurnitureecommerce.domain.repository;
 
 import com.thesis.serverfurnitureecommerce.domain.model.entity.ImageEntity;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.ProductEntity;

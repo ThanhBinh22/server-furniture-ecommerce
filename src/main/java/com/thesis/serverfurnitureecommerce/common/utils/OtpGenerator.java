@@ -1,25 +1,46 @@
 package com.thesis.serverfurnitureecommerce.common.utils;
 
 import java.security.SecureRandom;
-/**
- * Utility class for generating One Time Passwords (OTPs).
- * This class provides methods to generate OTPs of specified lengths.
- */
-public class OtpGenerator {
 
-    private static final SecureRandom random = new SecureRandom();
+public final class OtpGenerator {
+
+    private static final SecureRandom RANDOM = new SecureRandom();
+    private static final String DEFAULT_CHARSET = "0123456789";
+    private static final String ALPHANUMERIC_CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     private OtpGenerator() {
-        throw new AssertionError();
+        throw new UnsupportedOperationException("Utility class");
     }
 
     /**
-     * Generate a 6-digit One Time Password (OTP).
-     *
-     * @return a 6-digit OTP
+     * @deprecated This method is deprecated. Use {@link #generateNumericOtp(int)} instead.
      */
+    @Deprecated
     public static int generate6DigitOtp() {
-        return 100000 + random.nextInt(900000);
+        return 100000 + RANDOM.nextInt(900000);
     }
 
+    // 3812
+    public static String generateNumericOtp(int length) {
+        if (length <= 0) {
+            throw new IllegalArgumentException("OTP length must be positive");
+        }
+        return generateFromCharset(length, DEFAULT_CHARSET);
+    }
+
+    // A3f9Z1qX
+    public static String generateAlphanumericOtp(int length) {
+        if (length <= 0) {
+            throw new IllegalArgumentException("OTP length must be positive");
+        }
+        return generateFromCharset(length, ALPHANUMERIC_CHARSET);
+    }
+
+    private static String generateFromCharset(int length, String charset) {
+        StringBuilder otp = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            otp.append(charset.charAt(RANDOM.nextInt(charset.length())));
+        }
+        return otp.toString();
+    }
 }

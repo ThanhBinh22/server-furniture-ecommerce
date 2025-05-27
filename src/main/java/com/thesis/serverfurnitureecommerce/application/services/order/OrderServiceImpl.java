@@ -2,10 +2,10 @@ package com.thesis.serverfurnitureecommerce.application.services.order;
 
 import com.thesis.serverfurnitureecommerce.presentation.request.OrderItemRequest;
 import com.thesis.serverfurnitureecommerce.presentation.request.OrderRequest;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.OrderItemRepository;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.OrderRepository;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.ProductRepository;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.UserRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.OrderItemRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.OrderRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.ProductRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.UserRepository;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.OrderEntity;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.OrderItemEntity;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.ProductEntity;

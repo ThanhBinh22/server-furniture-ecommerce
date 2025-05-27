@@ -11,6 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
+@Deprecated
 public class RegisterRequest {
 
     @NotBlank(message = "Username is required")

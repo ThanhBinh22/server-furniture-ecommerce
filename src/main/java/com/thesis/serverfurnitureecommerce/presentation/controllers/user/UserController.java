@@ -49,7 +49,6 @@ public class UserController extends BaseController {
 
     @PostMapping("/change-password")
     public ResponseEntity<APIResponse<String>> changePassword(@RequestBody @Valid NewPasswordRequest newPasswordRequest, HttpServletRequest httpServletRequest) {
-        userLogService.log("Change password", "INFO", "User require change password", null, httpServletRequest.getRemoteAddr());
         userService.changePassword(newPasswordRequest);
         return ResponseBuilder.buildResponse("Password changed successfully", ErrorCode.SUCCESS);
     }
@@ -57,7 +56,6 @@ public class UserController extends BaseController {
     @DeleteMapping("/delete-account")
     public ResponseEntity<APIResponse<Void>> deleteAccount(@RequestParam UUID userID, HttpServletRequest httpServletRequest) {
         return handleAction(() -> {
-            userLogService.log("Delete account", "INFO", "User require delete account", null, httpServletRequest.getRemoteAddr());
             userService.deleteAccount(userID);
             return ResponseBuilder.buildResponse(null, ErrorCode.SUCCESS);
         });
@@ -66,7 +64,6 @@ public class UserController extends BaseController {
     @GetMapping("/view-profile")
     public ResponseEntity<APIResponse<UserVO>> viewProfile(@RequestParam UUID userID, HttpServletRequest httpServletRequest) {
         return handleAction(() -> {
-            userLogService.log("View profile", "INFO", "User require view profile", null, httpServletRequest.getRemoteAddr());
             UserVO userVO = userService.viewProfile(userID);
             return ResponseBuilder.buildResponse(userVO, ErrorCode.SUCCESS);
         });
@@ -75,7 +72,6 @@ public class UserController extends BaseController {
     @GetMapping("/get-information-user")
     public ResponseEntity<APIResponse<UserVO>> getInformationUser(@RequestParam String accessToken, HttpServletRequest httpServletRequest) {
         return handleAction(() -> {
-            userLogService.log("Get information user", "INFO", "User require get information user", null, httpServletRequest.getRemoteAddr());
             UserVO userVO = userService.getInformationUser(accessToken);
             return ResponseBuilder.buildResponse(userVO, ErrorCode.SUCCESS);
         });
@@ -84,7 +80,6 @@ public class UserController extends BaseController {
     @PutMapping("/update-account")
     public ResponseEntity<APIResponse<UpdateAccountRequest>> updateAccount(@RequestBody UpdateAccountRequest updateAccountRequest, HttpServletRequest httpServletRequest) {
         return handleAction(() -> {
-            userLogService.log("Update account", "INFO", "User require update account", null, httpServletRequest.getRemoteAddr());
             UpdateAccountRequest accountRequest = userService.updateProfile(updateAccountRequest);
             return ResponseBuilder.buildResponse(accountRequest, ErrorCode.SUCCESS);
         });

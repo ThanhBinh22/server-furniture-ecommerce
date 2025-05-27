@@ -2,8 +2,8 @@ package com.thesis.serverfurnitureecommerce.application.services.account;
 
 import com.thesis.serverfurnitureecommerce.common.constant.RoleConstant;
 import com.thesis.serverfurnitureecommerce.presentation.requestv2.RegisterRequest;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.RoleRepository;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.UserRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.RoleRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.UserRepository;
 import com.thesis.serverfurnitureecommerce.application.services.email.EmailService;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.RoleEntity;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.UserEntity;
@@ -84,7 +84,7 @@ public class AccountServiceImpl implements AccountService {
         userEntity.setOtp(OtpGenerator.generate6DigitOtp());
         userEntity.setIsActive((short) 0);
         userEntity.setOtpExpired(LocalDateTime.now().plus(Duration.ofMinutes(3)));
-        RoleEntity role = roleRepository.findByName(RoleConstant.USER)
+        RoleEntity role = roleRepository.findByName(RoleConstant.CUSTOMER)
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
         userEntity.setRole(role);
         userRepository.save(userEntity);

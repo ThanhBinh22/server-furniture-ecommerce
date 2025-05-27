@@ -3,7 +3,7 @@ package com.thesis.serverfurnitureecommerce.application.services.user;
 import com.thesis.serverfurnitureecommerce.presentation.requestv2.AccountVerifyRequest;
 import com.thesis.serverfurnitureecommerce.presentation.requestv2.NewPasswordRequest;
 import com.thesis.serverfurnitureecommerce.presentation.requestv2.UpdateAccountRequest;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.UserRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.UserRepository;
 import com.thesis.serverfurnitureecommerce.application.services.email.EmailService;
 import com.thesis.serverfurnitureecommerce.domain.model.vo.UserVO;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.UserEntity;

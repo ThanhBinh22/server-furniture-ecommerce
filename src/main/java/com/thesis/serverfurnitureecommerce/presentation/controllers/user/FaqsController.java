@@ -26,14 +26,11 @@ import java.util.List;
 @Slf4j
 public class FaqsController {
     FaqsService faqsService;
-    UserLogService userLogService;
 
-    @ApiMessage("Get all faqs")
     @GetMapping
     public ResponseEntity<APIResponse<List<FaqsVO>>> getFaqs(HttpServletRequest httpRequest) {
         log.info("Get all faqs");
         List<FaqsVO> faqsVOS = faqsService.getAllFaqs();
-        userLogService.log("Get all faqs", "INFO", "User require get all faqs", null, httpRequest.getRemoteAddr());
         return ResponseBuilder.buildResponse(faqsVOS, faqsVOS != null ? ErrorCode.FOUND : ErrorCode.NOT_FOUND);
     }
 }

@@ -1,7 +1,7 @@
 package com.thesis.serverfurnitureecommerce.application.services.support;
 
 import com.thesis.serverfurnitureecommerce.presentation.requestv2.SupportCustomerRequest;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.SupportCustomerRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.SupportCustomerRepository;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.SupportCustomerEntity;
 import com.thesis.serverfurnitureecommerce.common.mapper.SupportCustomerMapper;
 import lombok.AccessLevel;

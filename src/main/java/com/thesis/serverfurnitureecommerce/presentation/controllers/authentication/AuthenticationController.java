@@ -1,6 +1,7 @@
 package com.thesis.serverfurnitureecommerce.presentation.controllers.authentication;
 
 import com.thesis.serverfurnitureecommerce.domain.model.vo.UserVO;
+import com.thesis.serverfurnitureecommerce.presentation.requestv2.*;
 import com.thesis.serverfurnitureecommerce.presentation.response.APIResponse;
 import com.thesis.serverfurnitureecommerce.presentation.response.LoginResponse;
 import com.thesis.serverfurnitureecommerce.common.utils.ResponseBuilder;
@@ -16,10 +17,6 @@ import com.thesis.serverfurnitureecommerce.domain.exception.AppException;
 import com.thesis.serverfurnitureecommerce.domain.exception.ErrorCode;
 import com.thesis.serverfurnitureecommerce.common.mapper.UserMapper;
 import com.thesis.serverfurnitureecommerce.common.utils.annotation.ApiMessage;
-import com.thesis.serverfurnitureecommerce.presentation.requestv2.AuthenticationRequest;
-import com.thesis.serverfurnitureecommerce.presentation.requestv2.LogoutRequest;
-import com.thesis.serverfurnitureecommerce.presentation.requestv2.RefreshTokenRequest;
-import com.thesis.serverfurnitureecommerce.presentation.requestv2.RegisterRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -80,7 +77,6 @@ public class AuthenticationController extends BaseController {
         );
     }
 
-    @ApiMessage("Logout")
     @PostMapping("/logout")
     public ResponseEntity<APIResponse<Void>> logout(@RequestBody @Valid LogoutRequest logoutRequest, HttpServletRequest httpServletRequest) {
         return handleAction(() -> {
@@ -90,7 +86,6 @@ public class AuthenticationController extends BaseController {
         });
     }
 
-    @ApiMessage("Verify OTP")
     @PostMapping("/confirm-account")
     public ResponseEntity<APIResponse<Void>> verifyOtp(@RequestParam String otp) {
         try {
@@ -102,7 +97,6 @@ public class AuthenticationController extends BaseController {
         }
     }
 
-    @ApiMessage("Check account verification status")
     @GetMapping("/check-account-verification-status")
     public ResponseEntity<Boolean> checkAccountVerificationStatus(@RequestParam String email) {
         boolean isVerified = accountService.isAccountVerified(email);
@@ -110,12 +104,19 @@ public class AuthenticationController extends BaseController {
     }
 
 
-    @ApiMessage("Resend OTP")
     @PostMapping("/resend-otp")
     public ResponseEntity<APIResponse<Void>> resendOtp(@RequestBody String email) {
         return handleAction(() -> {
             accountService.resendOTP(email);
             return ResponseBuilder.buildResponse(null, ErrorCode.SUCCESS);
+        });
+    }
+
+    @PostMapping("/sign-up-customer")
+    public ResponseEntity<APIResponse<Void>> registerCustomer(@RequestBody @Valid CustomerRegisterRequest customerRegisterRequest) {
+        return handleAction(() -> {
+            authenticationService.signUp(customerRegisterRequest);
+            return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);
         });
     }
 }

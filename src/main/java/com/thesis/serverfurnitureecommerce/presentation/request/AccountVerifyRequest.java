@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Deprecated
 public class AccountVerifyRequest {
     @NotBlank(message = "PARAMETER_MISSING")
     private String email;

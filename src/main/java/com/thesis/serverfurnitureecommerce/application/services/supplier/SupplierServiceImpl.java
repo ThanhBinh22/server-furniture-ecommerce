@@ -1,7 +1,7 @@
 package com.thesis.serverfurnitureecommerce.application.services.supplier;
 
 import com.thesis.serverfurnitureecommerce.domain.model.vo.SupplierVO;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.SupplierRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.SupplierRepository;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.SupplierEntity;
 import com.thesis.serverfurnitureecommerce.common.mapper.SupplierMapper;
 import lombok.RequiredArgsConstructor;

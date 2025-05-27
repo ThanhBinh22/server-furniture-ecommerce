@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Deprecated
 public class LogoutRequest {
     @NotBlank(message = "PARAMETER_MISSING")
     private String token;

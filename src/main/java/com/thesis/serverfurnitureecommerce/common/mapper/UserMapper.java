@@ -1,9 +1,11 @@
 package com.thesis.serverfurnitureecommerce.common.mapper;
 
 import com.thesis.serverfurnitureecommerce.domain.model.vo.UserVO;
+import com.thesis.serverfurnitureecommerce.presentation.requestv2.CustomerRegisterRequest;
 import com.thesis.serverfurnitureecommerce.presentation.requestv2.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.presentation.request.UpdateAccountRequest;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.UserEntity;
+import com.thesis.serverfurnitureecommerce.presentation.response.UserInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -19,4 +21,6 @@ public interface UserMapper {
     UserEntity fromRequestToEntity(RegisterRequest registerRequest);
     UserEntity fromUpdateToEntity(UpdateAccountRequest updateAccountRequest);
     List<UserVO> toListDTO(List<UserEntity> userEntities);
+    UserEntity toUserEntity(CustomerRegisterRequest customerRegisterRequest);
+    UserInfo toUserInfo(UserEntity userEntity);
 }

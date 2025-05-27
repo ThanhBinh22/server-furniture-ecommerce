@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Deprecated
 public class RefreshTokenRequest {
     String refreshToken;
 }

@@ -19,7 +19,6 @@ public record CustomerRegisterRequest(
                 message = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)"
         )
         String password,
-
         @NotNull(message = "Type code is required")
         @Min(value = 0, message = "Invalid type code")
         @Max(value = 2, message = "Invalid type code")

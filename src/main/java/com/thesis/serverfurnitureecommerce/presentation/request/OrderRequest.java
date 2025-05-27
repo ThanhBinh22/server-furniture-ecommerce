@@ -14,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Deprecated
 public class OrderRequest {
     Long id;
     Double totalAmount;

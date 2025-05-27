@@ -1,6 +1,6 @@
 package com.thesis.serverfurnitureecommerce.application.services.category;
 
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.CategoryRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.CategoryRepository;
 import com.thesis.serverfurnitureecommerce.domain.model.vo.CategoryVO;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.CategoryEntity;
 import com.thesis.serverfurnitureecommerce.common.mapper.CategoryMapper;

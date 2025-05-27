@@ -1,7 +1,7 @@
 package com.thesis.serverfurnitureecommerce.application.services.token;
 
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.RefreshTokenRepository;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.UserRepository;
+    import com.thesis.serverfurnitureecommerce.domain.repository.RefreshTokenRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.UserRepository;
 import com.thesis.serverfurnitureecommerce.application.services.jwt.JwtService;
 import com.thesis.serverfurnitureecommerce.domain.model.vo.UserVO;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.RefreshTokenEntity;

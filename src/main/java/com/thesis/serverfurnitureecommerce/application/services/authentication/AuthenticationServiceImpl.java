@@ -1,11 +1,15 @@
 package com.thesis.serverfurnitureecommerce.application.services.authentication;
 
+import com.thesis.serverfurnitureecommerce.common.constant.RoleConstant;
+import com.thesis.serverfurnitureecommerce.domain.model.entity.RoleEntity;
+import com.thesis.serverfurnitureecommerce.domain.repository.RoleRepository;
 import com.thesis.serverfurnitureecommerce.presentation.requestv2.AuthenticationRequest;
 import com.thesis.serverfurnitureecommerce.presentation.requestv2.CustomerRegisterRequest;
 import com.thesis.serverfurnitureecommerce.presentation.requestv2.LogoutRequest;
+import com.thesis.serverfurnitureecommerce.presentation.requestv2.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.presentation.response.UserInfo;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.UserRepository;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.InvalidatedTokenRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.UserRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.InvalidatedTokenRepository;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.InvalidatedTokenEntity;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.domain.exception.AppException;
@@ -22,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +38,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     PasswordEncoder passwordEncoder;
     InvalidatedTokenRepository invalidatedTokenRepository;
     UserMapper userMapper;
+    private final RoleRepository roleRepository;
 
     @Override
     public UserEntity authenticate(AuthenticationRequest authenticationRequest) {
@@ -53,8 +59,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public UserInfo signUp(CustomerRegisterRequest customerRegisterRequest) {
+        log.info("Customer register account");
+        if (userRepository.findByUsername(customerRegisterRequest.username()).isPresent()) {
+            throw new AppException(ErrorCode.USERNAME_EXIST);
+        }
+        if (userRepository.findByEmail(customerRegisterRequest.email()).isPresent()) {
+            throw new AppException(ErrorCode.EMAIL_EXIST);
+        }
+        UserEntity userEntity = userMapper.toUserEntity(customerRegisterRequest);
+        userEntity.setPassword(passwordEncoder.encode(customerRegisterRequest.password()));
+        userEntity.setIsActive((short) 1);
+        RoleEntity role = getRoleUser();
+        userEntity.setRole(role);
+        userEntity.setIsLocked((short) 0);
+        UserEntity user = userRepository.save(userEntity);
+        if (user == null) {
+            throw new AppException(ErrorCode.USER_REGISTER_FAIL);
+        }
+        return userMapper.toUserInfo(user);
+    }
 
-        return null;
+    private RoleEntity getRoleUser() {
+        return roleRepository.findByName(RoleConstant.CUSTOMER)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
     }
 
     private void validateAuthentication() {

@@ -1,6 +1,6 @@
 package com.thesis.serverfurnitureecommerce.application.services.authentication;
 
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.UserRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.UserRepository;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.UserEntity;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

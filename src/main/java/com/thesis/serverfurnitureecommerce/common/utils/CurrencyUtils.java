@@ -5,14 +5,17 @@ import java.util.Locale;
 
 public class CurrencyUtils {
 
+    private static final Locale VIETNAM_LOCALE = new Locale("vi", "VN");
+    private static final NumberFormat VND_FORMATTER = NumberFormat.getInstance(VIETNAM_LOCALE);
+
     private CurrencyUtils() {
-        throw new AssertionError();
+        throw new UnsupportedOperationException("Utility class");
     }
 
     public static String formatCurrencyVND(int amount) {
-        Locale vietnamLocale = new Locale("vi", "VN");
-        NumberFormat currencyFormatter = NumberFormat.getInstance(vietnamLocale);
-        return currencyFormatter.format(amount) + " VNĐ";
+        synchronized (VND_FORMATTER) {
+            return VND_FORMATTER.format(amount) + " VNĐ";
+        }
     }
-
 }
+

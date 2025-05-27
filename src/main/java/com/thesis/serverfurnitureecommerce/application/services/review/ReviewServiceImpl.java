@@ -2,9 +2,9 @@ package com.thesis.serverfurnitureecommerce.application.services.review;
 
 import com.thesis.serverfurnitureecommerce.domain.model.vo.ReviewVO;
 import com.thesis.serverfurnitureecommerce.presentation.requestv2.ReviewRequest;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.ProductRepository;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.ReviewRepository;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.UserRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.ProductRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.ReviewRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.UserRepository;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.ProductEntity;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.ReviewEntity;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.UserEntity;

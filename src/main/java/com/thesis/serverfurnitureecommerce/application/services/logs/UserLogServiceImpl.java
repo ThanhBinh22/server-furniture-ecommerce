@@ -1,7 +1,7 @@
 package com.thesis.serverfurnitureecommerce.application.services.logs;
 
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.UserLogRepository;
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.UserRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.UserLogRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.UserRepository;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.UserEntity;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.UserLogEntity;
 import com.thesis.serverfurnitureecommerce.common.utils.UserUtil;

@@ -3,6 +3,7 @@ package com.thesis.serverfurnitureecommerce.application.services.authentication;
 import com.thesis.serverfurnitureecommerce.presentation.requestv2.AuthenticationRequest;
 import com.thesis.serverfurnitureecommerce.presentation.requestv2.CustomerRegisterRequest;
 import com.thesis.serverfurnitureecommerce.presentation.requestv2.LogoutRequest;
+import com.thesis.serverfurnitureecommerce.presentation.requestv2.RegisterRequest;
 import com.thesis.serverfurnitureecommerce.presentation.response.UserInfo;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.UserEntity;
 

@@ -1,6 +1,6 @@
 package com.thesis.serverfurnitureecommerce.application.services.faqs;
 
-import com.thesis.serverfurnitureecommerce.infrastructure.persistence.FaqsRepository;
+import com.thesis.serverfurnitureecommerce.domain.repository.FaqsRepository;
 import com.thesis.serverfurnitureecommerce.domain.model.vo.FaqsVO;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.FaqsEntity;
 import com.thesis.serverfurnitureecommerce.common.mapper.FaqsMapper;

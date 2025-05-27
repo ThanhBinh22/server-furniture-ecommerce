@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Deprecated
 public class AuthenticationRequest {
 
     @NotBlank(message = "PARAMETER_MISSING")

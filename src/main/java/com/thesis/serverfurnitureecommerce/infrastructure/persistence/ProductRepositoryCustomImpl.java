@@ -1,5 +1,6 @@
-package com.thesis.serverfurnitureecommerce.infrastructure.persistence.custom.product;
+package com.thesis.serverfurnitureecommerce.infrastructure.persistence;
 
+import com.thesis.serverfurnitureecommerce.domain.repository.custom.product.IProductRepositoryCustom;
 import com.thesis.serverfurnitureecommerce.presentation.request.ProductSearchRequest;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.CategoryEntity;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.ProductEntity;

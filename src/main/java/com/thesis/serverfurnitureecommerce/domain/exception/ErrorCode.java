@@ -45,6 +45,9 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Product not found"),
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Review not found"),
     CART_ITEM_EMPTY(HttpStatus.OK.value(), "Cart item empty"),
+    USERNAME_EXIST(HttpStatus.BAD_REQUEST.value(), "Username already exists"),
+    EMAIL_EXIST(HttpStatus.BAD_REQUEST.value(), "Email already exists"),
+    USER_REGISTER_FAIL(HttpStatus.BAD_REQUEST.value(), "User register fail"),
     // Server Error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error"),
     SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE.value(), "Service Unavailable"),

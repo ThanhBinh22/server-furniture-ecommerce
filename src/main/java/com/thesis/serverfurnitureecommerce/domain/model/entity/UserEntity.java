@@ -30,8 +30,12 @@ public class UserEntity extends BaseEntity implements UserDetails {
     String password;
     String email;
     String phone;
+    @Column(name = "avatar_url")
+    String avatarURL;
     @Column(name = "full_name")
     String fullName;
+    @Column(name = "type_code")
+    Integer typeCode;
 
     @JsonIgnore
     @Column(name = "otp")
@@ -52,6 +56,9 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     @Column(name = "is_locked", nullable = false)
     Short isLocked;
+
+    @Column(name = "last_login_at")
+    LocalDateTime lastLoginAt;
 
     @ManyToOne
     @JoinColumn(name = "role_id")

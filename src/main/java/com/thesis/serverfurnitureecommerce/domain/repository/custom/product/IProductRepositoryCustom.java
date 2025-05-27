@@ -1,4 +1,4 @@
-package com.thesis.serverfurnitureecommerce.infrastructure.persistence.custom.product;
+package com.thesis.serverfurnitureecommerce.domain.repository.custom.product;
 
 import com.thesis.serverfurnitureecommerce.presentation.request.ProductSearchRequest;
 import com.thesis.serverfurnitureecommerce.domain.model.entity.ProductEntity;
