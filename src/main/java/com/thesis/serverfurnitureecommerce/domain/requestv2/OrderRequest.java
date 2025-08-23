@@ -1,6 +1,7 @@
 package com.thesis.serverfurnitureecommerce.domain.requestv2;
 
-import com.thesis.serverfurnitureecommerce.pkg.enums.StatusOrderEnum;
+import com.thesis.serverfurnitureecommerce.common.enums.StatusOrderEnum;
+
 import java.util.List;
 import java.util.Set;
 

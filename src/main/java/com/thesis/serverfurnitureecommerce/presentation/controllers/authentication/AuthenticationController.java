@@ -40,6 +40,7 @@ public class AuthenticationController extends BaseController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<APIResponse<Void>> register(@RequestBody @Valid RegisterRequest registerRequest) {
+        log.info("Received request to sign up account");
         return handleAction(() -> {
             accountService.registerAccount(registerRequest);
             return ResponseBuilder.buildResponse(null, ErrorCode.CREATE_SUCCESS);

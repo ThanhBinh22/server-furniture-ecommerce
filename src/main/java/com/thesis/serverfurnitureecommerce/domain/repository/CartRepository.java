@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CartRepository extends CrudRepository<CartEntity, Long> {
-
         CartEntity findByUser(UserEntity user);
 }
